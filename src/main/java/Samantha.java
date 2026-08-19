@@ -81,7 +81,20 @@ public class Samantha {
         printResponse("OK, I've marked this task as not done yet:\n  " + task);
     }
 
-    private int parseMarkID(String[] parts) throws SamanthaException {
+    private void delete(int id) throws SamanthaException {
+        if (id < 1 || id > tasks.size()) {
+            throw new SamanthaException("You entered a task number that does not exist.");
+        }
+
+        Task task = tasks.get(id - 1);
+        tasks.remove(id - 1);
+        printResponse("Noted. I've removed this task:\n  "
+                + task + "\n"
+                + String.format("Now you have %d tasks in the list.", tasks.size())
+        );
+    }
+
+    private int parseID(String[] parts) throws SamanthaException {
         if (parts.length > 2) {
             throw new SamanthaException("You entered too many parameters for this operation");
         } else if (parts.length == 2) {
@@ -115,8 +128,8 @@ public class Samantha {
             try {
                 String[] parts = input.split(" ");
                 switch (parts[0]) {
-                    case "mark" -> samantha.markDone(samantha.parseMarkID(parts));
-                    case "unmark" -> samantha.markNotDone(samantha.parseMarkID(parts));
+                    case "mark" -> samantha.markDone(samantha.parseID(parts));
+                    case "unmark" -> samantha.markNotDone(samantha.parseID(parts));
                     case "list" -> samantha.printTaskList();
                     case "todo" -> {
                         String taskName = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
@@ -138,6 +151,7 @@ public class Samantha {
                         }
                         samantha.addEvent(segments[0].trim(), segments[1].trim(), segments[2].trim());
                     }
+                    case "delete" -> samantha.delete(samantha.parseID(parts));
                     default -> throw new SamanthaException("It seems that you entered a wrong command.");
                 }
             } catch (SamanthaException e) {
