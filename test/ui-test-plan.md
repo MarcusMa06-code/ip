@@ -111,10 +111,14 @@ bye
 Bye. Let's talk next time!
 ```
 
-## Test 4: Mark and unmark a task
+## Test 4: Mark and unmark the middle task of several
 
-**Aim:** `mark <n>` and `unmark <n>` flip the checkbox for task `n`, and the
-change is reflected both in the confirmation message and in a later `list`.
+**Aim:** `mark <n>` and `unmark <n>` flip the checkbox for task `n`
+specifically -- not just for the first or last task. The list deliberately
+holds three tasks and the test targets the middle one, so an off-by-one in
+the index arithmetic, or a bug that always touches `tasks.get(0)`, shows up
+as the wrong line changing. The surrounding tasks must stay untouched, which
+is why `list` is checked in full after each flip.
 
 ```input
 todo read book
@@ -126,27 +130,29 @@ Now you have 1 tasks in the list.
 ```
 
 ```input
-mark 1
+todo return book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] return book
+Now you have 2 tasks in the list.
+```
+
+```input
+todo join club
+```
+```expected
+Got it. I've added this task:
+  [T][ ] join club
+Now you have 3 tasks in the list.
+```
+
+```input
+mark 2
 ```
 ```expected
 Nice! I've marked this task as done:
-  [T][X] read book
-```
-
-```input
-list
-```
-```expected
-Here are the tasks in your list:
-1. [T][X] read book
-```
-
-```input
-unmark 1
-```
-```expected
-OK, I've marked this task as not done yet:
-  [T][ ] read book
+  [T][X] return book
 ```
 
 ```input
@@ -155,6 +161,26 @@ list
 ```expected
 Here are the tasks in your list:
 1. [T][ ] read book
+2. [T][X] return book
+3. [T][ ] join club
+```
+
+```input
+unmark 2
+```
+```expected
+OK, I've marked this task as not done yet:
+  [T][ ] return book
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+1. [T][ ] read book
+2. [T][ ] return book
+3. [T][ ] join club
 ```
 
 ```input
@@ -294,6 +320,134 @@ mark 1
 ```expected
 Nice! I've marked this task as done:
   [T][X] read book
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 8: Delete a task and confirm the rest renumber
+
+**Aim:** `delete <n>` removes task `n`, reports it with the updated count,
+and the tasks after it shift up to fill the gap. The final `mark 2` is the
+real point of this test: after deleting task 2 of 3, the old task 3 must now
+answer to index 2. A delete that removed the right task but left the list
+indexed wrongly would pass every check except that last one.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+deadline return book /by June 6th
+```
+```expected
+Got it. I've added this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+```
+
+```input
+event project meeting /from Aug 6th 2pm /to 4pm
+```
+```expected
+Got it. I've added this task:
+  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Now you have 3 tasks in the list.
+```
+
+```input
+delete 2
+```
+```expected
+Noted. I've removed this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+1. [T][ ] read book
+2. [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+```
+
+```input
+mark 2
+```
+```expected
+Nice! I've marked this task as done:
+  [E][X] project meeting (from: Aug 6th 2pm to: 4pm)
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 9: Reject bad delete input, then confirm the list is intact
+
+**Aim:** `delete` with a missing, non-numeric, out-of-range, or over-supplied
+argument is rejected instead of crashing or deleting the wrong thing. The
+`delete 1 2` step covers the "too many parameters" branch, which no other
+test reaches. The closing `list` proves none of the four rejected commands
+removed anything.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+delete
+```
+```expected
+OOPS!!! You forgot to mention the id of the task
+```
+
+```input
+delete abc
+```
+```expected
+OOPS!!! You need to enter a number for the task id.
+```
+
+```input
+delete 5
+```
+```expected
+OOPS!!! You entered a task number that does not exist.
+```
+
+```input
+delete 1 2
+```
+```expected
+OOPS!!! You entered too many parameters for this operation
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+1. [T][ ] read book
 ```
 
 ```input
