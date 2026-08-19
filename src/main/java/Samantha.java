@@ -1,10 +1,26 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Samantha {
     private static final String LINE = "____________________________________________________________";
+    private final List<String> tasks = new ArrayList<>();
 
     private static void printResponse(String content) {
         System.out.println(LINE + "\n" + content + "\n" + LINE);
+    }
+
+    private void addTask(String task) {
+        tasks.add(task);
+        printResponse("added: " + task);
+    }
+
+    private void printTaskList() {
+        String message = "";
+        for (int i = 1; i <= tasks.size(); i++) {
+            message += String.format("%d. %s\n", i, tasks.get(i - 1));
+        }
+        printResponse(message.stripTrailing());
     }
 
     public static void main(String[] args) {
@@ -18,11 +34,16 @@ public class Samantha {
                 + "Hello! I'm Samantha.\n"
                 + "What can I do for you?");
 
+        Samantha samantha = new Samantha();
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
 
+        String input = scanner.nextLine();
         while (!input.equals("bye")) {
-            printResponse(input);
+            if (input.equals("list")) {
+                samantha.printTaskList();
+            } else {
+                samantha.addTask(input);
+            }
             input = scanner.nextLine();
         }
 
