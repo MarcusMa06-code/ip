@@ -194,21 +194,21 @@ Bye. Let's talk next time!
 
 **Aim:** The two error cases required by the Level-5 spec -- an empty todo
 description, and a command word the program doesn't recognize -- are
-reported with an `OOPS!!!` message instead of crashing or silently doing
+reported with an error message instead of crashing or silently doing
 nothing, and neither one adds anything to the task list.
 
 ```input
 todo
 ```
 ```expected
-OOPS!!! The description of a todo cannot be empty.
+The description of a todo cannot be empty.
 ```
 
 ```input
 blah
 ```
 ```expected
-OOPS!!! It seems that you entered a wrong command.
+It seems that you entered a wrong command.
 ```
 
 ```input
@@ -228,7 +228,7 @@ Bye. Let's talk next time!
 ## Test 6: Reject malformed deadlines and events, then confirm a valid one still works
 
 **Aim:** A deadline missing `/by`, a deadline with an empty description, and
-an event missing `/to` are all rejected with a specific `OOPS!!!` message
+an event missing `/to` are all rejected with a specific error message
 and don't add anything to the list -- and, importantly, none of them corrupt
 internal state: a valid `deadline` right after still gets added as task #1,
 not #4.
@@ -237,21 +237,21 @@ not #4.
 deadline return book
 ```
 ```expected
-OOPS!!! You forgot to include /by for this deadline.
+You forgot to include /by for this deadline.
 ```
 
 ```input
 deadline /by Sunday
 ```
 ```expected
-OOPS!!! The description of a deadline cannot be empty.
+The description of a deadline cannot be empty.
 ```
 
 ```input
 event meeting /from Mon
 ```
 ```expected
-OOPS!!! You forgot to include /from and /to for this event.
+You forgot to include /from and /to for this event.
 ```
 
 ```input
@@ -297,21 +297,21 @@ Now you have 1 tasks in the list.
 mark
 ```
 ```expected
-OOPS!!! You forgot to mention the id of the task
+You forgot to mention the id of the task
 ```
 
 ```input
 mark abc
 ```
 ```expected
-OOPS!!! You need to enter a number for the task id.
+You need to enter a number for the task id.
 ```
 
 ```input
 mark 5
 ```
 ```expected
-OOPS!!! You entered a task number that does not exist.
+You entered a task number that does not exist.
 ```
 
 ```input
@@ -418,28 +418,28 @@ Now you have 1 tasks in the list.
 delete
 ```
 ```expected
-OOPS!!! You forgot to mention the id of the task
+You forgot to mention the id of the task
 ```
 
 ```input
 delete abc
 ```
 ```expected
-OOPS!!! You need to enter a number for the task id.
+You need to enter a number for the task id.
 ```
 
 ```input
 delete 5
 ```
 ```expected
-OOPS!!! You entered a task number that does not exist.
+You entered a task number that does not exist.
 ```
 
 ```input
 delete 1 2
 ```
 ```expected
-OOPS!!! You entered too many parameters for this operation
+You entered too many parameters for this operation
 ```
 
 ```input
