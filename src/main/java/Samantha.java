@@ -4,15 +4,15 @@ import java.util.Scanner;
 
 public class Samantha {
     private static final String LINE = "____________________________________________________________";
-    private final List<String> tasks = new ArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
 
     private static void printResponse(String content) {
         System.out.println(LINE + "\n" + content + "\n" + LINE);
     }
 
-    private void addTask(String task) {
-        tasks.add(task);
-        printResponse("added: " + task);
+    private void addTask(String taskName) {
+        tasks.add(new Task(taskName));
+        printResponse("added: " + taskName);
     }
 
     private void printTaskList() {
@@ -21,6 +21,18 @@ public class Samantha {
             message += String.format("%d. %s\n", i, tasks.get(i - 1));
         }
         printResponse(message.stripTrailing());
+    }
+
+    private void markDone(int id) {
+        Task task = tasks.get(id - 1);
+        task.markDone();
+        printResponse("Nice! I've marked this task as done:\n  " + task);
+    }
+
+    private void markNotDone(int id) {
+        Task task = tasks.get(id - 1);
+        task.markNotDone();
+        printResponse("OK, I've marked this task as not done yet:\n  " + task);
     }
 
     public static void main(String[] args) {
@@ -39,14 +51,49 @@ public class Samantha {
 
         String input = scanner.nextLine();
         while (!input.equals("bye")) {
-            if (input.equals("list")) {
-                samantha.printTaskList();
-            } else {
-                samantha.addTask(input);
+            String[] parts = input.split(" ");
+            switch (parts[0]) {
+                case "mark" -> samantha.markDone(Integer.parseInt(parts[1]));
+                case "unmark" -> samantha.markNotDone(Integer.parseInt(parts[1]));
+                case "list" -> samantha.printTaskList();
+                default -> samantha.addTask(input);
             }
+
             input = scanner.nextLine();
         }
 
         printResponse("Bye. Let's talk next time!");
+    }
+
+    private static class Task {
+        private boolean isDone;
+        private final String taskName; //cannot change task name once it's set
+
+        public Task(String name) {
+            this.taskName = name;
+            this.isDone = false;
+        }
+
+        public void markDone() {
+            this.isDone = true;
+        }
+
+        public void markNotDone() {
+            this.isDone = false;
+        }
+
+        public String getTaskName() {
+            return this.taskName;
+        }
+
+        public boolean getStatus() {
+            return isDone;
+        }
+
+        @Override
+        public String toString() {
+            String flag = isDone ? "[X] " : "[ ] ";
+            return flag + this.taskName;
+        }
     }
 }
