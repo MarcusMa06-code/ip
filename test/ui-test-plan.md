@@ -164,18 +164,141 @@ bye
 Bye. Let's talk next time!
 ```
 
-## Known gaps not yet covered
+## Test 5: Reject an empty todo and an unrecognized command
 
-These are real behaviours worth testing eventually, but they're deliberately
-left out for now because the program doesn't handle them gracefully yet --
-error handling is Level-5's job, not this test plan's:
+**Aim:** The two error cases required by the Level-5 spec -- an empty todo
+description, and a command word the program doesn't recognize -- are
+reported with an `OOPS!!!` message instead of crashing or silently doing
+nothing, and neither one adds anything to the task list.
 
-- `mark`/`unmark`/`deadline`/`event` with missing or malformed arguments
-  (e.g. `mark abc`, `mark 99`, `deadline no slash here`) currently crash the
-  program instead of printing an error message.
-- A command word that isn't `todo`/`deadline`/`event`/`mark`/`unmark`/`list`
-  (e.g. a typo, or plain text with no command) currently produces no output
-  at all instead of an error message.
+```input
+todo
+```
+```expected
+OOPS!!! The description of a todo cannot be empty.
+```
 
-Add test cases for these once Level-5 gives them well-defined expected
-output.
+```input
+blah
+```
+```expected
+OOPS!!! It seems that you entered a wrong command.
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 6: Reject malformed deadlines and events, then confirm a valid one still works
+
+**Aim:** A deadline missing `/by`, a deadline with an empty description, and
+an event missing `/to` are all rejected with a specific `OOPS!!!` message
+and don't add anything to the list -- and, importantly, none of them corrupt
+internal state: a valid `deadline` right after still gets added as task #1,
+not #4.
+
+```input
+deadline return book
+```
+```expected
+OOPS!!! You forgot to include /by for this deadline.
+```
+
+```input
+deadline /by Sunday
+```
+```expected
+OOPS!!! The description of a deadline cannot be empty.
+```
+
+```input
+event meeting /from Mon
+```
+```expected
+OOPS!!! You forgot to include /from and /to for this event.
+```
+
+```input
+deadline return book /by Sunday
+```
+```expected
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 1 tasks in the list.
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+1. [D][ ] return book (by: Sunday)
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 7: Reject bad mark input, then confirm a valid mark still works
+
+**Aim:** `mark` with no number, a non-numeric number, and a number outside
+the task list's range are each rejected with a specific message instead of
+crashing, and a valid `mark` afterward still flips the right task.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+mark
+```
+```expected
+OOPS!!! You forgot to mention the id of the task
+```
+
+```input
+mark abc
+```
+```expected
+OOPS!!! You need to enter a number for the task id.
+```
+
+```input
+mark 5
+```
+```expected
+OOPS!!! You entered a task number that does not exist.
+```
+
+```input
+mark 1
+```
+```expected
+Nice! I've marked this task as done:
+  [T][X] read book
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
