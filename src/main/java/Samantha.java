@@ -108,6 +108,18 @@ public class Samantha {
         }
     }
 
+    public enum Command {
+        BYE, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE;
+
+        public static Command from(String word) throws SamanthaException {
+            try {
+                return Command.valueOf(word.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new SamanthaException("It seems that you entered a wrong command.");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         String banner = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
                 + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
@@ -122,20 +134,20 @@ public class Samantha {
         Samantha samantha = new Samantha();
         Scanner scanner = new Scanner(System.in);
 
-
-        String input = scanner.nextLine();
-        while (!input.equals("bye")) {
+        boolean isRunning = true;
+        while (isRunning) {
             try {
-                String[] parts = input.split(" ");
-                switch (parts[0]) {
-                    case "mark" -> samantha.markDone(samantha.parseID(parts));
-                    case "unmark" -> samantha.markNotDone(samantha.parseID(parts));
-                    case "list" -> samantha.printTaskList();
-                    case "todo" -> {
+                String[] parts = scanner.nextLine().split(" ");
+                switch (Command.from(parts[0])) {
+                    case BYE -> isRunning = false;
+                    case LIST -> samantha.printTaskList();
+                    case MARK -> samantha.markDone(samantha.parseID(parts));
+                    case UNMARK -> samantha.markNotDone(samantha.parseID(parts));
+                    case TODO -> {
                         String taskName = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
                         samantha.addToDo(taskName);
                     }
-                    case "deadline" -> {
+                    case DEADLINE -> {
                         String content = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
                         String[] segments = content.split("/by");
                         if (segments.length < 2) {
@@ -143,7 +155,7 @@ public class Samantha {
                         }
                         samantha.addDeadline(segments[0].trim(), segments[1].trim());
                     }
-                    case "event" -> {
+                    case EVENT -> {
                         String content = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
                         String[] segments = content.split("/from|/to");
                         if (segments.length < 3) {
@@ -151,14 +163,11 @@ public class Samantha {
                         }
                         samantha.addEvent(segments[0].trim(), segments[1].trim(), segments[2].trim());
                     }
-                    case "delete" -> samantha.delete(samantha.parseID(parts));
-                    default -> throw new SamanthaException("It seems that you entered a wrong command.");
+                    case DELETE -> samantha.delete(samantha.parseID(parts));
                 }
             } catch (SamanthaException e) {
                 printResponse(e.getMessage());
             }
-
-            input = scanner.nextLine();
         }
 
         printResponse("Bye. Let's talk next time!");
