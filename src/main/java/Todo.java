@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Todo extends Task{
 
     public Todo(String name) {
@@ -7,6 +9,11 @@ public class Todo extends Task{
     @Override
     public String getType() {
         return "[T]";
+    }
+
+    @Override
+    public boolean isOnDate(LocalDate date) {
+        return false;
     }
 
     @Override

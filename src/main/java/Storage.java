@@ -68,14 +68,11 @@ public class Storage {
             if (parts.length == 4) {
                 String schedule = requireText(parts[3]);
                 String[] times = schedule.split("\\s+to\\s+", 2);
-                if (times.length == 2) {
-                    task = new Event(requireText(parts[2]), requireText(times[0]), requireText(times[1]));
-                } else {
-                    // The serialized format permits one free-form schedule field.
-                    task = new Event(requireText(parts[2]), schedule, "");
+                if (times.length != 2) {
+                    throw new SamanthaException("Malformed event schedule");
                 }
+                task = new Event(requireText(parts[2]), requireText(times[0]), requireText(times[1]));
             } else if (parts.length == 5) {
-                // Accept the partially implemented format for backward compatibility.
                 task = new Event(requireText(parts[2]), requireText(parts[3]), requireText(parts[4]));
             } else {
                 throw new SamanthaException("Wrong number of fields");

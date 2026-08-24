@@ -46,6 +46,68 @@ bye
 Bye. Let's talk next time!
 ```
 
+## Test 11: Filter tasks by date
+
+**Aim:** `list` accepts an optional date using either `/` or `-`, showing
+deadlines and events occurring on that date while excluding unrelated tasks.
+
+```input
+todo buy groceries
+```
+```expected
+Got it. I've added this task:
+  [T][ ] buy groceries
+Now you have 1 tasks in the list.
+```
+
+```input
+deadline return book /by 2/12/2019
+```
+```expected
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 2 2019)
+Now you have 2 tasks in the list.
+```
+
+```input
+event project meeting /from 2-12-2019 1400 /to 2-12-2019 1600
+```
+```expected
+Got it. I've added this task:
+  [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+Now you have 3 tasks in the list.
+```
+
+```input
+list 2/12/2019
+```
+```expected
+Here are the tasks in your list:
+2. [D][ ] return book (by: Dec 2 2019)
+3. [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+```
+
+```input
+list 3-12-2019
+```
+```expected
+Here are the tasks in your list:
+```
+
+```input
+list 31/02/2019
+```
+```expected
+The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
 ## Test 2: Add a todo and list it
 
 **Aim:** Adding a todo confirms the task with its `[T]` marker and an
@@ -76,6 +138,67 @@ bye
 Bye. Let's talk next time!
 ```
 
+## Test 10: Parse numeric deadline dates with optional times
+
+**Aim:** A numeric deadline is stored as a date rather than raw text, accepts
+both supported date separators, and can omit its time for an all-day deadline.
+Malformed numeric dates are rejected without adding a task.
+
+```input
+deadline return book /by 2/12/2019 1800
+```
+```expected
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 2 2019, 6:00 PM)
+Now you have 1 tasks in the list.
+```
+
+```input
+deadline submit report /by 5-01-2020
+```
+```expected
+Got it. I've added this task:
+  [D][ ] submit report (by: Jan 5 2020)
+Now you have 2 tasks in the list.
+```
+
+```input
+deadline invalid date /by 31/02/2019
+```
+```expected
+The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.
+```
+
+```input
+deadline invalid time /by 2-12-2019 2560
+```
+```expected
+The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.
+```
+
+```input
+deadline natural language /by Sunday
+```
+```expected
+The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+1. [D][ ] return book (by: Dec 2 2019, 6:00 PM)
+2. [D][ ] submit report (by: Jan 5 2020)
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
 ## Test 3: Add a deadline and an event, then list
 
 **Aim:** A deadline's `/by` date and an event's `/from`/`/to` range are
@@ -83,20 +206,20 @@ parsed out of the command and shown correctly in both the add confirmation
 and `list`, and the task count accumulates across different task types.
 
 ```input
-deadline return book /by Sunday
+deadline return book /by 2/12/2019
 ```
 ```expected
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 2 2019)
 Now you have 1 tasks in the list.
 ```
 
 ```input
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600
 ```
 ```expected
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
 Now you have 2 tasks in the list.
 ```
 
@@ -105,8 +228,8 @@ list
 ```
 ```expected
 Here are the tasks in your list:
-1. [D][ ] return book (by: Sunday)
-2. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+1. [D][ ] return book (by: Dec 2 2019)
+2. [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
 ```
 
 ```input
@@ -246,25 +369,25 @@ You forgot to include /by for this deadline.
 ```
 
 ```input
-deadline /by Sunday
+deadline /by 2/12/2019
 ```
 ```expected
 The description of a deadline cannot be empty.
 ```
 
 ```input
-event meeting /from Mon
+event meeting /from 2/12/2019 1400
 ```
 ```expected
 You forgot to include /from and /to for this event.
 ```
 
 ```input
-deadline return book /by Sunday
+deadline return book /by 2/12/2019
 ```
 ```expected
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 2 2019)
 Now you have 1 tasks in the list.
 ```
 
@@ -273,7 +396,7 @@ list
 ```
 ```expected
 Here are the tasks in your list:
-1. [D][ ] return book (by: Sunday)
+1. [D][ ] return book (by: Dec 2 2019)
 ```
 
 ```input
@@ -352,20 +475,20 @@ Now you have 1 tasks in the list.
 ```
 
 ```input
-deadline return book /by June 6th
+deadline return book /by 6-6-2019
 ```
 ```expected
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ```
 
 ```input
-event project meeting /from Aug 6th 2pm /to 4pm
+event project meeting /from 8-6-2019 1400 /to 8-6-2019 1600
 ```
 ```expected
 Got it. I've added this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: Jun 8 2019, 2:00 PM to: Jun 8 2019, 4:00 PM)
 Now you have 3 tasks in the list.
 ```
 
@@ -374,7 +497,7 @@ delete 2
 ```
 ```expected
 Noted. I've removed this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ```
 
@@ -384,7 +507,7 @@ list
 ```expected
 Here are the tasks in your list:
 1. [T][ ] read book
-2. [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+2. [E][ ] project meeting (from: Jun 8 2019, 2:00 PM to: Jun 8 2019, 4:00 PM)
 ```
 
 ```input
@@ -392,7 +515,7 @@ mark 2
 ```
 ```expected
 Nice! I've marked this task as done:
-  [E][X] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][X] project meeting (from: Jun 8 2019, 2:00 PM to: Jun 8 2019, 4:00 PM)
 ```
 
 ```input

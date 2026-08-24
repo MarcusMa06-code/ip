@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,10 +84,18 @@ public class Samantha {
         );
     }
 
-    private void printTaskList() {
+    private void printTaskList(String[] parts) throws SamanthaException {
+        if (parts.length > 2) {
+            throw new SamanthaException("You entered too many parameters for this operation");
+        }
+
+        LocalDate date = parts.length == 2 ? DateTimeValue.parseDate(parts[1]) : null;
         String message = "Here are the tasks in your list:\n";
         for (int i = 1; i <= tasks.size(); i++) {
-            message += String.format("%d. %s\n", i, tasks.get(i - 1));
+            Task task = tasks.get(i - 1);
+            if (date == null || task.isOnDate(date)) {
+                message += String.format("%d. %s\n", i, task);
+            }
         }
         printResponse(message.stripTrailing());
     }
@@ -179,7 +188,7 @@ public class Samantha {
                 String[] parts = scanner.nextLine().split(" ");
                 switch (Command.from(parts[0])) {
                     case BYE -> isRunning = false;
-                    case LIST -> samantha.printTaskList();
+                    case LIST -> samantha.printTaskList(parts);
                     case MARK -> samantha.markDone(samantha.parseID(parts));
                     case UNMARK -> samantha.markNotDone(samantha.parseID(parts));
                     case TODO -> {
@@ -188,7 +197,7 @@ public class Samantha {
                     }
                     case DEADLINE -> {
                         String content = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
-                        String[] segments = content.split("/by");
+                        String[] segments = content.split("\\s*/by\\s*", 2);
                         if (segments.length < 2) {
                             throw new SamanthaException("You forgot to include /by for this deadline.");
                         }
