@@ -6,7 +6,13 @@ public class Event extends Task {
     private final DateTimeValue to;
 
     public Event(String name, String from, String to) throws SamanthaException {
-        super(name);
+        super(name, "event");
+        if (from.isBlank()) {
+            throw new MissingEventStartException();
+        }
+        if (to.isBlank()) {
+            throw new MissingEventEndException();
+        }
         this.from = parseEventDateTime(from);
         this.to = parseEventDateTime(to);
     }
@@ -14,7 +20,7 @@ public class Event extends Task {
     private DateTimeValue parseEventDateTime(String text) throws SamanthaException {
         DateTimeValue dateTime = DateTimeValue.parse(text);
         if (dateTime.getTime().isEmpty()) {
-            throw new SamanthaException("An event date and time must include a time in HHmm format.");
+            throw new InvalidEventTimeException();
         }
         return dateTime;
     }

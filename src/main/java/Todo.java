@@ -2,8 +2,8 @@ import java.time.LocalDate;
 
 public class Todo extends Task{
 
-    public Todo(String name) {
-        super(name);
+    public Todo(String name) throws EmptyTaskDescriptionException {
+        super(name, "todo");
     }
 
     @Override

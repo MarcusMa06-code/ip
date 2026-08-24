@@ -1,10 +1,23 @@
 import java.time.LocalDate;
 
+/**
+ * Common state and behavior shared by all task types.
+ */
 public abstract class Task {
     private boolean isDone;
-    private final String taskName; //cannot change task name once it's set
+    private final String taskName;
 
-    public Task(String name) {
+    /**
+     * Creates a task after checking its required description.
+     *
+     * @param name task description
+     * @param taskType user-facing task type name
+     * @throws EmptyTaskDescriptionException if the description is blank
+     */
+    public Task(String name, String taskType) throws EmptyTaskDescriptionException {
+        if (name.isBlank()) {
+            throw new EmptyTaskDescriptionException(taskType);
+        }
         this.taskName = name;
         this.isDone = false;
     }

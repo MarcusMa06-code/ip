@@ -23,9 +23,6 @@ public class AddTodoCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException {
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of a todo cannot be empty.");
-        }
         Task task = new Todo(taskName);
         tasks.add(task);
         saveTasks(tasks, storage);

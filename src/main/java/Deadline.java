@@ -13,7 +13,7 @@ public class Deadline extends Task {
      * @throws SamanthaException if the deadline value is invalid
      */
     public Deadline(String name, String deadline) throws SamanthaException {
-        super(name);
+        super(name, "deadline");
         this.deadline = DateTimeValue.parse(deadline);
     }
 

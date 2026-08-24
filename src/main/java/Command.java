@@ -60,10 +60,7 @@ public abstract class Command {
      * @return the matching task
      * @throws SamanthaException if the task ID is outside the task list
      */
-    protected Task getTask(TaskList tasks, int taskId) throws SamanthaException {
-        if (taskId < 1 || taskId > tasks.size()) {
-            throw new SamanthaException("You entered a task number that does not exist.");
-        }
-        return tasks.get(taskId - 1);
+    protected Task getTask(TaskList tasks, int taskId) throws TaskNotFoundException {
+        return tasks.getTask(taskId);
     }
 }

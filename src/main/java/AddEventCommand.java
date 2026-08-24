@@ -29,15 +29,6 @@ public class AddEventCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException {
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of an event cannot be empty.");
-        }
-        if (from.isBlank()) {
-            throw new SamanthaException("You need to specify a start time after /from.");
-        }
-        if (to.isBlank()) {
-            throw new SamanthaException("You need to specify an end time after /to.");
-        }
         Task task = new Event(taskName, from, to);
         tasks.add(task);
         saveTasks(tasks, storage);

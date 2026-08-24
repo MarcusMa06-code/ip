@@ -26,12 +26,6 @@ public class AddDeadlineCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException {
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of a deadline cannot be empty.");
-        }
-        if (deadline.isBlank()) {
-            throw new SamanthaException("You did not mention deadline after /by");
-        }
         Task task = new Deadline(taskName, deadline);
         tasks.add(task);
         saveTasks(tasks, storage);
