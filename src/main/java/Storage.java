@@ -17,41 +17,46 @@ public class Storage {
      * task list. Any existing malformed record is reported as a corrupted file.
      *
      * @return the tasks read from disk
-     * @throws IOException if the file cannot be read
-     * @throws SamanthaException if an existing record is malformed
+     * @throws TaskFileReadException if the file cannot be read
+     * @throws CorruptedTaskFileException if an existing record is malformed
      */
-    public ArrayList<Task> load() throws IOException, SamanthaException {
+    public ArrayList<Task> load() throws TaskFileReadException, CorruptedTaskFileException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(FILE)) {
             return tasks;
         }
 
-        List<String> lines = Files.readAllLines(FILE);
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(FILE);
+        } catch (IOException e) {
+            throw new TaskFileReadException(e);
+        }
         for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
             String line = lines.get(lineNumber);
             String[] parts = line.split("\\s*\\|\\s*", -1);
             try {
                 tasks.add(parseTask(parts));
-            } catch (SamanthaException | NumberFormatException e) {
-                throw new SamanthaException("The data file is corrupted at line " + (lineNumber + 1) + ".");
+            } catch (SamanthaException | IllegalArgumentException e) {
+                throw new CorruptedTaskFileException(lineNumber + 1, e);
             }
         }
         return tasks;
     }
 
-    private Task parseTask(String[] parts) throws SamanthaException {
+    private Task parseTask(String[] parts) throws TaskValidationException, InputException {
         if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank()) {
-            throw new SamanthaException("Malformed task record");
+            throw new IllegalArgumentException("Malformed task record");
         }
 
         int status;
         try {
             status = Integer.parseInt(parts[1].trim());
         } catch (NumberFormatException e) {
-            throw new SamanthaException("Malformed task status");
+            throw new IllegalArgumentException("Malformed task status", e);
         }
         if (status != 0 && status != 1) {
-            throw new SamanthaException("Malformed task status");
+            throw new IllegalArgumentException("Malformed task status");
         }
 
         Task task;
@@ -69,16 +74,16 @@ public class Storage {
                 String schedule = requireText(parts[3]);
                 String[] times = schedule.split("\\s+to\\s+", 2);
                 if (times.length != 2) {
-                    throw new SamanthaException("Malformed event schedule");
+                    throw new IllegalArgumentException("Malformed event schedule");
                 }
                 task = new Event(requireText(parts[2]), requireText(times[0]), requireText(times[1]));
             } else if (parts.length == 5) {
                 task = new Event(requireText(parts[2]), requireText(parts[3]), requireText(parts[4]));
             } else {
-                throw new SamanthaException("Wrong number of fields");
+                throw new IllegalArgumentException("Wrong number of fields");
             }
         }
-        default -> throw new SamanthaException("Unknown task type");
+        default -> throw new IllegalArgumentException("Unknown task type");
         }
 
         if (status == 1) {
@@ -87,16 +92,16 @@ public class Storage {
         return task;
     }
 
-    private void requirePartCount(String[] parts, int expected) throws SamanthaException {
+    private void requirePartCount(String[] parts, int expected) {
         if (parts.length != expected) {
-            throw new SamanthaException("Wrong number of fields");
+            throw new IllegalArgumentException("Wrong number of fields");
         }
     }
 
-    private String requireText(String value) throws SamanthaException {
+    private String requireText(String value) {
         String text = value.trim();
         if (text.isEmpty()) {
-            throw new SamanthaException("Task fields cannot be empty");
+            throw new IllegalArgumentException("Task fields cannot be empty");
         }
         return text;
     }
@@ -106,19 +111,23 @@ public class Storage {
      * necessary.
      *
      * @param tasks tasks to serialize
-     * @throws IOException if the file cannot be created or written
+     * @throws TaskFileWriteException if the file cannot be created or written
      */
-    public void save(List<Task> tasks) throws IOException {
-        Path parent = FILE.getParent();
-        if (parent != null) {
-            Files.createDirectories(parent);
-        }
-
-        try (var writer = Files.newBufferedWriter(FILE)) {
-            for (Task task : tasks) {
-                writer.write(task.toFileString());
-                writer.newLine();
+    public void save(List<Task> tasks) throws TaskFileWriteException {
+        try {
+            Path parent = FILE.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
             }
+
+            try (var writer = Files.newBufferedWriter(FILE)) {
+                for (Task task : tasks) {
+                    writer.write(task.toFileString());
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            throw new TaskFileWriteException(e);
         }
     }
 }

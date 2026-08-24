@@ -37,13 +37,13 @@ public final class DateTimeValue {
      *
      * @param text raw text after {@code /by}
      * @return a parsed deadline value
-     * @throws SamanthaException if the value is empty or does not follow the
+     * @throws InputException if the value is empty or does not follow the
      *         supported date format
      */
-    public static DateTimeValue parse(String text) throws SamanthaException {
+    public static DateTimeValue parse(String text) throws InputException {
         String value = text.trim();
         if (value.isEmpty()) {
-            throw new SamanthaException("You did not mention deadline after /by");
+            throw new InputException("You did not mention deadline after /by");
         }
 
         Matcher matcher = DATE_PATTERN.matcher(value);
@@ -70,7 +70,7 @@ public final class DateTimeValue {
         }
     }
 
-    public static LocalDate parseDate(String text) throws SamanthaException {
+    public static LocalDate parseDate(String text) throws InputException {
         DateTimeValue value = parse(text);
         if (value.getTime().isPresent()) {
             throw invalidFormat();
@@ -78,8 +78,8 @@ public final class DateTimeValue {
         return value.date;
     }
 
-    private static SamanthaException invalidFormat() {
-        return new SamanthaException(
+    private static InputException invalidFormat() {
+        return new InputException(
                 "The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.");
     }
 

@@ -5,16 +5,25 @@ public class Event extends Task {
     private final DateTimeValue from;
     private final DateTimeValue to;
 
-    public Event(String name, String from, String to) throws SamanthaException {
-        super(name);
+    public Event(String name, String from, String to)
+            throws TaskValidationException, InputException {
+        super(name, "event");
+        if (from.isBlank()) {
+            throw new TaskValidationException("You need to specify a start time after /from.");
+        }
+        if (to.isBlank()) {
+            throw new TaskValidationException("You need to specify an end time after /to.");
+        }
         this.from = parseEventDateTime(from);
         this.to = parseEventDateTime(to);
     }
 
-    private DateTimeValue parseEventDateTime(String text) throws SamanthaException {
+    private DateTimeValue parseEventDateTime(String text)
+            throws TaskValidationException, InputException {
         DateTimeValue dateTime = DateTimeValue.parse(text);
         if (dateTime.getTime().isEmpty()) {
-            throw new SamanthaException("An event date and time must include a time in HHmm format.");
+            throw new TaskValidationException(
+                    "An event date and time must include a time in HHmm format.");
         }
         return dateTime;
     }

@@ -10,10 +10,12 @@ public class Deadline extends Task {
      *
      * @param name task description
      * @param deadline raw value after {@code /by}
-     * @throws SamanthaException if the deadline value is invalid
+     * @throws TaskValidationException if the task description is blank
+     * @throws InputException if the deadline value is invalid
      */
-    public Deadline(String name, String deadline) throws SamanthaException {
-        super(name);
+    public Deadline(String name, String deadline)
+            throws TaskValidationException, InputException {
+        super(name, "deadline");
         this.deadline = DateTimeValue.parse(deadline);
     }
 
