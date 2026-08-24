@@ -22,10 +22,13 @@ public class AddDeadlineCommand extends Command {
      * @param tasks current task list
      * @param ui console interaction handler
      * @param storage task persistence handler
-     * @throws SamanthaException if the details are invalid or saving fails
+     * @throws TaskValidationException if the description is invalid
+     * @throws InputException if the deadline value is invalid
+     * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException {
+    public void execute(TaskList tasks, Ui ui, Storage storage)
+            throws TaskValidationException, InputException, TaskFileWriteException {
         Task task = new Deadline(taskName, deadline);
         tasks.add(task);
         saveTasks(tasks, storage);

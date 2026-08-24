@@ -19,10 +19,12 @@ public class AddTodoCommand extends Command {
      * @param tasks current task list
      * @param ui console interaction handler
      * @param storage task persistence handler
-     * @throws SamanthaException if the description is empty or saving fails
+     * @throws TaskValidationException if the description is empty
+     * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException {
+    public void execute(TaskList tasks, Ui ui, Storage storage)
+            throws TaskValidationException, TaskFileWriteException {
         Task task = new Todo(taskName);
         tasks.add(task);
         saveTasks(tasks, storage);
