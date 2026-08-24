@@ -29,53 +29,6 @@ public class Samantha {
         }
     }
 
-    private void addDeadline(String taskName, String deadline) throws SamanthaException{
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of a deadline cannot be empty.");
-        }
-        if (deadline.isBlank()) {
-            throw new SamanthaException("You did not mention deadline after /by");
-        }
-        Task newTask = new Deadline(taskName, deadline);
-        tasks.add(newTask);
-        saveTasks();
-        printAddTaskMsg(newTask);
-    }
-
-    private void addEvent(String taskName, String from, String to) throws SamanthaException{
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of an event cannot be empty.");
-        }
-        if (from.isBlank()) {
-            throw new SamanthaException("You need to specify a start time after /from.");
-        }
-        if (to.isBlank()) {
-            throw new SamanthaException("You need to specify an end time after /to.");
-        }
-        Task newTask = new Event(taskName, from, to);
-        tasks.add(newTask);
-        saveTasks();
-        printAddTaskMsg(newTask);
-    }
-
-    private void addToDo(String taskName) throws SamanthaException{
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of a todo cannot be empty.");
-        }
-
-        Task newTask = new Todo(taskName);
-        tasks.add(newTask);
-        saveTasks();
-        printAddTaskMsg(newTask);
-    }
-
-    private void printAddTaskMsg(Task task) {
-        ui.showResponse("Got it. I've added this task: \n  "
-                + task + "\n"
-                + String.format("Now you have %d tasks in the list.", tasks.size())
-        );
-    }
-
     private void markDone(int id) throws SamanthaException {
         if (id < 1 || id > tasks.size()) {
             throw new SamanthaException("You entered a task number that does not exist.");
@@ -144,15 +97,15 @@ public class Samantha {
                     case MARK -> markDone(Parser.parseTaskId(parts));
                     case UNMARK -> markNotDone(Parser.parseTaskId(parts));
                     case TODO -> {
-                        addToDo(Parser.parseDescription(parts));
+                        new AddTodoCommand(Parser.parseDescription(parts)).execute(tasks, ui, storage);
                     }
                     case DEADLINE -> {
                         String[] details = Parser.parseDeadlineDetails(parts);
-                        addDeadline(details[0], details[1]);
+                        new AddDeadlineCommand(details[0], details[1]).execute(tasks, ui, storage);
                     }
                     case EVENT -> {
                         String[] details = Parser.parseEventDetails(parts);
-                        addEvent(details[0], details[1], details[2]);
+                        new AddEventCommand(details[0], details[1], details[2]).execute(tasks, ui, storage);
                     }
                     case DELETE -> delete(Parser.parseTaskId(parts));
                 }
