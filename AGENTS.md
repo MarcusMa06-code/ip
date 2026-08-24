@@ -12,6 +12,16 @@ naming, layout, whitespace, imports, braces, variable scope, encapsulation, and 
 checked before completing a Java change. Use the Google Java Style Guide only for topics not
 covered by the project skill.
 
+# Mandatory project Git standard
+
+For every future authorized commit or branch creation in this repository, read and apply the
+project-specific `.agents/skills/seedu-git-standard/SKILL.md`. It is based on the
+[SE-EDU Git conventions](https://se-education.org/guides/conventions/git.html). Commit subjects
+must be imperative, capitalized, free of a trailing period, and no longer than 72 characters;
+non-trivial commits must include a focused body explaining what changed and why, wrapped at 72
+characters. Branch names must use meaningful kebab-case keywords. Existing project instructions
+and explicit user authorization still control whether a commit or branch operation may be made.
+
 # Default user context
 
 Unless the user says otherwise, assume that you are assisting a student working on a project in this repository. If the user identifies themselves as an instructor or another project stakeholder, adapt your response to that role.
