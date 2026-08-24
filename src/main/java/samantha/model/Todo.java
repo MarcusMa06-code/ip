@@ -4,8 +4,17 @@ import java.time.LocalDate;
 
 import samantha.exception.TaskValidationException;
 
-public class Todo extends Task{
+/**
+ * A task without a date or time constraint.
+ */
+public class Todo extends Task {
 
+    /**
+     * Creates a todo task with the supplied description.
+     *
+     * @param name task description
+     * @throws TaskValidationException if the description is blank
+     */
     public Todo(String name) throws TaskValidationException {
         super(name, "todo");
     }
@@ -22,6 +31,6 @@ public class Todo extends Task{
 
     @Override
     public String toFileString() {
-        return String.format("T | %d | %s", getStatus() ? 1 : 0, getTaskName());
+        return String.format("T | %d | %s", isDone() ? 1 : 0, getTaskName());
     }
 }

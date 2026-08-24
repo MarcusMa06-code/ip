@@ -74,6 +74,13 @@ public final class DateTimeValue {
         }
     }
 
+    /**
+     * Parses a date-only value for date-filtered task listing.
+     *
+     * @param text raw date text
+     * @return the parsed date
+     * @throws InputException if the value contains a time or has an invalid format
+     */
     public static LocalDate parseDate(String text) throws InputException {
         DateTimeValue value = parse(text);
         if (value.getTime().isPresent()) {
@@ -100,6 +107,11 @@ public final class DateTimeValue {
                 .orElse(formattedDate);
     }
 
+    /**
+     * Returns the value in the format used by task-file persistence.
+     *
+     * @return a serialized date and optional time
+     */
     public String toStorageString() {
         String storedDate = date.format(STORAGE_DATE_FORMAT);
         return time.map(value -> storedDate + " "

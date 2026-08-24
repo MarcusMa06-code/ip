@@ -21,18 +21,18 @@ class TodoTest {
     void todo_newAndMarked_statusAndRepresentationsUpdated() throws TaskValidationException {
         Todo todo = new Todo("read book");
 
-        assertFalse(todo.getStatus());
+        assertFalse(todo.isDone());
         assertEquals("[T]", todo.getType());
         assertEquals("[T][ ] read book", todo.toString());
         assertEquals("T | 0 | read book", todo.toFileString());
         assertFalse(todo.isOnDate(LocalDate.of(2024, 1, 1)));
 
         todo.markDone();
-        assertTrue(todo.getStatus());
+        assertTrue(todo.isDone());
         assertEquals("[T][X] read book", todo.toString());
         assertEquals("T | 1 | read book", todo.toFileString());
 
         todo.markNotDone();
-        assertFalse(todo.getStatus());
+        assertFalse(todo.isDone());
     }
 }

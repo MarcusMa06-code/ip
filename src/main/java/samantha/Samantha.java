@@ -9,6 +9,9 @@ import samantha.parser.Parser;
 import samantha.storage.Storage;
 import samantha.ui.Ui;
 
+/**
+ * Runs Samantha's command-line task manager.
+ */
 public class Samantha {
     private final TaskList tasks = new TaskList();
     private final Storage storage;

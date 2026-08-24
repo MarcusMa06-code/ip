@@ -5,11 +5,23 @@ import java.time.LocalDate;
 import samantha.exception.InputException;
 import samantha.exception.TaskValidationException;
 
+/**
+ * A task that spans a specified start and end date-time.
+ */
 public class Event extends Task {
 
     private final DateTimeValue from;
     private final DateTimeValue to;
 
+    /**
+     * Creates an event task from the supplied description and date-times.
+     *
+     * @param name task description
+     * @param from event start date-time
+     * @param to event end date-time
+     * @throws TaskValidationException if the task description or event times are invalid
+     * @throws InputException if either date-time has an invalid format
+     */
     public Event(String name, String from, String to)
             throws TaskValidationException, InputException {
         super(name, "event");
@@ -53,6 +65,6 @@ public class Event extends Task {
     @Override
     public String toFileString() {
         String schedule = from.toStorageString() + " to " + to.toStorageString();
-        return String.format("E | %d | %s | %s", getStatus() ? 1 : 0, getTaskName(), schedule);
+        return String.format("E | %d | %s | %s", isDone() ? 1 : 0, getTaskName(), schedule);
     }
 }
