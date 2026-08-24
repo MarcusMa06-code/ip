@@ -1,3 +1,14 @@
+package samantha.command;
+
+import samantha.exception.InputException;
+import samantha.exception.TaskFileWriteException;
+import samantha.exception.TaskValidationException;
+import samantha.model.Event;
+import samantha.model.Task;
+import samantha.model.TaskList;
+import samantha.storage.Storage;
+import samantha.ui.Ui;
+
 /**
  * Represents the command that adds an event task.
  */

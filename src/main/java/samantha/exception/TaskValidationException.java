@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Indicates that task data does not satisfy the task model's requirements.
  */

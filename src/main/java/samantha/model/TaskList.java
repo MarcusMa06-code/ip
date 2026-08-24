@@ -1,6 +1,10 @@
+package samantha.model;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import samantha.exception.InputException;
 
 /**
  * Stores and provides operations on Samantha's tasks.

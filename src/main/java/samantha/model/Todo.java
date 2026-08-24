@@ -1,4 +1,8 @@
+package samantha.model;
+
 import java.time.LocalDate;
+
+import samantha.exception.TaskValidationException;
 
 public class Todo extends Task{
 

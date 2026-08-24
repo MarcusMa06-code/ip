@@ -1,3 +1,9 @@
+package samantha.command;
+
+import samantha.model.TaskList;
+import samantha.storage.Storage;
+import samantha.ui.Ui;
+
 /**
  * Represents the command that ends Samantha's command loop.
  */

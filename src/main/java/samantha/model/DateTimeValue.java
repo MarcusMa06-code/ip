@@ -1,3 +1,5 @@
+package samantha.model;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -7,6 +9,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import samantha.exception.InputException;
 
 /**
  * Represents the value after a deadline's {@code /by} marker.

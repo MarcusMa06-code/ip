@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Indicates that the saved task file could not be read.
  */

@@ -1,20 +1,29 @@
+package samantha.command;
+
+import samantha.exception.InputException;
+import samantha.exception.TaskFileWriteException;
+import samantha.model.Task;
+import samantha.model.TaskList;
+import samantha.storage.Storage;
+import samantha.ui.Ui;
+
 /**
- * Represents the command that marks a task as incomplete.
+ * Represents the command that marks a task as complete.
  */
-public class UnmarkCommand extends Command {
+public class MarkCommand extends Command {
     private final int taskId;
 
     /**
      * Creates a command for the given one-based task ID.
      *
-     * @param taskId task to mark as incomplete
+     * @param taskId task to mark as complete
      */
-    public UnmarkCommand(int taskId) {
+    public MarkCommand(int taskId) {
         this.taskId = taskId;
     }
 
     /**
-     * Marks the selected task as incomplete and saves it.
+     * Marks and saves the selected task.
      *
      * @param tasks current task list
      * @param ui console interaction handler
@@ -26,8 +35,8 @@ public class UnmarkCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws InputException, TaskFileWriteException {
         Task task = getTask(tasks, taskId);
-        task.markNotDone();
+        task.markDone();
         saveTasks(tasks, storage);
-        ui.showResponse("OK, I've marked this task as not done yet:\n  " + task);
+        ui.showResponse("Nice! I've marked this task as done:\n  " + task);
     }
 }
