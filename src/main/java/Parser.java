@@ -40,11 +40,11 @@ public class Parser {
         };
     }
 
-    private static CommandType parseCommandType(String word) throws SamanthaException {
+    private static CommandType parseCommandType(String word) throws InvalidCommandException {
         try {
             return CommandType.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new SamanthaException("It seems that you entered a wrong command.");
+            throw new InvalidCommandException();
         }
     }
 
@@ -78,7 +78,7 @@ public class Parser {
     public static String[] parseDeadlineDetails(String[] parts) throws SamanthaException {
         String[] segments = parseDescription(parts).split("\\s*/by\\s*", 2);
         if (segments.length < 2) {
-            throw new SamanthaException("You forgot to include /by for this deadline.");
+            throw new MissingDeadlineMarkerException();
         }
         return new String[] {segments[0].trim(), segments[1].trim()};
     }
@@ -93,7 +93,7 @@ public class Parser {
     public static String[] parseEventDetails(String[] parts) throws SamanthaException {
         String[] segments = parseDescription(parts).split("/from|/to");
         if (segments.length < 3) {
-            throw new SamanthaException("You forgot to include /from and /to for this event.");
+            throw new MissingEventMarkersException();
         }
         return new String[] {segments[0].trim(), segments[1].trim(), segments[2].trim()};
     }
@@ -107,7 +107,7 @@ public class Parser {
      */
     public static LocalDate parseListDate(String[] parts) throws SamanthaException {
         if (parts.length > 2) {
-            throw new SamanthaException("You entered too many parameters for this operation");
+            throw new TooManyArgumentsException();
         }
         return parts.length == 2 ? DateTimeValue.parseDate(parts[1]) : null;
     }
@@ -121,15 +121,15 @@ public class Parser {
      */
     public static int parseTaskId(String[] parts) throws SamanthaException {
         if (parts.length > 2) {
-            throw new SamanthaException("You entered too many parameters for this operation");
+            throw new TooManyArgumentsException();
         } else if (parts.length == 2) {
             try {
                 return Integer.parseInt(parts[1]);
             } catch (NumberFormatException e) {
-                throw new SamanthaException("You need to enter a number for the task id.");
+                throw new InvalidTaskIdException();
             }
         } else {
-            throw new SamanthaException("You forgot to mention the id of the task");
+            throw new MissingTaskIdException();
         }
     }
 }

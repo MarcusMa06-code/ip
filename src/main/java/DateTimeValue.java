@@ -43,7 +43,7 @@ public final class DateTimeValue {
     public static DateTimeValue parse(String text) throws SamanthaException {
         String value = text.trim();
         if (value.isEmpty()) {
-            throw new SamanthaException("You did not mention deadline after /by");
+            throw new MissingDateTimeException();
         }
 
         Matcher matcher = DATE_PATTERN.matcher(value);
@@ -78,9 +78,8 @@ public final class DateTimeValue {
         return value.date;
     }
 
-    private static SamanthaException invalidFormat() {
-        return new SamanthaException(
-                "The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.");
+    private static InvalidDateTimeException invalidFormat() {
+        return new InvalidDateTimeException();
     }
 
     /**
