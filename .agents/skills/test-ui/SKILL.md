@@ -14,7 +14,7 @@ against the expected output recorded for it. Stop at the first mismatch.
 From the repository root:
 
 ```bash
-python3 .claude/skills/test-ui/scripts/run_ui_tests.py
+python3 .agents/skills/test-ui/scripts/run_ui_tests.py
 ```
 
 This recompiles `src/main/java/*.java` into a temporary directory first, so

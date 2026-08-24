@@ -9,6 +9,11 @@ The very first thing the program prints -- the startup banner and greeting
 -- is shown in the console transcript but is not itself checked, since it
 isn't a response to any command.
 
+The program persists tasks in `data/samantha.txt`, relative to its working
+directory. Run each test case with an isolated working directory (or remove
+that directory's `data/samantha.txt` before starting it) so saved tasks from
+one case do not affect another case.
+
 ## Format for new test cases
 
 ```

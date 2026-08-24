@@ -103,12 +103,22 @@ def compile_sources(src_dir: Path) -> Path:
     return classes_dir
 
 
-def run_session(classes_dir: Path, main_class: str, inputs: list[str], timeout: int):
+def run_session(
+    classes_dir: Path,
+    main_class: str,
+    inputs: list[str],
+    timeout: int,
+    working_directory: Path,
+):
     stdin_text = "".join(line + "\n" for line in inputs)
     try:
         result = subprocess.run(
             ["java", "-cp", str(classes_dir), main_class],
-            input=stdin_text, capture_output=True, text=True, timeout=timeout,
+            input=stdin_text,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=working_directory,
         )
         return result.stdout, result.stderr
     except subprocess.TimeoutExpired as e:
@@ -163,7 +173,14 @@ def main() -> int:
     passed = 0
     for case in cases:
         inputs = [command for command, _ in case.steps]
-        stdout, stderr = run_session(classes_dir, args.main_class, inputs, args.timeout)
+        with tempfile.TemporaryDirectory(prefix="ui-test-workdir-") as working_directory:
+            stdout, stderr = run_session(
+                classes_dir,
+                args.main_class,
+                inputs,
+                args.timeout,
+                Path(working_directory),
+            )
         blocks = split_response_blocks(stdout)
 
         print_transcript(case, blocks)
