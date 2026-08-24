@@ -188,7 +188,7 @@ public class Samantha {
                     }
                     case DEADLINE -> {
                         String content = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
-                        String[] segments = content.split("/by");
+                        String[] segments = content.split("\\s*/by\\s*", 2);
                         if (segments.length < 2) {
                             throw new SamanthaException("You forgot to include /by for this deadline.");
                         }
