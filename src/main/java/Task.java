@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public abstract class Task {
     private boolean isDone;
     private final String taskName; //cannot change task name once it's set
@@ -24,6 +26,8 @@ public abstract class Task {
     }
 
     public abstract String getType();
+
+    public abstract boolean isOnDate(LocalDate date);
 
     /**
      * Returns the task in the format used by {@link Storage}.

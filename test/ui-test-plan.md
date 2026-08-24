@@ -46,6 +46,68 @@ bye
 Bye. Let's talk next time!
 ```
 
+## Test 11: Filter tasks by date
+
+**Aim:** `list` accepts an optional date using either `/` or `-`, showing
+deadlines and events occurring on that date while excluding unrelated tasks.
+
+```input
+todo buy groceries
+```
+```expected
+Got it. I've added this task:
+  [T][ ] buy groceries
+Now you have 1 tasks in the list.
+```
+
+```input
+deadline return book /by 2/12/2019
+```
+```expected
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 2 2019)
+Now you have 2 tasks in the list.
+```
+
+```input
+event project meeting /from 2-12-2019 1400 /to 2-12-2019 1600
+```
+```expected
+Got it. I've added this task:
+  [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+Now you have 3 tasks in the list.
+```
+
+```input
+list 2/12/2019
+```
+```expected
+Here are the tasks in your list:
+2. [D][ ] return book (by: Dec 2 2019)
+3. [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+```
+
+```input
+list 3-12-2019
+```
+```expected
+Here are the tasks in your list:
+```
+
+```input
+list 31/02/2019
+```
+```expected
+The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
 ## Test 2: Add a todo and list it
 
 **Aim:** Adding a todo confirms the task with its `[T]` marker and an

@@ -70,6 +70,14 @@ public final class DateTimeValue {
         }
     }
 
+    public static LocalDate parseDate(String text) throws SamanthaException {
+        DateTimeValue value = parse(text);
+        if (value.getTime().isPresent()) {
+            throw invalidFormat();
+        }
+        return value.date;
+    }
+
     private static SamanthaException invalidFormat() {
         return new SamanthaException(
                 "The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.");

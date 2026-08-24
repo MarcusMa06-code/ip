@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /** A task that must be completed by a specified date or deadline value. */
 public class Deadline extends Task {
 
@@ -18,6 +20,11 @@ public class Deadline extends Task {
     @Override
     public String getType() {
         return "[D]";
+    }
+
+    @Override
+    public boolean isOnDate(LocalDate date) {
+        return deadline.getDate().orElseThrow().equals(date);
     }
 
     @Override
