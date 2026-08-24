@@ -18,9 +18,9 @@ public class Parser {
      *
      * @param fullCommand complete command entered by the user
      * @return an executable command
-     * @throws SamanthaException if the command or its arguments are invalid
+     * @throws InputException if the command or its arguments are invalid
      */
-    public static Command parse(String fullCommand) throws SamanthaException {
+    public static Command parse(String fullCommand) throws InputException {
         String[] parts = splitCommand(fullCommand);
         return switch (parseCommandType(parts[0])) {
         case BYE -> new ExitCommand();
@@ -40,11 +40,11 @@ public class Parser {
         };
     }
 
-    private static CommandType parseCommandType(String word) throws SamanthaException {
+    private static CommandType parseCommandType(String word) throws InputException {
         try {
             return CommandType.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new SamanthaException("It seems that you entered a wrong command.");
+            throw new InputException("It seems that you entered a wrong command.");
         }
     }
 
@@ -73,12 +73,12 @@ public class Parser {
      *
      * @param parts words from a deadline command
      * @return a two-element array containing the description and deadline
-     * @throws SamanthaException if the command does not contain {@code /by}
+     * @throws InputException if the command does not contain {@code /by}
      */
-    public static String[] parseDeadlineDetails(String[] parts) throws SamanthaException {
+    public static String[] parseDeadlineDetails(String[] parts) throws InputException {
         String[] segments = parseDescription(parts).split("\\s*/by\\s*", 2);
         if (segments.length < 2) {
-            throw new SamanthaException("You forgot to include /by for this deadline.");
+            throw new InputException("You forgot to include /by for this deadline.");
         }
         return new String[] {segments[0].trim(), segments[1].trim()};
     }
@@ -88,12 +88,12 @@ public class Parser {
      *
      * @param parts words from an event command
      * @return a three-element array containing the description, start time, and end time
-     * @throws SamanthaException if the command does not contain both {@code /from} and {@code /to}
+     * @throws InputException if the command does not contain both {@code /from} and {@code /to}
      */
-    public static String[] parseEventDetails(String[] parts) throws SamanthaException {
+    public static String[] parseEventDetails(String[] parts) throws InputException {
         String[] segments = parseDescription(parts).split("/from|/to");
         if (segments.length < 3) {
-            throw new SamanthaException("You forgot to include /from and /to for this event.");
+            throw new InputException("You forgot to include /from and /to for this event.");
         }
         return new String[] {segments[0].trim(), segments[1].trim(), segments[2].trim()};
     }
@@ -103,11 +103,11 @@ public class Parser {
      *
      * @param parts words from a list command
      * @return the requested date, or {@code null} when no date was given
-     * @throws SamanthaException if too many arguments were supplied or the date is invalid
+     * @throws InputException if too many arguments were supplied or the date is invalid
      */
-    public static LocalDate parseListDate(String[] parts) throws SamanthaException {
+    public static LocalDate parseListDate(String[] parts) throws InputException {
         if (parts.length > 2) {
-            throw new SamanthaException("You entered too many parameters for this operation");
+            throw new InputException("You entered too many parameters for this operation");
         }
         return parts.length == 2 ? DateTimeValue.parseDate(parts[1]) : null;
     }
@@ -117,19 +117,19 @@ public class Parser {
      *
      * @param parts words from the user command
      * @return the parsed task ID
-     * @throws SamanthaException if the command has a missing, extra, or non-numeric ID
+     * @throws InputException if the command has a missing, extra, or non-numeric ID
      */
-    public static int parseTaskId(String[] parts) throws SamanthaException {
+    public static int parseTaskId(String[] parts) throws InputException {
         if (parts.length > 2) {
-            throw new SamanthaException("You entered too many parameters for this operation");
+            throw new InputException("You entered too many parameters for this operation");
         } else if (parts.length == 2) {
             try {
                 return Integer.parseInt(parts[1]);
             } catch (NumberFormatException e) {
-                throw new SamanthaException("You need to enter a number for the task id.");
+                throw new InputException("You need to enter a number for the task id.");
             }
         } else {
-            throw new SamanthaException("You forgot to mention the id of the task");
+            throw new InputException("You forgot to mention the id of the task");
         }
     }
 }

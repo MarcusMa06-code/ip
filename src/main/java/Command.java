@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 /**
  * Represents an executable user command.
  */
@@ -11,9 +9,12 @@ public abstract class Command {
      * @param tasks current task list
      * @param ui console interaction handler
      * @param storage task persistence handler
-     * @throws SamanthaException if this command cannot be completed
+     * @throws TaskValidationException if task data is invalid
+     * @throws InputException if a task value has invalid input format
+     * @throws TaskFileWriteException if the task list cannot be saved
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException;
+    public abstract void execute(TaskList tasks, Ui ui, Storage storage)
+            throws TaskValidationException, InputException, TaskFileWriteException;
 
     /**
      * Returns whether executing this command should end the application.
@@ -25,18 +26,14 @@ public abstract class Command {
     }
 
     /**
-     * Saves the current task list and converts storage failures to application errors.
+     * Saves the current task list through the storage component.
      *
      * @param tasks task list to save
      * @param storage task persistence handler
-     * @throws SamanthaException if the task list cannot be saved
+     * @throws TaskFileWriteException if the task list cannot be saved
      */
-    protected void saveTasks(TaskList tasks, Storage storage) throws SamanthaException {
-        try {
-            storage.save(tasks.asList());
-        } catch (IOException e) {
-            throw new SamanthaException("I couldn't save your tasks to disk.");
-        }
+    protected void saveTasks(TaskList tasks, Storage storage) throws TaskFileWriteException {
+        storage.save(tasks.asList());
     }
 
     /**
@@ -58,12 +55,9 @@ public abstract class Command {
      * @param tasks current task list
      * @param taskId one-based task ID
      * @return the matching task
-     * @throws SamanthaException if the task ID is outside the task list
+     * @throws InputException if the task ID is outside the task list
      */
-    protected Task getTask(TaskList tasks, int taskId) throws SamanthaException {
-        if (taskId < 1 || taskId > tasks.size()) {
-            throw new SamanthaException("You entered a task number that does not exist.");
-        }
-        return tasks.get(taskId - 1);
+    protected Task getTask(TaskList tasks, int taskId) throws InputException {
+        return tasks.getTask(taskId);
     }
 }

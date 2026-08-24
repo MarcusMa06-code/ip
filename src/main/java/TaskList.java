@@ -44,6 +44,20 @@ public class TaskList {
     }
 
     /**
+     * Returns the task identified by a one-based user-facing ID.
+     *
+     * @param taskId one-based task ID
+     * @return the matching task
+     * @throws InputException if the ID is outside this list
+     */
+    public Task getTask(int taskId) throws InputException {
+        if (taskId < 1 || taskId > tasks.size()) {
+            throw new InputException("You entered a task number that does not exist.");
+        }
+        return get(taskId - 1);
+    }
+
+    /**
      * Removes and returns the task at a zero-based position.
      *
      * @param index zero-based task position

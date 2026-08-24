@@ -25,19 +25,13 @@ public class AddEventCommand extends Command {
      * @param tasks current task list
      * @param ui console interaction handler
      * @param storage task persistence handler
-     * @throws SamanthaException if the details are invalid or saving fails
+     * @throws TaskValidationException if the event details are invalid
+     * @throws InputException if an event date value is invalid
+     * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws SamanthaException {
-        if (taskName.isBlank()) {
-            throw new SamanthaException("The description of an event cannot be empty.");
-        }
-        if (from.isBlank()) {
-            throw new SamanthaException("You need to specify a start time after /from.");
-        }
-        if (to.isBlank()) {
-            throw new SamanthaException("You need to specify an end time after /to.");
-        }
+    public void execute(TaskList tasks, Ui ui, Storage storage)
+            throws TaskValidationException, InputException, TaskFileWriteException {
         Task task = new Event(taskName, from, to);
         tasks.add(task);
         saveTasks(tasks, storage);
