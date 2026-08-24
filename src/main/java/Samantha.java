@@ -129,32 +129,6 @@ public class Samantha {
         );
     }
 
-    private int parseID(String[] parts) throws SamanthaException {
-        if (parts.length > 2) {
-            throw new SamanthaException("You entered too many parameters for this operation");
-        } else if (parts.length == 2) {
-            try {
-                return Integer.parseInt(parts[1]);
-            } catch (NumberFormatException e) {
-                throw new SamanthaException("You need to enter a number for the task id.");
-            }
-        } else {
-            throw new SamanthaException("You forgot to mention the id of the task");
-        }
-    }
-
-    public enum Command {
-        BYE, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE;
-
-        public static Command from(String word) throws SamanthaException {
-            try {
-                return Command.valueOf(word.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new SamanthaException("It seems that you entered a wrong command.");
-            }
-        }
-    }
-
     public static void main(String[] args) {
         String banner = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
                 + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
@@ -181,11 +155,11 @@ public class Samantha {
         while (isRunning) {
             try {
                 String[] parts = scanner.nextLine().split(" ");
-                switch (Command.from(parts[0])) {
+                switch (Parser.parseCommand(parts[0])) {
                     case BYE -> isRunning = false;
                     case LIST -> samantha.printTaskList(parts);
-                    case MARK -> samantha.markDone(samantha.parseID(parts));
-                    case UNMARK -> samantha.markNotDone(samantha.parseID(parts));
+                    case MARK -> samantha.markDone(Parser.parseTaskId(parts));
+                    case UNMARK -> samantha.markNotDone(Parser.parseTaskId(parts));
                     case TODO -> {
                         String taskName = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
                         samantha.addToDo(taskName);
@@ -206,7 +180,7 @@ public class Samantha {
                         }
                         samantha.addEvent(segments[0].trim(), segments[1].trim(), segments[2].trim());
                     }
-                    case DELETE -> samantha.delete(samantha.parseID(parts));
+                    case DELETE -> samantha.delete(Parser.parseTaskId(parts));
                 }
             } catch (SamanthaException e) {
                 samantha.ui.showResponse(e.getMessage());
