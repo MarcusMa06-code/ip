@@ -122,51 +122,62 @@ public class Samantha {
         );
     }
 
-    public static void main(String[] args) {
+    /**
+     * Runs the application until the user enters the exit command.
+     */
+    public void run() {
         String banner = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
                 + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
                 + "\\___ \\ / _ \\ | |\\/| | / _ \\ |  \\| | | | | |_| | / _ \\  \n"
                 + " ___) / ___ \\| |  | |/ ___ \\| |\\  | | | |  _  |/ ___ \\ \n"
                 + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
 
-        Samantha samantha = new Samantha();
         try {
-            samantha.loadTasks();
+            loadTasks();
         } catch (SamanthaException e) {
-            samantha.ui.showCorruptedFileWarning();
+            ui.showCorruptedFileWarning();
         } catch (IOException e) {
-            samantha.ui.showFileReadErrorWarning();
+            ui.showFileReadErrorWarning();
         }
 
-        samantha.ui.showWelcome(banner);
+        ui.showWelcome(banner);
 
         boolean isRunning = true;
         while (isRunning) {
             try {
-                String[] parts = Parser.splitCommand(samantha.ui.readCommand());
+                String[] parts = Parser.splitCommand(ui.readCommand());
                 switch (Parser.parseCommand(parts[0])) {
                     case BYE -> isRunning = false;
-                    case LIST -> samantha.printTaskList(Parser.parseListDate(parts));
-                    case MARK -> samantha.markDone(Parser.parseTaskId(parts));
-                    case UNMARK -> samantha.markNotDone(Parser.parseTaskId(parts));
+                    case LIST -> printTaskList(Parser.parseListDate(parts));
+                    case MARK -> markDone(Parser.parseTaskId(parts));
+                    case UNMARK -> markNotDone(Parser.parseTaskId(parts));
                     case TODO -> {
-                        samantha.addToDo(Parser.parseDescription(parts));
+                        addToDo(Parser.parseDescription(parts));
                     }
                     case DEADLINE -> {
                         String[] details = Parser.parseDeadlineDetails(parts);
-                        samantha.addDeadline(details[0], details[1]);
+                        addDeadline(details[0], details[1]);
                     }
                     case EVENT -> {
                         String[] details = Parser.parseEventDetails(parts);
-                        samantha.addEvent(details[0], details[1], details[2]);
+                        addEvent(details[0], details[1], details[2]);
                     }
-                    case DELETE -> samantha.delete(Parser.parseTaskId(parts));
+                    case DELETE -> delete(Parser.parseTaskId(parts));
                 }
             } catch (SamanthaException e) {
-                samantha.ui.showResponse(e.getMessage());
+                ui.showResponse(e.getMessage());
             }
         }
 
-        samantha.ui.showGoodbye();
+        ui.showGoodbye();
+    }
+
+    /**
+     * Starts Samantha using the default storage location.
+     *
+     * @param args command-line arguments, which are not used
+     */
+    public static void main(String[] args) {
+        new Samantha().run();
     }
 }
