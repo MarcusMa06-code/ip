@@ -5,7 +5,7 @@ the compiled chatbot, and check each command's output against its expected
 output.
 
     python3 run_ui_tests.py [--plan test/ui-test-plan.md] [--src src/main/java]
-                             [--main-class Samantha] [--timeout 10]
+                             [--main-class samantha.Samantha] [--timeout 10]
 
 Test plan format (see test/ui-test-plan.md for the authoritative examples):
 
@@ -92,7 +92,7 @@ def normalize(block: str) -> str:
 
 def compile_sources(src_dir: Path) -> Path:
     classes_dir = Path(tempfile.mkdtemp(prefix="ui-test-classes-"))
-    sources = sorted(str(p) for p in src_dir.glob("*.java"))
+    sources = sorted(str(p) for p in src_dir.rglob("*.java"))
     result = subprocess.run(
         ["javac", "-d", str(classes_dir), *sources],
         capture_output=True, text=True,
@@ -155,7 +155,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--plan", default="test/ui-test-plan.md", type=Path)
     parser.add_argument("--src", default="src/main/java", type=Path)
-    parser.add_argument("--main-class", default="Samantha")
+    parser.add_argument("--main-class", default="samantha.Samantha")
     parser.add_argument("--timeout", type=int, default=10)
     args = parser.parse_args()
 

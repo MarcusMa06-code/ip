@@ -17,11 +17,11 @@ From the repository root:
 python3 .agents/skills/test-ui/scripts/run_ui_tests.py
 ```
 
-This recompiles `src/main/java/*.java` into a temporary directory first, so
+This recompiles all Java files under `src/main/java` into a temporary directory first, so
 it always tests the current source, not a stale build. Override
 `--plan`, `--src`, `--main-class`, or `--timeout` if the user asks for a
 non-default location or class name; defaults are `test/ui-test-plan.md`,
-`src/main/java`, `Samantha`, and 10 seconds.
+`src/main/java`, `samantha.Samantha`, and 10 seconds.
 
 ## Behavior to expect
 

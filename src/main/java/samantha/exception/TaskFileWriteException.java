@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Indicates that the current task list could not be saved.
  */

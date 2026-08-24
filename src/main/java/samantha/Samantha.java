@@ -1,3 +1,14 @@
+package samantha;
+
+import samantha.command.Command;
+import samantha.exception.CorruptedTaskFileException;
+import samantha.exception.SamanthaException;
+import samantha.exception.TaskFileReadException;
+import samantha.model.TaskList;
+import samantha.parser.Parser;
+import samantha.storage.Storage;
+import samantha.ui.Ui;
+
 public class Samantha {
     private final TaskList tasks = new TaskList();
     private final Storage storage;

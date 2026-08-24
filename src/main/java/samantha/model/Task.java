@@ -1,4 +1,9 @@
+package samantha.model;
+
 import java.time.LocalDate;
+
+import samantha.exception.TaskValidationException;
+import samantha.storage.Storage;
 
 /**
  * Common state and behavior shared by all task types.

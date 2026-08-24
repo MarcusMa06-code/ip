@@ -1,20 +1,29 @@
+package samantha.command;
+
+import samantha.exception.InputException;
+import samantha.exception.TaskFileWriteException;
+import samantha.model.Task;
+import samantha.model.TaskList;
+import samantha.storage.Storage;
+import samantha.ui.Ui;
+
 /**
- * Represents the command that removes a task.
+ * Represents the command that marks a task as incomplete.
  */
-public class DeleteCommand extends Command {
+public class UnmarkCommand extends Command {
     private final int taskId;
 
     /**
      * Creates a command for the given one-based task ID.
      *
-     * @param taskId task to remove
+     * @param taskId task to mark as incomplete
      */
-    public DeleteCommand(int taskId) {
+    public UnmarkCommand(int taskId) {
         this.taskId = taskId;
     }
 
     /**
-     * Removes and saves the selected task.
+     * Marks the selected task as incomplete and saves it.
      *
      * @param tasks current task list
      * @param ui console interaction handler
@@ -26,10 +35,8 @@ public class DeleteCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws InputException, TaskFileWriteException {
         Task task = getTask(tasks, taskId);
-        tasks.remove(taskId - 1);
+        task.markNotDone();
         saveTasks(tasks, storage);
-        ui.showResponse("Noted. I've removed this task:\n  "
-                + task + "\n"
-                + String.format("Now you have %d tasks in the list.", tasks.size()));
+        ui.showResponse("OK, I've marked this task as not done yet:\n  " + task);
     }
 }

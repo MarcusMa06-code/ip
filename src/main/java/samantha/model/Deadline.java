@@ -1,4 +1,9 @@
+package samantha.model;
+
 import java.time.LocalDate;
+
+import samantha.exception.InputException;
+import samantha.exception.TaskValidationException;
 
 /** A task that must be completed by a specified date or deadline value. */
 public class Deadline extends Task {

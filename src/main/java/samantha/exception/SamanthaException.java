@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Base class for checked exceptions raised by Samantha.
  */

@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Base class for failures while reading, validating, or writing task data.
  */

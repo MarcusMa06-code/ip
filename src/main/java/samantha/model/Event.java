@@ -1,4 +1,9 @@
+package samantha.model;
+
 import java.time.LocalDate;
+
+import samantha.exception.InputException;
+import samantha.exception.TaskValidationException;
 
 public class Event extends Task {
 

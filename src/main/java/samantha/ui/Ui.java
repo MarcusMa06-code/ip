@@ -1,3 +1,5 @@
+package samantha.ui;
+
 import java.util.Scanner;
 
 /**

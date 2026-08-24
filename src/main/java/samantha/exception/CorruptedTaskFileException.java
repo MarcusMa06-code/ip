@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Indicates that a saved task file contains an invalid record.
  */

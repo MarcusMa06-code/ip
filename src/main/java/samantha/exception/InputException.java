@@ -1,3 +1,5 @@
+package samantha.exception;
+
 /**
  * Indicates that user-supplied command input is invalid.
  */
