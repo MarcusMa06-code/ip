@@ -9,6 +9,9 @@ import samantha.parser.Parser;
 import samantha.storage.Storage;
 import samantha.ui.Ui;
 
+/**
+ * Coordinates Samantha's command loop and its task, storage, and UI components.
+ */
 public class Samantha {
     private final TaskList tasks = new TaskList();
     private final Storage storage;
@@ -21,11 +24,23 @@ public class Samantha {
         this(new Storage(), new Ui());
     }
 
+    /**
+     * Creates an application instance with the supplied collaborators.
+     *
+     * @param storage task persistence handler
+     * @param ui console interaction handler
+     */
     private Samantha(Storage storage, Ui ui) {
         this.storage = storage;
         this.ui = ui;
     }
 
+    /**
+     * Loads the persisted tasks into this application's task list.
+     *
+     * @throws TaskFileReadException if the task file cannot be read
+     * @throws CorruptedTaskFileException if a persisted task record is malformed
+     */
     private void loadTasks() throws TaskFileReadException, CorruptedTaskFileException {
         tasks.addAll(storage.load());
     }

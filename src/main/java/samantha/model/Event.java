@@ -5,11 +5,23 @@ import java.time.LocalDate;
 import samantha.exception.InputException;
 import samantha.exception.TaskValidationException;
 
+/**
+ * Represents a task scheduled between a start and end date and time.
+ */
 public class Event extends Task {
 
     private final DateTimeValue from;
     private final DateTimeValue to;
 
+    /**
+     * Creates an event after validating its description and schedule.
+     *
+     * @param name event description
+     * @param from raw value after {@code /from}
+     * @param to raw value after {@code /to}
+     * @throws TaskValidationException if the description or schedule lacks a required value
+     * @throws InputException if a date or time value is invalid
+     */
     public Event(String name, String from, String to)
             throws TaskValidationException, InputException {
         super(name, "event");
@@ -23,6 +35,14 @@ public class Event extends Task {
         this.to = parseEventDateTime(to);
     }
 
+    /**
+     * Parses one endpoint of an event schedule and requires it to contain a time.
+     *
+     * @param text raw schedule endpoint
+     * @return parsed date and time
+     * @throws TaskValidationException if the endpoint does not include a time
+     * @throws InputException if the endpoint has an invalid format
+     */
     private DateTimeValue parseEventDateTime(String text)
             throws TaskValidationException, InputException {
         DateTimeValue dateTime = DateTimeValue.parse(text);
@@ -33,11 +53,22 @@ public class Event extends Task {
         return dateTime;
     }
 
+    /**
+     * Returns the display marker for an event task.
+     *
+     * @return the event marker
+     */
     @Override
     public String getType() {
         return "[E]";
     }
 
+    /**
+     * Returns whether the supplied date falls within this event's inclusive date range.
+     *
+     * @param date date to check
+     * @return {@code true} when the event occurs on {@code date}
+     */
     @Override
     public boolean isOnDate(LocalDate date) {
         LocalDate fromDate = from.getDate().orElseThrow();
@@ -45,11 +76,21 @@ public class Event extends Task {
         return !date.isBefore(fromDate) && !date.isAfter(toDate);
     }
 
+    /**
+     * Returns this event in the user-facing task format.
+     *
+     * @return formatted event task
+     */
     @Override
     public String toString() {
         return String.format("%s (from: %s to: %s)", super.toString(), this.from, this.to);
     }
 
+    /**
+     * Returns this event as one record for the task data file.
+     *
+     * @return serialized event task
+     */
     @Override
     public String toFileString() {
         String schedule = from.toStorageString() + " to " + to.toStorageString();

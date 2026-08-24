@@ -24,21 +24,42 @@ public class Deadline extends Task {
         this.deadline = DateTimeValue.parse(deadline);
     }
 
+    /**
+     * Returns the display marker for a deadline task.
+     *
+     * @return the deadline marker
+     */
     @Override
     public String getType() {
         return "[D]";
     }
 
+    /**
+     * Returns whether this deadline falls on the supplied date.
+     *
+     * @param date date to compare with the deadline
+     * @return {@code true} when the deadline is on {@code date}
+     */
     @Override
     public boolean isOnDate(LocalDate date) {
         return deadline.getDate().orElseThrow().equals(date);
     }
 
+    /**
+     * Returns this deadline in the user-facing task format.
+     *
+     * @return formatted deadline task
+     */
     @Override
     public String toString() {
         return String.format("%s (by: %s)", super.toString(), this.deadline);
     }
 
+    /**
+     * Returns this deadline as one record for the task data file.
+     *
+     * @return serialized deadline task
+     */
     @Override
     public String toFileString() {
         return String.format("D | %d | %s | %s", getStatus() ? 1 : 0, getTaskName(),
