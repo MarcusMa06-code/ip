@@ -25,6 +25,13 @@ public abstract class Task {
 
     public abstract String getType();
 
+    /**
+     * Returns the task in the format used by {@link Storage}.
+     *
+     * @return one serialized task record
+     */
+    public abstract String toFileString();
+
     @Override
     public String toString() {
         String flag = isDone ? "[X] " : "[ ] ";

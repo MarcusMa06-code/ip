@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -6,6 +7,30 @@ import java.util.Scanner;
 public class Samantha {
     private static final String LINE = "____________________________________________________________";
     private final List<Task> tasks = new ArrayList<>();
+    private final Storage storage;
+
+    /**
+     * Creates an empty Samantha instance using the default storage location.
+     */
+    public Samantha() {
+        this(new Storage());
+    }
+
+    private Samantha(Storage storage) {
+        this.storage = storage;
+    }
+
+    private void loadTasks() throws IOException, SamanthaException {
+        tasks.addAll(storage.load());
+    }
+
+    private void saveTasks() throws SamanthaException {
+        try {
+            storage.save(tasks);
+        } catch (IOException e) {
+            throw new SamanthaException("I couldn't save your tasks to disk.");
+        }
+    }
 
     private static void printResponse(String content) {
         System.out.println(LINE + "\n" + content + "\n" + LINE);
@@ -20,6 +45,7 @@ public class Samantha {
         }
         Task newTask = new Deadline(taskName, deadline);
         tasks.add(newTask);
+        saveTasks();
         printAddTaskMsg(newTask);
     }
 
@@ -35,6 +61,7 @@ public class Samantha {
         }
         Task newTask = new Event(taskName, from, to);
         tasks.add(newTask);
+        saveTasks();
         printAddTaskMsg(newTask);
     }
 
@@ -45,6 +72,7 @@ public class Samantha {
 
         Task newTask = new Todo(taskName);
         tasks.add(newTask);
+        saveTasks();
         printAddTaskMsg(newTask);
     }
 
@@ -69,6 +97,7 @@ public class Samantha {
         }
         Task task = tasks.get(id - 1);
         task.markDone();
+        saveTasks();
         printResponse("Nice! I've marked this task as done:\n  " + task);
     }
 
@@ -78,6 +107,7 @@ public class Samantha {
         }
         Task task = tasks.get(id - 1);
         task.markNotDone();
+        saveTasks();
         printResponse("OK, I've marked this task as not done yet:\n  " + task);
     }
 
@@ -88,6 +118,7 @@ public class Samantha {
 
         Task task = tasks.get(id - 1);
         tasks.remove(id - 1);
+        saveTasks();
         printResponse("Noted. I've removed this task:\n  "
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", tasks.size())
@@ -127,11 +158,19 @@ public class Samantha {
                 + " ___) / ___ \\| |  | |/ ___ \\| |\\  | | | |  _  |/ ___ \\ \n"
                 + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
 
+        Samantha samantha = new Samantha(new Storage());
+        try {
+            samantha.loadTasks();
+        } catch (SamanthaException e) {
+            printResponse("Warning: The saved task file is corrupted. Starting with an empty task list.");
+        } catch (IOException e) {
+            printResponse("Warning: I couldn't read the saved tasks. Starting with an empty task list.");
+        }
+
         printResponse(banner
                 + "Hello! I'm Samantha.\n"
                 + "What can I do for you?");
 
-        Samantha samantha = new Samantha();
         Scanner scanner = new Scanner(System.in);
 
         boolean isRunning = true;
