@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Scanner;
 
 public class Samantha {
     private final TaskList tasks = new TaskList();
@@ -139,16 +138,12 @@ public class Samantha {
             samantha.ui.showFileReadErrorWarning();
         }
 
-        samantha.ui.showResponse(banner
-                + "Hello! I'm Samantha.\n"
-                + "What can I do for you?");
-
-        Scanner scanner = new Scanner(System.in);
+        samantha.ui.showWelcome(banner);
 
         boolean isRunning = true;
         while (isRunning) {
             try {
-                String[] parts = Parser.splitCommand(scanner.nextLine());
+                String[] parts = Parser.splitCommand(samantha.ui.readCommand());
                 switch (Parser.parseCommand(parts[0])) {
                     case BYE -> isRunning = false;
                     case LIST -> samantha.printTaskList(Parser.parseListDate(parts));
