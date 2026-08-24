@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.time.LocalDate;
 
 public class Samantha {
     private final TaskList tasks = new TaskList();
@@ -77,17 +76,6 @@ public class Samantha {
         );
     }
 
-    private void printTaskList(LocalDate date) {
-        String message = "Here are the tasks in your list:\n";
-        for (int i = 1; i <= tasks.size(); i++) {
-            Task task = tasks.get(i - 1);
-            if (date == null || task.isOnDate(date)) {
-                message += String.format("%d. %s\n", i, task);
-            }
-        }
-        ui.showResponse(message.stripTrailing());
-    }
-
     private void markDone(int id) throws SamanthaException {
         if (id < 1 || id > tasks.size()) {
             throw new SamanthaException("You entered a task number that does not exist.");
@@ -147,8 +135,12 @@ public class Samantha {
             try {
                 String[] parts = Parser.splitCommand(ui.readCommand());
                 switch (Parser.parseCommand(parts[0])) {
-                    case BYE -> isRunning = false;
-                    case LIST -> printTaskList(Parser.parseListDate(parts));
+                    case BYE -> {
+                        Command command = new ExitCommand();
+                        command.execute(tasks, ui, storage);
+                        isRunning = !command.isExit();
+                    }
+                    case LIST -> new ListCommand(Parser.parseListDate(parts)).execute(tasks, ui, storage);
                     case MARK -> markDone(Parser.parseTaskId(parts));
                     case UNMARK -> markNotDone(Parser.parseTaskId(parts));
                     case TODO -> {
