@@ -29,8 +29,8 @@ class UnmarkCommandTest {
 
         new UnmarkCommand(1).execute(tasks, new Ui(), storage);
 
-        assertFalse(tasks.getTask(1).getStatus());
-        assertFalse(storage.load().getFirst().getStatus());
+        assertFalse(tasks.getTask(1).isDone());
+        assertFalse(storage.load().getFirst().isDone());
     }
 
     @Test
@@ -42,6 +42,6 @@ class UnmarkCommandTest {
 
         assertThrows(InputException.class, () -> new UnmarkCommand(2).execute(tasks, new Ui(),
                 new Storage(temporaryDirectory.resolve("tasks.txt"))));
-        assertTrue(tasks.getTask(1).getStatus());
+        assertTrue(tasks.getTask(1).isDone());
     }
 }

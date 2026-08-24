@@ -94,6 +94,6 @@ public class Event extends Task {
     @Override
     public String toFileString() {
         String schedule = from.toStorageString() + " to " + to.toStorageString();
-        return String.format("E | %d | %s | %s", getStatus() ? 1 : 0, getTaskName(), schedule);
+        return String.format("E | %d | %s | %s", isDone() ? 1 : 0, getTaskName(), schedule);
     }
 }

@@ -62,7 +62,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileString() {
-        return String.format("D | %d | %s | %s", getStatus() ? 1 : 0, getTaskName(),
+        return String.format("D | %d | %s | %s", isDone() ? 1 : 0, getTaskName(),
                 deadline.toStorageString());
     }
 }

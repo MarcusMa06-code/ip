@@ -26,10 +26,10 @@ class MarkCommandTest {
 
         new MarkCommand(2).execute(tasks, new Ui(), storage);
 
-        assertFalse(tasks.getTask(1).getStatus());
-        assertTrue(tasks.getTask(2).getStatus());
-        assertFalse(tasks.getTask(3).getStatus());
-        assertTrue(storage.load().get(1).getStatus());
+        assertFalse(tasks.getTask(1).isDone());
+        assertTrue(tasks.getTask(2).isDone());
+        assertFalse(tasks.getTask(3).isDone());
+        assertTrue(storage.load().get(1).isDone());
     }
 
     @Test
@@ -38,9 +38,9 @@ class MarkCommandTest {
 
         assertThrows(InputException.class, () -> new MarkCommand(4).execute(tasks, new Ui(),
                 new Storage(temporaryDirectory.resolve("tasks.txt"))));
-        assertFalse(tasks.getTask(1).getStatus());
-        assertFalse(tasks.getTask(2).getStatus());
-        assertFalse(tasks.getTask(3).getStatus());
+        assertFalse(tasks.getTask(1).isDone());
+        assertFalse(tasks.getTask(2).isDone());
+        assertFalse(tasks.getTask(3).isDone());
     }
 
     private TaskList taskListWithThreeTodos() throws Exception {

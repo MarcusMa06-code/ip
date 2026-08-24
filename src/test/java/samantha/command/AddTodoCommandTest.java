@@ -39,7 +39,8 @@ class AddTodoCommandTest {
         TaskList tasks = new TaskList();
 
         assertThrows(TaskValidationException.class,
-                () -> new AddTodoCommand(" ").execute(tasks, new Ui(), new Storage(temporaryDirectory.resolve("tasks.txt"))));
+                () -> new AddTodoCommand(" ").execute(
+                        tasks, new Ui(), new Storage(temporaryDirectory.resolve("tasks.txt"))));
         assertEquals(0, tasks.size());
     }
 }
