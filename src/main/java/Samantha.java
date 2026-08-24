@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Samantha {
@@ -79,12 +78,7 @@ public class Samantha {
         );
     }
 
-    private void printTaskList(String[] parts) throws SamanthaException {
-        if (parts.length > 2) {
-            throw new SamanthaException("You entered too many parameters for this operation");
-        }
-
-        LocalDate date = parts.length == 2 ? DateTimeValue.parseDate(parts[1]) : null;
+    private void printTaskList(LocalDate date) {
         String message = "Here are the tasks in your list:\n";
         for (int i = 1; i <= tasks.size(); i++) {
             Task task = tasks.get(i - 1);
@@ -154,31 +148,22 @@ public class Samantha {
         boolean isRunning = true;
         while (isRunning) {
             try {
-                String[] parts = scanner.nextLine().split(" ");
+                String[] parts = Parser.splitCommand(scanner.nextLine());
                 switch (Parser.parseCommand(parts[0])) {
                     case BYE -> isRunning = false;
-                    case LIST -> samantha.printTaskList(parts);
+                    case LIST -> samantha.printTaskList(Parser.parseListDate(parts));
                     case MARK -> samantha.markDone(Parser.parseTaskId(parts));
                     case UNMARK -> samantha.markNotDone(Parser.parseTaskId(parts));
                     case TODO -> {
-                        String taskName = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
-                        samantha.addToDo(taskName);
+                        samantha.addToDo(Parser.parseDescription(parts));
                     }
                     case DEADLINE -> {
-                        String content = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
-                        String[] segments = content.split("\\s*/by\\s*", 2);
-                        if (segments.length < 2) {
-                            throw new SamanthaException("You forgot to include /by for this deadline.");
-                        }
-                        samantha.addDeadline(segments[0].trim(), segments[1].trim());
+                        String[] details = Parser.parseDeadlineDetails(parts);
+                        samantha.addDeadline(details[0], details[1]);
                     }
                     case EVENT -> {
-                        String content = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
-                        String[] segments = content.split("/from|/to");
-                        if (segments.length < 3) {
-                            throw new SamanthaException("You forgot to include /from and /to for this event.");
-                        }
-                        samantha.addEvent(segments[0].trim(), segments[1].trim(), segments[2].trim());
+                        String[] details = Parser.parseEventDetails(parts);
+                        samantha.addEvent(details[0], details[1], details[2]);
                     }
                     case DELETE -> samantha.delete(Parser.parseTaskId(parts));
                 }
