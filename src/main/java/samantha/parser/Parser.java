@@ -54,6 +54,13 @@ public class Parser {
         };
     }
 
+    /**
+     * Converts a command word into its supported command type.
+     *
+     * @param word command word to interpret
+     * @return the matching command type
+     * @throws InputException if the word does not name a supported command
+     */
     private static CommandType parseCommandType(String word) throws InputException {
         try {
             return CommandType.valueOf(word.toUpperCase());
