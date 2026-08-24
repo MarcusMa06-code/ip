@@ -15,7 +15,7 @@ Generate one interactive HTML page containing every changed file as a side-by-si
 4. Run the bundled generator from the repository root:
 
    ```bash
-   python3 .claude/skills/present-changes-visually/scripts/generate-split-view-diff.py \
+   python3 .Codex/skills/present-changes-visually/scripts/generate-split-view-diff.py \
      . HEAD WORKTREE _temp/visual-diff.html
    ```
 
