@@ -6,19 +6,20 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Samantha {
-    private static final String LINE = "____________________________________________________________";
     private final List<Task> tasks = new ArrayList<>();
     private final Storage storage;
+    private final Ui ui;
 
     /**
      * Creates an empty Samantha instance using the default storage location.
      */
     public Samantha() {
-        this(new Storage());
+        this(new Storage(), new Ui());
     }
 
-    private Samantha(Storage storage) {
+    private Samantha(Storage storage, Ui ui) {
         this.storage = storage;
+        this.ui = ui;
     }
 
     private void loadTasks() throws IOException, SamanthaException {
@@ -31,10 +32,6 @@ public class Samantha {
         } catch (IOException e) {
             throw new SamanthaException("I couldn't save your tasks to disk.");
         }
-    }
-
-    private static void printResponse(String content) {
-        System.out.println(LINE + "\n" + content + "\n" + LINE);
     }
 
     private void addDeadline(String taskName, String deadline) throws SamanthaException{
@@ -78,7 +75,7 @@ public class Samantha {
     }
 
     private void printAddTaskMsg(Task task) {
-        printResponse("Got it. I've added this task: \n  "
+        ui.showResponse("Got it. I've added this task: \n  "
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", tasks.size())
         );
@@ -97,7 +94,7 @@ public class Samantha {
                 message += String.format("%d. %s\n", i, task);
             }
         }
-        printResponse(message.stripTrailing());
+        ui.showResponse(message.stripTrailing());
     }
 
     private void markDone(int id) throws SamanthaException {
@@ -107,7 +104,7 @@ public class Samantha {
         Task task = tasks.get(id - 1);
         task.markDone();
         saveTasks();
-        printResponse("Nice! I've marked this task as done:\n  " + task);
+        ui.showResponse("Nice! I've marked this task as done:\n  " + task);
     }
 
     private void markNotDone(int id) throws SamanthaException {
@@ -117,7 +114,7 @@ public class Samantha {
         Task task = tasks.get(id - 1);
         task.markNotDone();
         saveTasks();
-        printResponse("OK, I've marked this task as not done yet:\n  " + task);
+        ui.showResponse("OK, I've marked this task as not done yet:\n  " + task);
     }
 
     private void delete(int id) throws SamanthaException {
@@ -128,7 +125,7 @@ public class Samantha {
         Task task = tasks.get(id - 1);
         tasks.remove(id - 1);
         saveTasks();
-        printResponse("Noted. I've removed this task:\n  "
+        ui.showResponse("Noted. I've removed this task:\n  "
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", tasks.size())
         );
@@ -167,16 +164,16 @@ public class Samantha {
                 + " ___) / ___ \\| |  | |/ ___ \\| |\\  | | | |  _  |/ ___ \\ \n"
                 + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
 
-        Samantha samantha = new Samantha(new Storage());
+        Samantha samantha = new Samantha();
         try {
             samantha.loadTasks();
         } catch (SamanthaException e) {
-            printResponse("Warning: The saved task file is corrupted. Starting with an empty task list.");
+            samantha.ui.showCorruptedFileWarning();
         } catch (IOException e) {
-            printResponse("Warning: I couldn't read the saved tasks. Starting with an empty task list.");
+            samantha.ui.showFileReadErrorWarning();
         }
 
-        printResponse(banner
+        samantha.ui.showResponse(banner
                 + "Hello! I'm Samantha.\n"
                 + "What can I do for you?");
 
@@ -214,10 +211,10 @@ public class Samantha {
                     case DELETE -> samantha.delete(samantha.parseID(parts));
                 }
             } catch (SamanthaException e) {
-                printResponse(e.getMessage());
+                samantha.ui.showResponse(e.getMessage());
             }
         }
 
-        printResponse("Bye. Let's talk next time!");
+        samantha.ui.showGoodbye();
     }
 }

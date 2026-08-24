@@ -1,0 +1,36 @@
+/**
+ * Handles Samantha's console-based interactions with the user.
+ */
+public class Ui {
+    private static final String LINE = "____________________________________________________________";
+
+    /**
+     * Displays one formatted response in the console.
+     *
+     * @param content the response content to display
+     */
+    public void showResponse(String content) {
+        System.out.println(LINE + "\n" + content + "\n" + LINE);
+    }
+
+    /**
+     * Displays a warning that the saved task file is malformed.
+     */
+    public void showCorruptedFileWarning() {
+        showResponse("Warning: The saved task file is corrupted. Starting with an empty task list.");
+    }
+
+    /**
+     * Displays a warning that the saved task file could not be read.
+     */
+    public void showFileReadErrorWarning() {
+        showResponse("Warning: I couldn't read the saved tasks. Starting with an empty task list.");
+    }
+
+    /**
+     * Displays Samantha's farewell message.
+     */
+    public void showGoodbye() {
+        showResponse("Bye. Let's talk next time!");
+    }
+}
