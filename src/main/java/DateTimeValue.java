@@ -37,10 +37,10 @@ public final class DateTimeValue {
      *
      * @param text raw text after {@code /by}
      * @return a parsed deadline value
-     * @throws SamanthaException if the value is empty or does not follow the
+     * @throws InputException if the value is empty or does not follow the
      *         supported date format
      */
-    public static DateTimeValue parse(String text) throws SamanthaException {
+    public static DateTimeValue parse(String text) throws InputException {
         String value = text.trim();
         if (value.isEmpty()) {
             throw new MissingDateTimeException();
@@ -70,7 +70,7 @@ public final class DateTimeValue {
         }
     }
 
-    public static LocalDate parseDate(String text) throws SamanthaException {
+    public static LocalDate parseDate(String text) throws InputException {
         DateTimeValue value = parse(text);
         if (value.getTime().isPresent()) {
             throw invalidFormat();

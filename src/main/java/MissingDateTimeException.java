@@ -1,7 +1,7 @@
 /**
  * Indicates that a date or date-time value was not supplied.
  */
-public class MissingDateTimeException extends SamanthaException {
+public class MissingDateTimeException extends InputException {
     /**
      * Creates an exception for a missing deadline value.
      */

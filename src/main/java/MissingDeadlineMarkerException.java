@@ -1,7 +1,7 @@
 /**
  * Indicates that a deadline command does not contain its {@code /by} marker.
  */
-public class MissingDeadlineMarkerException extends SamanthaException {
+public class MissingDeadlineMarkerException extends InputException {
     /**
      * Creates an exception for a deadline without a {@code /by} marker.
      */

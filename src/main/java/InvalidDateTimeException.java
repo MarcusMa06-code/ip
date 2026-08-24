@@ -1,7 +1,7 @@
 /**
  * Indicates that a date or date-time value has an unsupported format.
  */
-public class InvalidDateTimeException extends SamanthaException {
+public class InvalidDateTimeException extends InputException {
     /**
      * Creates an exception for an incorrectly formatted date or date-time.
      */

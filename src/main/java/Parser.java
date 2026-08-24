@@ -18,9 +18,9 @@ public class Parser {
      *
      * @param fullCommand complete command entered by the user
      * @return an executable command
-     * @throws SamanthaException if the command or its arguments are invalid
+     * @throws InputException if the command or its arguments are invalid
      */
-    public static Command parse(String fullCommand) throws SamanthaException {
+    public static Command parse(String fullCommand) throws InputException {
         String[] parts = splitCommand(fullCommand);
         return switch (parseCommandType(parts[0])) {
         case BYE -> new ExitCommand();
@@ -73,9 +73,9 @@ public class Parser {
      *
      * @param parts words from a deadline command
      * @return a two-element array containing the description and deadline
-     * @throws SamanthaException if the command does not contain {@code /by}
+     * @throws InputException if the command does not contain {@code /by}
      */
-    public static String[] parseDeadlineDetails(String[] parts) throws SamanthaException {
+    public static String[] parseDeadlineDetails(String[] parts) throws InputException {
         String[] segments = parseDescription(parts).split("\\s*/by\\s*", 2);
         if (segments.length < 2) {
             throw new MissingDeadlineMarkerException();
@@ -88,9 +88,9 @@ public class Parser {
      *
      * @param parts words from an event command
      * @return a three-element array containing the description, start time, and end time
-     * @throws SamanthaException if the command does not contain both {@code /from} and {@code /to}
+     * @throws InputException if the command does not contain both {@code /from} and {@code /to}
      */
-    public static String[] parseEventDetails(String[] parts) throws SamanthaException {
+    public static String[] parseEventDetails(String[] parts) throws InputException {
         String[] segments = parseDescription(parts).split("/from|/to");
         if (segments.length < 3) {
             throw new MissingEventMarkersException();
@@ -103,9 +103,9 @@ public class Parser {
      *
      * @param parts words from a list command
      * @return the requested date, or {@code null} when no date was given
-     * @throws SamanthaException if too many arguments were supplied or the date is invalid
+     * @throws InputException if too many arguments were supplied or the date is invalid
      */
-    public static LocalDate parseListDate(String[] parts) throws SamanthaException {
+    public static LocalDate parseListDate(String[] parts) throws InputException {
         if (parts.length > 2) {
             throw new TooManyArgumentsException();
         }
@@ -117,9 +117,9 @@ public class Parser {
      *
      * @param parts words from the user command
      * @return the parsed task ID
-     * @throws SamanthaException if the command has a missing, extra, or non-numeric ID
+     * @throws InputException if the command has a missing, extra, or non-numeric ID
      */
-    public static int parseTaskId(String[] parts) throws SamanthaException {
+    public static int parseTaskId(String[] parts) throws InputException {
         if (parts.length > 2) {
             throw new TooManyArgumentsException();
         } else if (parts.length == 2) {

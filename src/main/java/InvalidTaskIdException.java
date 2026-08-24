@@ -1,7 +1,7 @@
 /**
  * Indicates that a task ID could not be parsed as a number.
  */
-public class InvalidTaskIdException extends SamanthaException {
+public class InvalidTaskIdException extends InputException {
     /**
      * Creates an exception for a non-numeric task ID.
      */

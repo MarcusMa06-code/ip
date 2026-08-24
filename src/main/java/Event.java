@@ -5,7 +5,8 @@ public class Event extends Task {
     private final DateTimeValue from;
     private final DateTimeValue to;
 
-    public Event(String name, String from, String to) throws SamanthaException {
+    public Event(String name, String from, String to)
+            throws TaskValidationException, InputException {
         super(name, "event");
         if (from.isBlank()) {
             throw new MissingEventStartException();
@@ -17,7 +18,8 @@ public class Event extends Task {
         this.to = parseEventDateTime(to);
     }
 
-    private DateTimeValue parseEventDateTime(String text) throws SamanthaException {
+    private DateTimeValue parseEventDateTime(String text)
+            throws InvalidEventTimeException, InputException {
         DateTimeValue dateTime = DateTimeValue.parse(text);
         if (dateTime.getTime().isEmpty()) {
             throw new InvalidEventTimeException();

@@ -1,7 +1,7 @@
 /**
  * Indicates that a task command did not include a task ID.
  */
-public class MissingTaskIdException extends SamanthaException {
+public class MissingTaskIdException extends InputException {
     /**
      * Creates an exception for a missing task ID.
      */

@@ -1,7 +1,7 @@
 /**
  * Indicates that a command word is not supported by Samantha.
  */
-public class InvalidCommandException extends SamanthaException {
+public class InvalidCommandException extends InputException {
     /**
      * Creates an exception for an unsupported command word.
      */
