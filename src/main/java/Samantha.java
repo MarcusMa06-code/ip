@@ -1,12 +1,10 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class Samantha {
-    private final List<Task> tasks = new ArrayList<>();
+    private final TaskList tasks = new TaskList();
     private final Storage storage;
     private final Ui ui;
 
@@ -28,7 +26,7 @@ public class Samantha {
 
     private void saveTasks() throws SamanthaException {
         try {
-            storage.save(tasks);
+            storage.save(tasks.asList());
         } catch (IOException e) {
             throw new SamanthaException("I couldn't save your tasks to disk.");
         }
