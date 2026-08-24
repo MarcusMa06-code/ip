@@ -51,4 +51,19 @@ public abstract class Command {
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", taskCount));
     }
+
+    /**
+     * Returns the task for a one-based task ID after validating its range.
+     *
+     * @param tasks current task list
+     * @param taskId one-based task ID
+     * @return the matching task
+     * @throws SamanthaException if the task ID is outside the task list
+     */
+    protected Task getTask(TaskList tasks, int taskId) throws SamanthaException {
+        if (taskId < 1 || taskId > tasks.size()) {
+            throw new SamanthaException("You entered a task number that does not exist.");
+        }
+        return tasks.get(taskId - 1);
+    }
 }

@@ -21,48 +21,6 @@ public class Samantha {
         tasks.addAll(storage.load());
     }
 
-    private void saveTasks() throws SamanthaException {
-        try {
-            storage.save(tasks.asList());
-        } catch (IOException e) {
-            throw new SamanthaException("I couldn't save your tasks to disk.");
-        }
-    }
-
-    private void markDone(int id) throws SamanthaException {
-        if (id < 1 || id > tasks.size()) {
-            throw new SamanthaException("You entered a task number that does not exist.");
-        }
-        Task task = tasks.get(id - 1);
-        task.markDone();
-        saveTasks();
-        ui.showResponse("Nice! I've marked this task as done:\n  " + task);
-    }
-
-    private void markNotDone(int id) throws SamanthaException {
-        if (id < 1 || id > tasks.size()) {
-            throw new SamanthaException("You entered a task number that does not exist.");
-        }
-        Task task = tasks.get(id - 1);
-        task.markNotDone();
-        saveTasks();
-        ui.showResponse("OK, I've marked this task as not done yet:\n  " + task);
-    }
-
-    private void delete(int id) throws SamanthaException {
-        if (id < 1 || id > tasks.size()) {
-            throw new SamanthaException("You entered a task number that does not exist.");
-        }
-
-        Task task = tasks.get(id - 1);
-        tasks.remove(id - 1);
-        saveTasks();
-        ui.showResponse("Noted. I've removed this task:\n  "
-                + task + "\n"
-                + String.format("Now you have %d tasks in the list.", tasks.size())
-        );
-    }
-
     /**
      * Runs the application until the user enters the exit command.
      */
@@ -94,8 +52,8 @@ public class Samantha {
                         isRunning = !command.isExit();
                     }
                     case LIST -> new ListCommand(Parser.parseListDate(parts)).execute(tasks, ui, storage);
-                    case MARK -> markDone(Parser.parseTaskId(parts));
-                    case UNMARK -> markNotDone(Parser.parseTaskId(parts));
+                    case MARK -> new MarkCommand(Parser.parseTaskId(parts)).execute(tasks, ui, storage);
+                    case UNMARK -> new UnmarkCommand(Parser.parseTaskId(parts)).execute(tasks, ui, storage);
                     case TODO -> {
                         new AddTodoCommand(Parser.parseDescription(parts)).execute(tasks, ui, storage);
                     }
@@ -107,7 +65,7 @@ public class Samantha {
                         String[] details = Parser.parseEventDetails(parts);
                         new AddEventCommand(details[0], details[1], details[2]).execute(tasks, ui, storage);
                     }
-                    case DELETE -> delete(Parser.parseTaskId(parts));
+                    case DELETE -> new DeleteCommand(Parser.parseTaskId(parts)).execute(tasks, ui, storage);
                 }
             } catch (SamanthaException e) {
                 ui.showResponse(e.getMessage());
