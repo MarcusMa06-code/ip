@@ -44,7 +44,8 @@ public class Storage {
         return tasks;
     }
 
-    private Task parseTask(String[] parts) throws SamanthaException {
+    private Task parseTask(String[] parts)
+            throws MalformedTaskRecordException, TaskValidationException, InputException {
         if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new MalformedTaskRecordException("Malformed task record");
         }
@@ -92,13 +93,14 @@ public class Storage {
         return task;
     }
 
-    private void requirePartCount(String[] parts, int expected) throws SamanthaException {
+    private void requirePartCount(String[] parts, int expected)
+            throws MalformedTaskRecordException {
         if (parts.length != expected) {
             throw new MalformedTaskRecordException("Wrong number of fields");
         }
     }
 
-    private String requireText(String value) throws SamanthaException {
+    private String requireText(String value) throws MalformedTaskRecordException {
         String text = value.trim();
         if (text.isEmpty()) {
             throw new MalformedTaskRecordException("Task fields cannot be empty");
