@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 /**
  * Represents an executable user command.
  */
@@ -25,18 +23,14 @@ public abstract class Command {
     }
 
     /**
-     * Saves the current task list and converts storage failures to application errors.
+     * Saves the current task list through the storage component.
      *
      * @param tasks task list to save
      * @param storage task persistence handler
-     * @throws SamanthaException if the task list cannot be saved
+     * @throws TaskFileWriteException if the task list cannot be saved
      */
-    protected void saveTasks(TaskList tasks, Storage storage) throws SamanthaException {
-        try {
-            storage.save(tasks.asList());
-        } catch (IOException e) {
-            throw new SamanthaException("I couldn't save your tasks to disk.");
-        }
+    protected void saveTasks(TaskList tasks, Storage storage) throws TaskFileWriteException {
+        storage.save(tasks.asList());
     }
 
     /**

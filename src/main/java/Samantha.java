@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class Samantha {
     private final TaskList tasks = new TaskList();
     private final Storage storage;
@@ -17,7 +15,7 @@ public class Samantha {
         this.ui = ui;
     }
 
-    private void loadTasks() throws IOException, SamanthaException {
+    private void loadTasks() throws TaskFileReadException, CorruptedTaskFileException {
         tasks.addAll(storage.load());
     }
 
@@ -33,9 +31,9 @@ public class Samantha {
 
         try {
             loadTasks();
-        } catch (SamanthaException e) {
+        } catch (CorruptedTaskFileException e) {
             ui.showCorruptedFileWarning();
-        } catch (IOException e) {
+        } catch (TaskFileReadException e) {
             ui.showFileReadErrorWarning();
         }
 
