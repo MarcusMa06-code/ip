@@ -38,5 +38,6 @@ Do not commit or push unless explicitly asked.
 
 After every code update under `src/main/java`:
 
-1. Update `test/ui-test-plan.md` if the change affects command behavior or output (new commands, changed messages, newly-handled edge cases) — add or edit test cases per the format documented at the top of that file.
-2. Invoke the `test-ui` skill to run the test plan against the updated code, and report the result (or the actual-vs-expected failure) back to the user.
+1. Review and update the JUnit tests under `src/test/java` for the changed behavior. Maintain approximately 50% coverage of the project's highest-value methods, prioritizing complex, core, and critical business logic over trivial getters, constructors, and thin UI adapters. Add or adjust tests for relevant normal, boundary, and error cases.
+2. Update `test/ui-test-plan.md` if the change affects command behavior or output (new commands, changed messages, newly-handled edge cases) — add or edit test cases per the format documented at the top of that file.
+3. Invoke the `test-ui` skill to run the test plan against the updated code, and report the result (or the actual-vs-expected failure) back to the user.

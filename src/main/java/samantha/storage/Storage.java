@@ -21,7 +21,27 @@ import samantha.model.Todo;
  * Handles persistence of Samantha's task list.
  */
 public class Storage {
-    private static final Path FILE = Path.of("data", "samantha.txt");
+    private static final Path DEFAULT_FILE = Path.of("data", "samantha.txt");
+    private final Path file;
+
+    /**
+     * Creates storage using Samantha's default data-file location.
+     */
+    public Storage() {
+        this(DEFAULT_FILE);
+    }
+
+    /**
+     * Creates storage backed by the supplied file.
+     *
+     * <p>This constructor is useful when a caller needs an isolated storage
+     * location, such as for automated tests.</p>
+     *
+     * @param file location of the task data file
+     */
+    public Storage(Path file) {
+        this.file = file;
+    }
 
     /**
      * Loads all tasks from the data file.
@@ -35,13 +55,13 @@ public class Storage {
      */
     public ArrayList<Task> load() throws TaskFileReadException, CorruptedTaskFileException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(FILE)) {
+        if (!Files.exists(file)) {
             return tasks;
         }
 
         List<String> lines;
         try {
-            lines = Files.readAllLines(FILE);
+            lines = Files.readAllLines(file);
         } catch (IOException e) {
             throw new TaskFileReadException(e);
         }
@@ -128,12 +148,12 @@ public class Storage {
      */
     public void save(List<Task> tasks) throws TaskFileWriteException {
         try {
-            Path parent = FILE.getParent();
+            Path parent = file.getParent();
             if (parent != null) {
                 Files.createDirectories(parent);
             }
 
-            try (var writer = Files.newBufferedWriter(FILE)) {
+            try (var writer = Files.newBufferedWriter(file)) {
                 for (Task task : tasks) {
                     writer.write(task.toFileString());
                     writer.newLine();
