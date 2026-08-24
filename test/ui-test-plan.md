@@ -138,6 +138,69 @@ bye
 Bye. Let's talk next time!
 ```
 
+## Test 12: Find tasks by description keyword
+
+**Aim:** `find <keyword>` searches task descriptions without regard to case,
+shows matching todo and deadline tasks in their original order and numbering,
+and reports no task lines when there are no matches.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+deadline return book /by 6-6-2019
+```
+```expected
+Got it. I've added this task:
+  [D][ ] return book (by: Jun 6 2019)
+Now you have 2 tasks in the list.
+```
+
+```input
+todo join club
+```
+```expected
+Got it. I've added this task:
+  [T][ ] join club
+Now you have 3 tasks in the list.
+```
+
+```input
+find BOOK
+```
+```expected
+Here are the matching tasks in your list:
+1. [T][ ] read book
+2. [D][ ] return book (by: Jun 6 2019)
+```
+
+```input
+find holiday
+```
+```expected
+Here are the matching tasks in your list:
+```
+
+```input
+find
+```
+```expected
+You forgot to mention the keyword to search for.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
 ## Test 10: Parse numeric deadline dates with optional times
 
 **Aim:** A numeric deadline is stored as a date rather than raw text, accepts

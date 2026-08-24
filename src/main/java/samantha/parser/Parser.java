@@ -9,6 +9,7 @@ import samantha.command.AddTodoCommand;
 import samantha.command.Command;
 import samantha.command.DeleteCommand;
 import samantha.command.ExitCommand;
+import samantha.command.FindCommand;
 import samantha.command.ListCommand;
 import samantha.command.MarkCommand;
 import samantha.command.UnmarkCommand;
@@ -30,7 +31,7 @@ public class Parser {
      * Represents the commands supported by Samantha.
      */
     private enum CommandType {
-        BYE, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE
+        BYE, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND
     }
 
     /**
@@ -57,6 +58,7 @@ public class Parser {
         case MARK -> new MarkCommand(parseTaskId(parts));
         case UNMARK -> new UnmarkCommand(parseTaskId(parts));
         case DELETE -> new DeleteCommand(parseTaskId(parts));
+        case FIND -> new FindCommand(parseFindKeyword(parts));
         };
     }
 
@@ -93,6 +95,21 @@ public class Parser {
      */
     public static String parseDescription(String[] parts) {
         return String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
+    }
+
+    /**
+     * Extracts and validates the keyword following a {@code find} command.
+     *
+     * @param parts words from the user command
+     * @return the keyword to search for
+     * @throws InputException if no keyword was supplied
+     */
+    public static String parseFindKeyword(String[] parts) throws InputException {
+        String keyword = parseDescription(parts).trim();
+        if (keyword.isEmpty()) {
+            throw new InputException("You forgot to mention the keyword to search for.");
+        }
+        return keyword;
     }
 
     /**
