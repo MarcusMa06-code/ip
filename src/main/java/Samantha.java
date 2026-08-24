@@ -41,34 +41,14 @@ public class Samantha {
 
         ui.showWelcome(banner);
 
-        boolean isRunning = true;
-        while (isRunning) {
+        boolean isExit = false;
+        while (!isExit) {
             try {
-                String[] parts = Parser.splitCommand(ui.readCommand());
-                switch (Parser.parseCommand(parts[0])) {
-                    case BYE -> {
-                        Command command = new ExitCommand();
-                        command.execute(tasks, ui, storage);
-                        isRunning = !command.isExit();
-                    }
-                    case LIST -> new ListCommand(Parser.parseListDate(parts)).execute(tasks, ui, storage);
-                    case MARK -> new MarkCommand(Parser.parseTaskId(parts)).execute(tasks, ui, storage);
-                    case UNMARK -> new UnmarkCommand(Parser.parseTaskId(parts)).execute(tasks, ui, storage);
-                    case TODO -> {
-                        new AddTodoCommand(Parser.parseDescription(parts)).execute(tasks, ui, storage);
-                    }
-                    case DEADLINE -> {
-                        String[] details = Parser.parseDeadlineDetails(parts);
-                        new AddDeadlineCommand(details[0], details[1]).execute(tasks, ui, storage);
-                    }
-                    case EVENT -> {
-                        String[] details = Parser.parseEventDetails(parts);
-                        new AddEventCommand(details[0], details[1], details[2]).execute(tasks, ui, storage);
-                    }
-                    case DELETE -> new DeleteCommand(Parser.parseTaskId(parts)).execute(tasks, ui, storage);
-                }
+                Command command = Parser.parse(ui.readCommand());
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (SamanthaException e) {
-                ui.showResponse(e.getMessage());
+                ui.showError(e.getMessage());
             }
         }
 

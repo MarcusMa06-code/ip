@@ -37,6 +37,15 @@ public class Ui {
     }
 
     /**
+     * Displays an error message in the standard response format.
+     *
+     * @param message error message to display
+     */
+    public void showError(String message) {
+        showResponse(message);
+    }
+
+    /**
      * Displays a warning that the saved task file is malformed.
      */
     public void showCorruptedFileWarning() {

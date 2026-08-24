@@ -9,20 +9,40 @@ public class Parser {
     /**
      * Represents the commands supported by Samantha.
      */
-    public enum Command {
+    private enum CommandType {
         BYE, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE
     }
 
     /**
-     * Converts a command word into a supported command.
+     * Converts a complete user command into an executable command object.
      *
-     * @param word command word entered by the user
-     * @return the corresponding command
-     * @throws SamanthaException if the word is not a supported command
+     * @param fullCommand complete command entered by the user
+     * @return an executable command
+     * @throws SamanthaException if the command or its arguments are invalid
      */
-    public static Command parseCommand(String word) throws SamanthaException {
+    public static Command parse(String fullCommand) throws SamanthaException {
+        String[] parts = splitCommand(fullCommand);
+        return switch (parseCommandType(parts[0])) {
+        case BYE -> new ExitCommand();
+        case LIST -> new ListCommand(parseListDate(parts));
+        case TODO -> new AddTodoCommand(parseDescription(parts));
+        case DEADLINE -> {
+            String[] details = parseDeadlineDetails(parts);
+            yield new AddDeadlineCommand(details[0], details[1]);
+        }
+        case EVENT -> {
+            String[] details = parseEventDetails(parts);
+            yield new AddEventCommand(details[0], details[1], details[2]);
+        }
+        case MARK -> new MarkCommand(parseTaskId(parts));
+        case UNMARK -> new UnmarkCommand(parseTaskId(parts));
+        case DELETE -> new DeleteCommand(parseTaskId(parts));
+        };
+    }
+
+    private static CommandType parseCommandType(String word) throws SamanthaException {
         try {
-            return Command.valueOf(word.toUpperCase());
+            return CommandType.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new SamanthaException("It seems that you entered a wrong command.");
         }
