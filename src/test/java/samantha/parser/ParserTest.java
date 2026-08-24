@@ -19,6 +19,7 @@ import samantha.command.AddEventCommand;
 import samantha.command.AddTodoCommand;
 import samantha.command.DeleteCommand;
 import samantha.command.ExitCommand;
+import samantha.command.FindCommand;
 import samantha.command.ListCommand;
 import samantha.command.MarkCommand;
 import samantha.command.UnmarkCommand;
@@ -36,6 +37,7 @@ class ParserTest {
         return Stream.of(
                 Arguments.of("bye", ExitCommand.class),
                 Arguments.of("LIST", ListCommand.class),
+                Arguments.of("find book", FindCommand.class),
                 Arguments.of("todo read book", AddTodoCommand.class),
                 Arguments.of("deadline return book /by 2/12/2019", AddDeadlineCommand.class),
                 Arguments.of("event meeting /from 2/12/2019 1400 /to 2/12/2019 1600", AddEventCommand.class),
@@ -55,6 +57,17 @@ class ParserTest {
 
         assertArrayEquals(new String[] {"todo", "buy", "groceries", "today"}, parts);
         assertEquals("buy groceries today", Parser.parseDescription(parts));
+    }
+
+    @Test
+    void parseFindKeyword_validKeyword_returnsTrimmedKeyword() throws InputException {
+        assertEquals("book", Parser.parseFindKeyword(Parser.splitCommand("find book ")));
+    }
+
+    @Test
+    void parseFindKeyword_missingKeyword_inputExceptionThrown() {
+        assertThrows(InputException.class,
+                () -> Parser.parseFindKeyword(Parser.splitCommand("find")));
     }
 
     @Test
