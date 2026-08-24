@@ -10,6 +10,12 @@ import samantha.ui.Ui;
 public class ExitCommand extends Command {
 
     /**
+     * Creates a command that ends the application loop.
+     */
+    public ExitCommand() {
+    }
+
+    /**
      * Performs no task operation because the application loop handles shutdown.
      *
      * @param tasks current task list

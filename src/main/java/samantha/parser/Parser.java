@@ -21,6 +21,12 @@ import samantha.model.DateTimeValue;
 public class Parser {
 
     /**
+     * Creates a parser for Samantha commands.
+     */
+    public Parser() {
+    }
+
+    /**
      * Represents the commands supported by Samantha.
      */
     private enum CommandType {
