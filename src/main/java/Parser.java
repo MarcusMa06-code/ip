@@ -40,11 +40,11 @@ public class Parser {
         };
     }
 
-    private static CommandType parseCommandType(String word) throws InvalidCommandException {
+    private static CommandType parseCommandType(String word) throws InputException {
         try {
             return CommandType.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new InvalidCommandException();
+            throw new InputException("It seems that you entered a wrong command.");
         }
     }
 
@@ -78,7 +78,7 @@ public class Parser {
     public static String[] parseDeadlineDetails(String[] parts) throws InputException {
         String[] segments = parseDescription(parts).split("\\s*/by\\s*", 2);
         if (segments.length < 2) {
-            throw new MissingDeadlineMarkerException();
+            throw new InputException("You forgot to include /by for this deadline.");
         }
         return new String[] {segments[0].trim(), segments[1].trim()};
     }
@@ -93,7 +93,7 @@ public class Parser {
     public static String[] parseEventDetails(String[] parts) throws InputException {
         String[] segments = parseDescription(parts).split("/from|/to");
         if (segments.length < 3) {
-            throw new MissingEventMarkersException();
+            throw new InputException("You forgot to include /from and /to for this event.");
         }
         return new String[] {segments[0].trim(), segments[1].trim(), segments[2].trim()};
     }
@@ -107,7 +107,7 @@ public class Parser {
      */
     public static LocalDate parseListDate(String[] parts) throws InputException {
         if (parts.length > 2) {
-            throw new TooManyArgumentsException();
+            throw new InputException("You entered too many parameters for this operation");
         }
         return parts.length == 2 ? DateTimeValue.parseDate(parts[1]) : null;
     }
@@ -121,15 +121,15 @@ public class Parser {
      */
     public static int parseTaskId(String[] parts) throws InputException {
         if (parts.length > 2) {
-            throw new TooManyArgumentsException();
+            throw new InputException("You entered too many parameters for this operation");
         } else if (parts.length == 2) {
             try {
                 return Integer.parseInt(parts[1]);
             } catch (NumberFormatException e) {
-                throw new InvalidTaskIdException();
+                throw new InputException("You need to enter a number for the task id.");
             }
         } else {
-            throw new MissingTaskIdException();
+            throw new InputException("You forgot to mention the id of the task");
         }
     }
 }

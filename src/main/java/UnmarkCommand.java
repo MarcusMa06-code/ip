@@ -19,12 +19,12 @@ public class UnmarkCommand extends Command {
      * @param tasks current task list
      * @param ui console interaction handler
      * @param storage task persistence handler
-     * @throws TaskNotFoundException if the task ID does not exist
+     * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage)
-            throws TaskNotFoundException, TaskFileWriteException {
+            throws InputException, TaskFileWriteException {
         Task task = getTask(tasks, taskId);
         task.markNotDone();
         saveTasks(tasks, storage);

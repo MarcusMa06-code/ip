@@ -11,12 +11,10 @@ public abstract class Command {
      * @param storage task persistence handler
      * @throws TaskValidationException if task data is invalid
      * @throws InputException if a task value has invalid input format
-     * @throws TaskNotFoundException if a referenced task does not exist
      * @throws TaskFileWriteException if the task list cannot be saved
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage)
-            throws TaskValidationException, InputException,
-            TaskNotFoundException, TaskFileWriteException;
+            throws TaskValidationException, InputException, TaskFileWriteException;
 
     /**
      * Returns whether executing this command should end the application.
@@ -57,9 +55,9 @@ public abstract class Command {
      * @param tasks current task list
      * @param taskId one-based task ID
      * @return the matching task
-     * @throws TaskNotFoundException if the task ID is outside the task list
+     * @throws InputException if the task ID is outside the task list
      */
-    protected Task getTask(TaskList tasks, int taskId) throws TaskNotFoundException {
+    protected Task getTask(TaskList tasks, int taskId) throws InputException {
         return tasks.getTask(taskId);
     }
 }

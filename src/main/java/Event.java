@@ -9,20 +9,21 @@ public class Event extends Task {
             throws TaskValidationException, InputException {
         super(name, "event");
         if (from.isBlank()) {
-            throw new MissingEventStartException();
+            throw new TaskValidationException("You need to specify a start time after /from.");
         }
         if (to.isBlank()) {
-            throw new MissingEventEndException();
+            throw new TaskValidationException("You need to specify an end time after /to.");
         }
         this.from = parseEventDateTime(from);
         this.to = parseEventDateTime(to);
     }
 
     private DateTimeValue parseEventDateTime(String text)
-            throws InvalidEventTimeException, InputException {
+            throws TaskValidationException, InputException {
         DateTimeValue dateTime = DateTimeValue.parse(text);
         if (dateTime.getTime().isEmpty()) {
-            throw new InvalidEventTimeException();
+            throw new TaskValidationException(
+                    "An event date and time must include a time in HHmm format.");
         }
         return dateTime;
     }

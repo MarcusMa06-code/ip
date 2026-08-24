@@ -12,11 +12,12 @@ public abstract class Task {
      *
      * @param name task description
      * @param taskType user-facing task type name
-     * @throws EmptyTaskDescriptionException if the description is blank
+     * @throws TaskValidationException if the description is blank
      */
-    public Task(String name, String taskType) throws EmptyTaskDescriptionException {
+    public Task(String name, String taskType) throws TaskValidationException {
         if (name.isBlank()) {
-            throw new EmptyTaskDescriptionException(taskType);
+            throw new TaskValidationException("The description of a " + taskType
+                    + " cannot be empty.");
         }
         this.taskName = name;
         this.isDone = false;

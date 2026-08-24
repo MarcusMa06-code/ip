@@ -2,7 +2,7 @@ import java.time.LocalDate;
 
 public class Todo extends Task{
 
-    public Todo(String name) throws EmptyTaskDescriptionException {
+    public Todo(String name) throws TaskValidationException {
         super(name, "todo");
     }
 

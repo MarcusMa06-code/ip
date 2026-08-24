@@ -1,13 +1,13 @@
 /**
- * Base class for failures caused by invalid user-supplied command input.
+ * Indicates that user-supplied command input is invalid.
  */
-public abstract class InputException extends SamanthaException {
+public class InputException extends SamanthaException {
     /**
      * Creates an input exception with a user-facing message.
      *
      * @param message explanation of the invalid input
      */
-    protected InputException(String message) {
+    public InputException(String message) {
         super(message);
     }
 }
