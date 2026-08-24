@@ -30,6 +30,12 @@ public final class DateTimeValue {
     private final LocalDate date;
     private final Optional<LocalTime> time;
 
+    /**
+     * Creates a parsed date value with an optional time component.
+     *
+     * @param date parsed date
+     * @param time parsed time, if supplied
+     */
     private DateTimeValue(LocalDate date, Optional<LocalTime> time) {
         this.date = date;
         this.time = time;
@@ -74,6 +80,13 @@ public final class DateTimeValue {
         }
     }
 
+    /**
+     * Parses a date-only value in the supported date formats.
+     *
+     * @param text raw date text
+     * @return the parsed date
+     * @throws InputException if the value is invalid or includes a time
+     */
     public static LocalDate parseDate(String text) throws InputException {
         DateTimeValue value = parse(text);
         if (value.getTime().isPresent()) {
@@ -82,6 +95,11 @@ public final class DateTimeValue {
         return value.date;
     }
 
+    /**
+     * Creates the shared validation exception for unsupported date input.
+     *
+     * @return an exception describing the required format
+     */
     private static InputException invalidFormat() {
         return new InputException(
                 "The date and time must use d/M/yyyy or d-M-yyyy, optionally followed by HHmm.");
@@ -100,6 +118,11 @@ public final class DateTimeValue {
                 .orElse(formattedDate);
     }
 
+    /**
+     * Returns the value in the stable format used in saved task records.
+     *
+     * @return a storage-compatible date and optional time value
+     */
     public String toStorageString() {
         String storedDate = date.format(STORAGE_DATE_FORMAT);
         return time.map(value -> storedDate + " "

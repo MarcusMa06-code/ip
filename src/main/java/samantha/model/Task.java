@@ -28,24 +28,47 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /** Marks this task as complete. */
     public void markDone() {
         this.isDone = true;
     }
 
+    /** Marks this task as incomplete. */
     public void markNotDone() {
         this.isDone = false;
     }
 
+    /**
+     * Returns this task's description.
+     *
+     * @return task description
+     */
     public String getTaskName() {
         return this.taskName;
     }
 
+    /**
+     * Returns this task's completion state.
+     *
+     * @return {@code true} if this task is complete
+     */
     public boolean getStatus() {
         return isDone;
     }
 
+    /**
+     * Returns the display marker for this task type.
+     *
+     * @return task-type marker
+     */
     public abstract String getType();
 
+    /**
+     * Returns whether this task applies to the supplied date.
+     *
+     * @param date date to check
+     * @return {@code true} if this task occurs on {@code date}
+     */
     public abstract boolean isOnDate(LocalDate date);
 
     /**
@@ -55,6 +78,11 @@ public abstract class Task {
      */
     public abstract String toFileString();
 
+    /**
+     * Returns this task in the standard user-facing display format.
+     *
+     * @return formatted task
+     */
     @Override
     public String toString() {
         String flag = isDone ? "[X] " : "[ ] ";

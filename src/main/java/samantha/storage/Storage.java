@@ -77,6 +77,15 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Reconstructs one task from the fields in a saved data-file record.
+     *
+     * @param parts pipe-delimited record fields
+     * @return the reconstructed task, with its saved completion state
+     * @throws TaskValidationException if a task field violates the task model's rules
+     * @throws InputException if a persisted date or time value is invalid
+     * @throws IllegalArgumentException if the record structure is malformed
+     */
     private Task parseTask(String[] parts) throws TaskValidationException, InputException {
         if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new IllegalArgumentException("Malformed task record");
@@ -125,12 +134,26 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Checks that a saved record has the required number of fields.
+     *
+     * @param parts record fields to validate
+     * @param expected required field count
+     * @throws IllegalArgumentException if the field count differs from {@code expected}
+     */
     private void requirePartCount(String[] parts, int expected) {
         if (parts.length != expected) {
             throw new IllegalArgumentException("Wrong number of fields");
         }
     }
 
+    /**
+     * Returns trimmed record text after ensuring that it is not blank.
+     *
+     * @param value raw record field
+     * @return non-blank trimmed text
+     * @throws IllegalArgumentException if the field is blank
+     */
     private String requireText(String value) {
         String text = value.trim();
         if (text.isEmpty()) {

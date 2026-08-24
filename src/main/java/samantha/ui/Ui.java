@@ -10,6 +10,12 @@ public class Ui {
     private final Scanner scanner = new Scanner(System.in);
 
     /**
+     * Creates a console UI that reads from standard input and writes to standard output.
+     */
+    public Ui() {
+    }
+
+    /**
      * Reads one command line from the user.
      *
      * @return the command line entered by the user

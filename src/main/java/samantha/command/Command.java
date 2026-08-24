@@ -14,6 +14,12 @@ import samantha.ui.Ui;
 public abstract class Command {
 
     /**
+     * Creates a command.
+     */
+    public Command() {
+    }
+
+    /**
      * Performs this command using Samantha's application components.
      *
      * @param tasks current task list
