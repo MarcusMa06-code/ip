@@ -2,6 +2,16 @@
 
 This repository is a starter template for a greenfield Java project used in an introductory software engineering course in an undergraduate computer science program. Students use it as the starting point for their own projects.
 
+# Mandatory project coding standard
+
+For every Java source or test change in this repository, read and apply the project-specific
+`.agents/skills/seedu-java-coding-standard/SKILL.md`. It is based on the
+[SE-EDU Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html)
+and is mandatory for code creation, editing, review, and refactoring. The skill's requirements for
+naming, layout, whitespace, imports, braces, variable scope, encapsulation, and Javadocs must be
+checked before completing a Java change. Use the Google Java Style Guide only for topics not
+covered by the project skill.
+
 # Default user context
 
 Unless the user says otherwise, assume that you are assisting a student working on a project in this repository. If the user identifies themselves as an instructor or another project stakeholder, adapt your response to that role.
