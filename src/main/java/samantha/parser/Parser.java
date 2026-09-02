@@ -10,6 +10,7 @@ import samantha.command.Command;
 import samantha.command.DeleteCommand;
 import samantha.command.ExitCommand;
 import samantha.command.FindCommand;
+import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
 import samantha.command.MarkCommand;
 import samantha.command.UnmarkCommand;
@@ -31,7 +32,7 @@ public class Parser {
      * Represents the commands supported by Samantha.
      */
     private enum CommandType {
-        BYE, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND
+        BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND
     }
 
     /**
@@ -45,6 +46,7 @@ public class Parser {
         String[] parts = splitCommand(fullCommand);
         return switch (parseCommandType(parts[0])) {
             case BYE -> new ExitCommand();
+            case HELP -> new HelpCommand();
             case LIST -> new ListCommand(parseListDate(parts));
             case TODO -> new AddTodoCommand(parseDescription(parts));
             case DEADLINE -> {

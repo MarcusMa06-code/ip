@@ -20,6 +20,7 @@ import samantha.command.AddTodoCommand;
 import samantha.command.DeleteCommand;
 import samantha.command.ExitCommand;
 import samantha.command.FindCommand;
+import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
 import samantha.command.MarkCommand;
 import samantha.command.UnmarkCommand;
@@ -36,6 +37,7 @@ class ParserTest {
     private static Stream<Arguments> validCommands() {
         return Stream.of(
                 Arguments.of("bye", ExitCommand.class),
+                Arguments.of("help", HelpCommand.class),
                 Arguments.of("LIST", ListCommand.class),
                 Arguments.of("find book", FindCommand.class),
                 Arguments.of("todo read book", AddTodoCommand.class),
