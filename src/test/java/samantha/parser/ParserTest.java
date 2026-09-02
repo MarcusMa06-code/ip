@@ -59,11 +59,13 @@ class ParserTest {
 
         assertArrayEquals(new String[] {"todo", "buy", "groceries", "today"}, parts);
         assertEquals("buy groceries today", Parser.parseDescription(parts));
+        assertEquals("buy groceries today", Parser.parseDescription("todo", "buy", "groceries", "today"));
     }
 
     @Test
     void parseFindKeyword_validKeyword_returnsTrimmedKeyword() throws InputException {
         assertEquals("book", Parser.parseFindKeyword(Parser.splitCommand("find book ")));
+        assertEquals("book", Parser.parseFindKeyword("find", "book"));
     }
 
     @Test
@@ -76,6 +78,8 @@ class ParserTest {
     void parseDeadlineDetails_validDetails_returnsDescriptionAndDeadline() throws InputException {
         assertArrayEquals(new String[] {"return book", "2/12/2019 1800"},
                 Parser.parseDeadlineDetails(Parser.splitCommand("deadline return book /by 2/12/2019 1800")));
+        assertArrayEquals(new String[] {"return book", "2/12/2019 1800"},
+                Parser.parseDeadlineDetails("deadline", "return", "book", "/by", "2/12/2019", "1800"));
     }
 
     @Test
@@ -89,6 +93,9 @@ class ParserTest {
         assertArrayEquals(new String[] {"meeting", "2/12/2019 1400", "2/12/2019 1600"},
                 Parser.parseEventDetails(Parser.splitCommand(
                         "event meeting /from 2/12/2019 1400 /to 2/12/2019 1600")));
+        assertArrayEquals(new String[] {"meeting", "2/12/2019 1400", "2/12/2019 1600"},
+                Parser.parseEventDetails("event", "meeting", "/from", "2/12/2019", "1400", "/to",
+                        "2/12/2019", "1600"));
     }
 
     @Test
@@ -106,6 +113,7 @@ class ParserTest {
     void parseListDate_validDate_returnsDate() throws InputException {
         assertEquals(LocalDate.of(2019, 12, 2),
                 Parser.parseListDate(Parser.splitCommand("list 2-12-2019")));
+        assertEquals(LocalDate.of(2019, 12, 2), Parser.parseListDate("list", "2-12-2019"));
     }
 
     @Test
@@ -119,6 +127,7 @@ class ParserTest {
     @Test
     void parseTaskId_validId_returnsId() throws InputException {
         assertEquals(42, Parser.parseTaskId(Parser.splitCommand("mark 42")));
+        assertEquals(42, Parser.parseTaskId("mark", "42"));
     }
 
     @Test

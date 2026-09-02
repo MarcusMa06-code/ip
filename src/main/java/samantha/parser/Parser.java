@@ -95,7 +95,7 @@ public class Parser {
      * @param parts words from the user command
      * @return the description, which may be empty
      */
-    public static String parseDescription(String[] parts) {
+    public static String parseDescription(String... parts) {
         return String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
     }
 
@@ -106,7 +106,7 @@ public class Parser {
      * @return the keyword to search for
      * @throws InputException if no keyword was supplied
      */
-    public static String parseFindKeyword(String[] parts) throws InputException {
+    public static String parseFindKeyword(String... parts) throws InputException {
         String keyword = parseDescription(parts).trim();
         if (keyword.isEmpty()) {
             throw new InputException("You forgot to mention the keyword to search for.");
@@ -121,7 +121,7 @@ public class Parser {
      * @return a two-element array containing the description and deadline
      * @throws InputException if the command does not contain {@code /by}
      */
-    public static String[] parseDeadlineDetails(String[] parts) throws InputException {
+    public static String[] parseDeadlineDetails(String... parts) throws InputException {
         String[] segments = parseDescription(parts).split("\\s*/by\\s*", 2);
         if (segments.length < 2) {
             throw new InputException("You forgot to include /by for this deadline.");
@@ -136,7 +136,7 @@ public class Parser {
      * @return a three-element array containing the description, start time, and end time
      * @throws InputException if the command does not contain both {@code /from} and {@code /to}
      */
-    public static String[] parseEventDetails(String[] parts) throws InputException {
+    public static String[] parseEventDetails(String... parts) throws InputException {
         String[] segments = parseDescription(parts).split("/from|/to");
         if (segments.length < 3) {
             throw new InputException("You forgot to include /from and /to for this event.");
@@ -151,7 +151,7 @@ public class Parser {
      * @return the requested date, or {@code null} when no date was given
      * @throws InputException if too many arguments were supplied or the date is invalid
      */
-    public static LocalDate parseListDate(String[] parts) throws InputException {
+    public static LocalDate parseListDate(String... parts) throws InputException {
         if (parts.length > 2) {
             throw new InputException("You entered too many parameters for this operation");
         }
@@ -165,7 +165,7 @@ public class Parser {
      * @return the parsed task ID
      * @throws InputException if the command has a missing, extra, or non-numeric ID
      */
-    public static int parseTaskId(String[] parts) throws InputException {
+    public static int parseTaskId(String... parts) throws InputException {
         if (parts.length > 2) {
             throw new InputException("You entered too many parameters for this operation");
         } else if (parts.length == 2) {
