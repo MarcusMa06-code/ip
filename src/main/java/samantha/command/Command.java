@@ -20,7 +20,20 @@ public abstract class Command {
     }
 
     /**
-     * Performs this command using Samantha's application components.
+     * Performs this command and returns its user-facing response.
+     *
+     * @param tasks current task list
+     * @param storage task persistence handler
+     * @return response for the command
+     * @throws TaskValidationException if task data is invalid
+     * @throws InputException if a task value has invalid input format
+     * @throws TaskFileWriteException if the task list cannot be saved
+     */
+    public abstract String execute(TaskList tasks, Storage storage)
+            throws TaskValidationException, InputException, TaskFileWriteException;
+
+    /**
+     * Performs this command and displays its response through the console UI.
      *
      * @param tasks current task list
      * @param ui console interaction handler
@@ -29,8 +42,13 @@ public abstract class Command {
      * @throws InputException if a task value has invalid input format
      * @throws TaskFileWriteException if the task list cannot be saved
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage)
-            throws TaskValidationException, InputException, TaskFileWriteException;
+    public void execute(TaskList tasks, Ui ui, Storage storage)
+            throws TaskValidationException, InputException, TaskFileWriteException {
+        String response = execute(tasks, storage);
+        if (!response.isEmpty()) {
+            ui.showResponse(response);
+        }
+    }
 
     /**
      * Returns whether executing this command should end the application.
@@ -53,16 +71,16 @@ public abstract class Command {
     }
 
     /**
-     * Displays the confirmation after a new task is added.
+     * Returns the confirmation after a new task is added.
      *
      * @param task newly added task
      * @param taskCount number of tasks after the addition
-     * @param ui console interaction handler
+     * @return confirmation for the added task
      */
-    protected void showTaskAdded(Task task, int taskCount, Ui ui) {
-        ui.showResponse("Got it. I've added this task: \n  "
+    protected String getTaskAddedResponse(Task task, int taskCount) {
+        return "Got it. I've added this task: \n  "
                 + task + "\n"
-                + String.format("Now you have %d tasks in the list.", taskCount));
+                + String.format("Now you have %d tasks in the list.", taskCount);
     }
 
     /**

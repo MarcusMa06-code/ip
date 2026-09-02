@@ -5,7 +5,6 @@ import samantha.exception.TaskFileWriteException;
 import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.storage.Storage;
-import samantha.ui.Ui;
 
 /**
  * Represents the command that marks a task as complete.
@@ -26,17 +25,17 @@ public class MarkCommand extends Command {
      * Marks and saves the selected task.
      *
      * @param tasks current task list
-     * @param ui console interaction handler
      * @param storage task persistence handler
+     * @return confirmation for the marked task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
+    public String execute(TaskList tasks, Storage storage)
             throws InputException, TaskFileWriteException {
         Task task = getTask(tasks, taskId);
         task.markDone();
         saveTasks(tasks, storage);
-        ui.showResponse("Nice! I've marked this task as done:\n  " + task);
+        return "Nice! I've marked this task as done:\n  " + task;
     }
 }

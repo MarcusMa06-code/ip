@@ -6,7 +6,6 @@ import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.model.Todo;
 import samantha.storage.Storage;
-import samantha.ui.Ui;
 
 /**
  * Represents the command that adds a todo task.
@@ -27,17 +26,17 @@ public class AddTodoCommand extends Command {
      * Adds and saves the todo task.
      *
      * @param tasks current task list
-     * @param ui console interaction handler
      * @param storage task persistence handler
+     * @return confirmation for the newly added task
      * @throws TaskValidationException if the description is empty
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
+    public String execute(TaskList tasks, Storage storage)
             throws TaskValidationException, TaskFileWriteException {
         Task task = new Todo(taskName);
         tasks.add(task);
         saveTasks(tasks, storage);
-        showTaskAdded(task, tasks.size(), ui);
+        return getTaskAddedResponse(task, tasks.size());
     }
 }

@@ -5,7 +5,6 @@ import samantha.exception.TaskFileWriteException;
 import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.storage.Storage;
-import samantha.ui.Ui;
 
 /**
  * Represents the command that removes a task.
@@ -26,19 +25,19 @@ public class DeleteCommand extends Command {
      * Removes and saves the selected task.
      *
      * @param tasks current task list
-     * @param ui console interaction handler
      * @param storage task persistence handler
+     * @return confirmation for the removed task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
+    public String execute(TaskList tasks, Storage storage)
             throws InputException, TaskFileWriteException {
         Task task = getTask(tasks, taskId);
         tasks.remove(taskId - 1);
         saveTasks(tasks, storage);
-        ui.showResponse("Noted. I've removed this task:\n  "
+        return "Noted. I've removed this task:\n  "
                 + task + "\n"
-                + String.format("Now you have %d tasks in the list.", tasks.size()));
+                + String.format("Now you have %d tasks in the list.", tasks.size());
     }
 }

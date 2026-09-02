@@ -5,7 +5,6 @@ import java.util.Locale;
 import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.storage.Storage;
-import samantha.ui.Ui;
 
 /**
  * Represents the command that finds tasks whose descriptions contain a keyword.
@@ -26,11 +25,11 @@ public class FindCommand extends Command {
      * Displays tasks whose descriptions contain the search keyword.
      *
      * @param tasks current task list
-     * @param ui console interaction handler
      * @param storage task persistence handler, which is not needed for searching
+     * @return matching task list
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Storage storage) {
         StringBuilder message = new StringBuilder("Here are the matching tasks in your list:\n");
         for (int i = 1; i <= tasks.size(); i++) {
             Task task = tasks.get(i - 1);
@@ -38,7 +37,7 @@ public class FindCommand extends Command {
                 message.append(String.format("%d. %s\n", i, task));
             }
         }
-        ui.showResponse(message.toString().stripTrailing());
+        return message.toString().stripTrailing();
     }
 
     /**

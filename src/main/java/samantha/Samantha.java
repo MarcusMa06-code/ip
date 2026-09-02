@@ -1,5 +1,8 @@
 package samantha;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import samantha.command.Command;
 import samantha.exception.CorruptedTaskFileException;
 import samantha.exception.SamanthaException;
@@ -13,26 +16,33 @@ import samantha.ui.Ui;
  * Coordinates Samantha's command loop and its task, storage, and UI components.
  */
 public class Samantha {
+    private static final String GUI_GREETING = "Hello. I’m here. What would you like to do today?";
+    private static final String CORRUPTED_FILE_WARNING =
+            "Warning: The saved task file is corrupted. Starting with an empty task list.";
+    private static final String FILE_READ_WARNING =
+            "Warning: I couldn't read the saved tasks. Starting with an empty task list.";
+    private static final String GOODBYE = "Bye. Let's talk next time!";
+
     private final TaskList tasks = new TaskList();
     private final Storage storage;
-    private final Ui ui;
+    private boolean isInitialized;
+    private boolean isExitRequested;
+    private String startupWarning = "";
 
     /**
      * Creates an empty Samantha instance using the default storage location.
      */
     public Samantha() {
-        this(new Storage(), new Ui());
+        this(new Storage());
     }
 
     /**
      * Creates an application instance with the supplied collaborators.
      *
      * @param storage task persistence handler
-     * @param ui console interaction handler
      */
-    private Samantha(Storage storage, Ui ui) {
+    Samantha(Storage storage) {
         this.storage = storage;
-        this.ui = ui;
     }
 
     /**
@@ -46,6 +56,66 @@ public class Samantha {
     }
 
     /**
+     * Returns the assistant messages that should open a new conversation.
+     *
+     * @return greeting and any storage warning
+     */
+    public List<String> getInitialResponses() {
+        initialize();
+        List<String> messages = new ArrayList<>();
+        messages.add(GUI_GREETING);
+        if (!startupWarning.isEmpty()) {
+            messages.add(startupWarning);
+        }
+        return List.copyOf(messages);
+    }
+
+    /**
+     * Processes one user command and returns Samantha's response.
+     *
+     * @param input command entered by the user
+     * @return command response, error message, or farewell
+     */
+    public String getResponse(String input) {
+        initialize();
+        try {
+            Command command = Parser.parse(input);
+            String response = command.execute(tasks, storage);
+            isExitRequested = command.isExit();
+            return isExitRequested ? GOODBYE : response;
+        } catch (SamanthaException e) {
+            return e.getMessage();
+        }
+    }
+
+    /**
+     * Returns whether the most recently handled command requested application exit.
+     *
+     * @return {@code true} after a {@code bye} command
+     */
+    public boolean isExitRequested() {
+        return isExitRequested;
+    }
+
+    /**
+     * Loads saved tasks once and records any user-facing storage warning.
+     */
+    private void initialize() {
+        if (isInitialized) {
+            return;
+        }
+
+        try {
+            loadTasks();
+        } catch (CorruptedTaskFileException e) {
+            startupWarning = CORRUPTED_FILE_WARNING;
+        } catch (TaskFileReadException e) {
+            startupWarning = FILE_READ_WARNING;
+        }
+        isInitialized = true;
+    }
+
+    /**
      * Runs the application until the user enters the exit command.
      */
     public void run() {
@@ -55,24 +125,18 @@ public class Samantha {
                 + " ___) / ___ \\| |  | |/ ___ \\| |\\  | | | |  _  |/ ___ \\ \n"
                 + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
 
-        try {
-            loadTasks();
-        } catch (CorruptedTaskFileException e) {
-            ui.showCorruptedFileWarning();
-        } catch (TaskFileReadException e) {
-            ui.showFileReadErrorWarning();
+        Ui ui = new Ui();
+        initialize();
+        if (!startupWarning.isEmpty()) {
+            ui.showResponse(startupWarning);
         }
 
         ui.showWelcome(banner);
 
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                Command command = Parser.parse(ui.readCommand());
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
-            } catch (SamanthaException e) {
-                ui.showError(e.getMessage());
+        while (!isExitRequested) {
+            String response = getResponse(ui.readCommand());
+            if (!isExitRequested) {
+                ui.showResponse(response);
             }
         }
 
