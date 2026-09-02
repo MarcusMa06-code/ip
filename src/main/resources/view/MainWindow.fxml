@@ -36,7 +36,7 @@
                     </content>
                 </ScrollPane>
                 <AnchorPane styleClass="composer" AnchorPane.bottomAnchor="18.0"
-                            AnchorPane.leftAnchor="28.0" AnchorPane.prefHeight="40.0"
+                            AnchorPane.leftAnchor="28.0" prefHeight="40.0"
                             AnchorPane.rightAnchor="28.0">
                     <children>
                         <TextField fx:id="userInput" onAction="#handleUserInput"
