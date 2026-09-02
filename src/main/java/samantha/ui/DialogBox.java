@@ -8,11 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 
 /**
  * Represents a conversation bubble with a speaker avatar and text.
@@ -41,6 +43,9 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setImage(image);
+        displayPicture.setViewport(createAvatarViewport(image));
+        displayPicture.setClip(new Circle(22, 22, 22));
+        getStyleClass().add("dialog-box");
     }
 
     /**
@@ -78,5 +83,19 @@ public class DialogBox extends HBox {
         Collections.reverse(children);
         getChildren().setAll(children);
         setAlignment(Pos.TOP_LEFT);
+    }
+
+    /**
+     * Returns a square viewport that keeps the approved horizontal avatar crop.
+     *
+     * @param image source avatar image
+     * @return square viewport for the avatar
+     */
+    private static Rectangle2D createAvatarViewport(Image image) {
+        double cropSize = Math.min(image.getWidth(), image.getHeight());
+        double horizontalPosition = 0.70;
+        double x = horizontalPosition * (image.getWidth() - cropSize);
+        double y = (image.getHeight() - cropSize) / 2;
+        return new Rectangle2D(x, y, cropSize, cropSize);
     }
 }

@@ -28,7 +28,7 @@ public class MainWindow extends AnchorPane {
     private Button sendButton;
 
     private final Image userImage = loadImage("/images/Theodore.png");
-    private final Image samanthaImage = loadImage("/images/SamanthaAvatar.svg");
+    private final Image samanthaImage = loadImage("/images/SamanthaAvatar.png");
     private Samantha samantha;
     private boolean hasShownInitialResponses;
 
