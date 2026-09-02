@@ -647,3 +647,40 @@ bye
 ```expected
 Bye. Let's talk next time!
 ```
+
+## Test 13: Display command help
+
+**Aim:** `help` lists each supported command and its required syntax without
+changing the task list, so a new user can discover how to use Samantha.
+
+```input
+help
+```
+```expected
+Here's how to use Samantha:
+  help
+    Show this guide.
+  todo DESCRIPTION
+    Add a task.
+  deadline DESCRIPTION /by DATE [TIME]
+    Add a task due on DATE, optionally at TIME.
+  event DESCRIPTION /from DATE TIME /to DATE TIME
+    Add an event.
+  list [DATE]
+    List every task, or only tasks on DATE.
+  find KEYWORD
+    Find tasks whose descriptions contain KEYWORD.
+  mark N | unmark N | delete N
+    Update or remove task number N.
+  bye
+    Close Samantha.
+
+Use dates as d/M/yyyy or d-M-yyyy. Use times as HHmm.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```

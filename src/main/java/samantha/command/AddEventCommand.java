@@ -7,7 +7,6 @@ import samantha.model.Event;
 import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.storage.Storage;
-import samantha.ui.Ui;
 
 /**
  * Represents the command that adds an event task.
@@ -34,18 +33,18 @@ public class AddEventCommand extends Command {
      * Adds and saves the event task.
      *
      * @param tasks current task list
-     * @param ui console interaction handler
      * @param storage task persistence handler
+     * @return confirmation for the newly added task
      * @throws TaskValidationException if the event details are invalid
      * @throws InputException if an event date value is invalid
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
+    public String execute(TaskList tasks, Storage storage)
             throws TaskValidationException, InputException, TaskFileWriteException {
         Task task = new Event(taskName, from, to);
         tasks.add(task);
         saveTasks(tasks, storage);
-        showTaskAdded(task, tasks.size(), ui);
+        return getTaskAddedResponse(task, tasks.size());
     }
 }

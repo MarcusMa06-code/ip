@@ -7,7 +7,6 @@ import samantha.model.Deadline;
 import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.storage.Storage;
-import samantha.ui.Ui;
 
 /**
  * Represents the command that adds a deadline task.
@@ -31,18 +30,18 @@ public class AddDeadlineCommand extends Command {
      * Adds and saves the deadline task.
      *
      * @param tasks current task list
-     * @param ui console interaction handler
      * @param storage task persistence handler
+     * @return confirmation for the newly added task
      * @throws TaskValidationException if the description is invalid
      * @throws InputException if the deadline value is invalid
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
+    public String execute(TaskList tasks, Storage storage)
             throws TaskValidationException, InputException, TaskFileWriteException {
         Task task = new Deadline(taskName, deadline);
         tasks.add(task);
         saveTasks(tasks, storage);
-        showTaskAdded(task, tasks.size(), ui);
+        return getTaskAddedResponse(task, tasks.size());
     }
 }
