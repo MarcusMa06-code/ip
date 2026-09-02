@@ -44,21 +44,21 @@ public class Parser {
     public static Command parse(String fullCommand) throws InputException {
         String[] parts = splitCommand(fullCommand);
         return switch (parseCommandType(parts[0])) {
-        case BYE -> new ExitCommand();
-        case LIST -> new ListCommand(parseListDate(parts));
-        case TODO -> new AddTodoCommand(parseDescription(parts));
-        case DEADLINE -> {
-            String[] details = parseDeadlineDetails(parts);
-            yield new AddDeadlineCommand(details[0], details[1]);
-        }
-        case EVENT -> {
-            String[] details = parseEventDetails(parts);
-            yield new AddEventCommand(details[0], details[1], details[2]);
-        }
-        case MARK -> new MarkCommand(parseTaskId(parts));
-        case UNMARK -> new UnmarkCommand(parseTaskId(parts));
-        case DELETE -> new DeleteCommand(parseTaskId(parts));
-        case FIND -> new FindCommand(parseFindKeyword(parts));
+            case BYE -> new ExitCommand();
+            case LIST -> new ListCommand(parseListDate(parts));
+            case TODO -> new AddTodoCommand(parseDescription(parts));
+            case DEADLINE -> {
+                String[] details = parseDeadlineDetails(parts);
+                yield new AddDeadlineCommand(details[0], details[1]);
+            }
+            case EVENT -> {
+                String[] details = parseEventDetails(parts);
+                yield new AddEventCommand(details[0], details[1], details[2]);
+            }
+            case MARK -> new MarkCommand(parseTaskId(parts));
+            case UNMARK -> new UnmarkCommand(parseTaskId(parts));
+            case DELETE -> new DeleteCommand(parseTaskId(parts));
+            case FIND -> new FindCommand(parseFindKeyword(parts));
         };
     }
 

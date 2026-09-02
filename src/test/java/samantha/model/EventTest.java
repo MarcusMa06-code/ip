@@ -15,16 +15,16 @@ import samantha.exception.TaskValidationException;
 class EventTest {
     @Test
     void constructor_missingStartOrEnd_taskValidationExceptionThrown() {
-        assertThrows(TaskValidationException.class,
-                () -> new Event("meeting", "", "2/12/2019 1600"));
-        assertThrows(TaskValidationException.class,
-                () -> new Event("meeting", "2/12/2019 1400", "   "));
+        assertThrows(TaskValidationException.class, () ->
+                new Event("meeting", "", "2/12/2019 1600"));
+        assertThrows(TaskValidationException.class, () ->
+                new Event("meeting", "2/12/2019 1400", "   "));
     }
 
     @Test
     void constructor_dateWithoutTime_taskValidationExceptionThrown() {
-        assertThrows(TaskValidationException.class,
-                () -> new Event("meeting", "2/12/2019", "2/12/2019 1600"));
+        assertThrows(TaskValidationException.class, () ->
+                new Event("meeting", "2/12/2019", "2/12/2019 1600"));
     }
 
     @Test

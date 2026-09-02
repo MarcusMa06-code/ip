@@ -103,29 +103,29 @@ public class Storage {
 
         Task task;
         switch (parts[0].trim()) {
-        case "T" -> {
-            requirePartCount(parts, 3);
-            task = new Todo(requireText(parts[2]));
-        }
-        case "D" -> {
-            requirePartCount(parts, 4);
-            task = new Deadline(requireText(parts[2]), requireText(parts[3]));
-        }
-        case "E" -> {
-            if (parts.length == 4) {
-                String schedule = requireText(parts[3]);
-                String[] times = schedule.split("\\s+to\\s+", 2);
-                if (times.length != 2) {
-                    throw new IllegalArgumentException("Malformed event schedule");
-                }
-                task = new Event(requireText(parts[2]), requireText(times[0]), requireText(times[1]));
-            } else if (parts.length == 5) {
-                task = new Event(requireText(parts[2]), requireText(parts[3]), requireText(parts[4]));
-            } else {
-                throw new IllegalArgumentException("Wrong number of fields");
+            case "T" -> {
+                requirePartCount(parts, 3);
+                task = new Todo(requireText(parts[2]));
             }
-        }
-        default -> throw new IllegalArgumentException("Unknown task type");
+            case "D" -> {
+                requirePartCount(parts, 4);
+                task = new Deadline(requireText(parts[2]), requireText(parts[3]));
+            }
+            case "E" -> {
+                if (parts.length == 4) {
+                    String schedule = requireText(parts[3]);
+                    String[] times = schedule.split("\\s+to\\s+", 2);
+                    if (times.length != 2) {
+                        throw new IllegalArgumentException("Malformed event schedule");
+                    }
+                    task = new Event(requireText(parts[2]), requireText(times[0]), requireText(times[1]));
+                } else if (parts.length == 5) {
+                    task = new Event(requireText(parts[2]), requireText(parts[3]), requireText(parts[4]));
+                } else {
+                    throw new IllegalArgumentException("Wrong number of fields");
+                }
+            }
+            default -> throw new IllegalArgumentException("Unknown task type");
         }
 
         if (status == 1) {

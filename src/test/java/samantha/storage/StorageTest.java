@@ -75,8 +75,8 @@ class StorageTest {
         Path file = temporaryDirectory.resolve("tasks.txt");
         Files.writeString(file, record + "\n");
 
-        CorruptedTaskFileException exception = assertThrows(CorruptedTaskFileException.class,
-                () -> new Storage(file).load());
+        CorruptedTaskFileException exception = assertThrows(CorruptedTaskFileException.class, () ->
+                new Storage(file).load());
         assertEquals(1, exception.getLineNumber());
     }
 
@@ -95,8 +95,8 @@ class StorageTest {
         Path file = temporaryDirectory.resolve("tasks.txt");
         Files.writeString(file, "T | 0 | valid\nX | 0 | invalid\n");
 
-        CorruptedTaskFileException exception = assertThrows(CorruptedTaskFileException.class,
-                () -> new Storage(file).load());
+        CorruptedTaskFileException exception = assertThrows(CorruptedTaskFileException.class, () ->
+                new Storage(file).load());
         assertEquals(2, exception.getLineNumber());
     }
 
@@ -111,7 +111,7 @@ class StorageTest {
     void save_directoryInsteadOfFile_taskFileWriteExceptionThrown() throws IOException, TaskValidationException {
         Path directory = Files.createDirectory(temporaryDirectory.resolve("task-directory"));
 
-        assertThrows(TaskFileWriteException.class,
-                () -> new Storage(directory).save(List.of(new Todo("task"))));
+        assertThrows(TaskFileWriteException.class, () ->
+                new Storage(directory).save(List.of(new Todo("task"))));
     }
 }

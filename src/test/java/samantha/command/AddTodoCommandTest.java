@@ -25,8 +25,8 @@ class AddTodoCommandTest {
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt"));
         TaskList tasks = new TaskList();
 
-        String output = CommandTestOutput.capture(
-                () -> new AddTodoCommand("read book").execute(tasks, new Ui(), storage));
+        String output = CommandTestOutput.capture(() ->
+                new AddTodoCommand("read book").execute(tasks, new Ui(), storage));
 
         assertEquals(1, tasks.size());
         assertInstanceOf(Todo.class, tasks.getTask(1));
@@ -38,9 +38,8 @@ class AddTodoCommandTest {
     void execute_blankDescription_taskValidationExceptionAndNoTaskAdded() {
         TaskList tasks = new TaskList();
 
-        assertThrows(TaskValidationException.class,
-                () -> new AddTodoCommand(" ").execute(
-                        tasks, new Ui(), new Storage(temporaryDirectory.resolve("tasks.txt"))));
+        assertThrows(TaskValidationException.class, () -> new AddTodoCommand(" ").execute(
+                tasks, new Ui(), new Storage(temporaryDirectory.resolve("tasks.txt"))));
         assertEquals(0, tasks.size());
     }
 }

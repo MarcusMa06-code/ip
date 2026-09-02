@@ -66,8 +66,8 @@ class ParserTest {
 
     @Test
     void parseFindKeyword_missingKeyword_inputExceptionThrown() {
-        assertThrows(InputException.class,
-                () -> Parser.parseFindKeyword(Parser.splitCommand("find")));
+        assertThrows(InputException.class, () ->
+                Parser.parseFindKeyword(Parser.splitCommand("find")));
     }
 
     @Test
@@ -78,8 +78,8 @@ class ParserTest {
 
     @Test
     void parseDeadlineDetails_missingMarker_inputExceptionThrown() {
-        assertThrows(InputException.class,
-                () -> Parser.parseDeadlineDetails(Parser.splitCommand("deadline return book")));
+        assertThrows(InputException.class, () ->
+                Parser.parseDeadlineDetails(Parser.splitCommand("deadline return book")));
     }
 
     @Test
@@ -91,8 +91,8 @@ class ParserTest {
 
     @Test
     void parseEventDetails_missingMarker_inputExceptionThrown() {
-        assertThrows(InputException.class,
-                () -> Parser.parseEventDetails(Parser.splitCommand("event meeting /from 2/12/2019 1400")));
+        assertThrows(InputException.class, () ->
+                Parser.parseEventDetails(Parser.splitCommand("event meeting /from 2/12/2019 1400")));
     }
 
     @Test
@@ -108,10 +108,10 @@ class ParserTest {
 
     @Test
     void parseListDate_timeOrExtraArgument_inputExceptionThrown() {
-        assertThrows(InputException.class,
-                () -> Parser.parseListDate(Parser.splitCommand("list 2/12/2019 1800")));
-        assertThrows(InputException.class,
-                () -> Parser.parseListDate(Parser.splitCommand("list 2/12/2019 extra")));
+        assertThrows(InputException.class, () ->
+                Parser.parseListDate(Parser.splitCommand("list 2/12/2019 1800")));
+        assertThrows(InputException.class, () ->
+                Parser.parseListDate(Parser.splitCommand("list 2/12/2019 extra")));
     }
 
     @Test

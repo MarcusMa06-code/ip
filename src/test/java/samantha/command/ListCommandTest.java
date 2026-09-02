@@ -24,9 +24,8 @@ class ListCommandTest {
     void execute_withoutDate_listsEveryTask() throws Exception {
         TaskList tasks = populatedTaskList();
 
-        String output = CommandTestOutput.capture(
-                () -> new ListCommand(null).execute(
-                        tasks, new Ui(), new Storage(temporaryDirectory.resolve("tasks.txt"))));
+        String output = CommandTestOutput.capture(() -> new ListCommand(null).execute(
+                tasks, new Ui(), new Storage(temporaryDirectory.resolve("tasks.txt"))));
 
         assertTrue(output.contains("1. [T][ ] buy groceries"));
         assertTrue(output.contains("2. [D][ ] return book"));
