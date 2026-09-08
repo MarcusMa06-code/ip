@@ -672,10 +672,47 @@ Here's how to use Samantha:
     Find tasks whose descriptions contain KEYWORD.
   mark N | unmark N | delete N
     Update or remove task number N.
+  undo
+    Undo the most recent task-changing command.
   bye
     Close Samantha.
 
 Use dates as d/M/yyyy or d-M-yyyy. Use times as HHmm.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 14: Undo the most recent task-changing command
+
+**Aim:** `undo` reverses the most recent task-changing command, persists the
+restored task list, and reports clearly when there is no command left to undo.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+undo
+```
+```expected
+There is nothing to undo.
 ```
 
 ```input
