@@ -12,6 +12,8 @@ import samantha.ui.Ui;
  * Represents an executable user command.
  */
 public abstract class Command {
+    /** The task added by an add command, when this command is undoable. */
+    private Task addedTask;
 
     /**
      * Creates a command.
@@ -60,6 +62,43 @@ public abstract class Command {
     }
 
     /**
+     * Returns whether this command can be undone.
+     *
+     * @return {@code true} when this command changes the task list
+     */
+    public boolean isUndoable() {
+        return false;
+    }
+
+    /**
+     * Returns whether this command requests undoing the latest command.
+     *
+     * @return {@code true} only for the undo command
+     */
+    public boolean isUndo() {
+        return false;
+    }
+
+    /**
+     * Reverses this command.
+     *
+     * @param tasks current task list
+     * @param storage task persistence handler
+     * @return confirmation for the undone command
+     * @throws InputException if the command cannot be undone
+     * @throws TaskFileWriteException if the task list cannot be saved
+     */
+    public String undo(TaskList tasks, Storage storage)
+            throws InputException, TaskFileWriteException {
+        if (addedTask == null) {
+            throw new InputException("This command cannot be undone.");
+        }
+        tasks.removeTask(addedTask);
+        saveTasks(tasks, storage);
+        return "I've undone the last command.";
+    }
+
+    /**
      * Saves the current task list through the storage component.
      *
      * @param tasks task list to save
@@ -83,6 +122,7 @@ public abstract class Command {
             throws TaskFileWriteException {
         tasks.add(task);
         saveTasks(tasks, storage);
+        addedTask = task;
         return getTaskAddedResponse(task, tasks.size());
     }
 
@@ -110,4 +150,5 @@ public abstract class Command {
     protected Task getTask(TaskList tasks, int taskId) throws InputException {
         return tasks.getTask(taskId);
     }
+
 }

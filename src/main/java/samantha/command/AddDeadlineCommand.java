@@ -26,6 +26,16 @@ public class AddDeadlineCommand extends Command {
     }
 
     /**
+     * Indicates that adding this task can be undone.
+     *
+     * @return {@code true}
+     */
+    @Override
+    public boolean isUndoable() {
+        return true;
+    }
+
+    /**
      * Adds and saves the deadline task.
      *
      * @param tasks current task list

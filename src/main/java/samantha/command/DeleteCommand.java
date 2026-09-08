@@ -11,6 +11,8 @@ import samantha.storage.Storage;
  */
 public class DeleteCommand extends Command {
     private final int taskId;
+    private Task deletedTask;
+    private int deletedTaskIndex;
 
     /**
      * Creates a command for the given one-based task ID.
@@ -19,6 +21,16 @@ public class DeleteCommand extends Command {
      */
     public DeleteCommand(int taskId) {
         this.taskId = taskId;
+    }
+
+    /**
+     * Indicates that deleting this task can be undone.
+     *
+     * @return {@code true}
+     */
+    @Override
+    public boolean isUndoable() {
+        return true;
     }
 
     /**
@@ -33,10 +45,32 @@ public class DeleteCommand extends Command {
     @Override
     public String execute(TaskList tasks, Storage storage)
             throws InputException, TaskFileWriteException {
-        Task task = tasks.removeTask(taskId);
+        Task task = getTask(tasks, taskId);
+        deletedTask = tasks.removeTask(taskId);
+        deletedTaskIndex = taskId - 1;
         saveTasks(tasks, storage);
         return "Noted. I've removed this task:\n  "
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", tasks.size());
+    }
+
+    /**
+     * Restores the task deleted by this command.
+     *
+     * @param tasks current task list
+     * @param storage task persistence handler
+     * @return confirmation for the undone command
+     * @throws InputException if the deleted task has not been recorded
+     * @throws TaskFileWriteException if the task list cannot be saved
+     */
+    @Override
+    public String undo(TaskList tasks, Storage storage)
+            throws InputException, TaskFileWriteException {
+        if (deletedTask == null) {
+            throw new InputException("This command cannot be undone.");
+        }
+        tasks.addTaskAt(deletedTask, deletedTaskIndex);
+        saveTasks(tasks, storage);
+        return "I've undone the last command.";
     }
 }

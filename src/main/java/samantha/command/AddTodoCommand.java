@@ -22,6 +22,16 @@ public class AddTodoCommand extends Command {
     }
 
     /**
+     * Indicates that adding this task can be undone.
+     *
+     * @return {@code true}
+     */
+    @Override
+    public boolean isUndoable() {
+        return true;
+    }
+
+    /**
      * Adds and saves the todo task.
      *
      * @param tasks current task list
