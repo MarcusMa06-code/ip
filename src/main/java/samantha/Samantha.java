@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import samantha.command.Command;
+import samantha.command.CommandContext;
+import samantha.exception.CorruptedNoteFileException;
 import samantha.exception.CorruptedTaskFileException;
+import samantha.exception.NoteFileReadException;
 import samantha.exception.SamanthaException;
 import samantha.exception.TaskFileReadException;
+import samantha.model.NoteList;
 import samantha.model.TaskList;
 import samantha.parser.Parser;
+import samantha.storage.NoteStorage;
 import samantha.storage.Storage;
 import samantha.ui.Ui;
 
@@ -21,6 +26,10 @@ public class Samantha {
             "Warning: The saved task file is corrupted. Starting with an empty task list.";
     private static final String FILE_READ_WARNING =
             "Warning: I couldn't read the saved tasks. Starting with an empty task list.";
+    private static final String CORRUPTED_NOTE_FILE_WARNING =
+            "Warning: The saved note file is corrupted. Starting with an empty note list.";
+    private static final String NOTE_FILE_READ_WARNING =
+            "Warning: I couldn't read the saved notes. Starting with an empty note list.";
     private static final String GOODBYE = "Bye. Let's talk next time!";
     private static final String CONSOLE_BANNER = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
             + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
@@ -29,7 +38,9 @@ public class Samantha {
             + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
 
     private final TaskList tasks = new TaskList();
+    private final NoteList notes = new NoteList();
     private final Storage storage;
+    private final NoteStorage noteStorage;
     private boolean isInitialized;
     private boolean isExitRequested;
     private String startupWarning = "";
@@ -39,7 +50,7 @@ public class Samantha {
      * Creates an empty Samantha instance using the default storage location.
      */
     public Samantha() {
-        this(new Storage());
+        this(new Storage(), new NoteStorage());
     }
 
     /**
@@ -48,8 +59,20 @@ public class Samantha {
      * @param storage task persistence handler
      */
     Samantha(Storage storage) {
+        this(storage, new NoteStorage());
+    }
+
+    /**
+     * Creates an application instance with isolated task and note storage.
+     *
+     * @param storage task persistence handler
+     * @param noteStorage note persistence handler
+     */
+    Samantha(Storage storage, NoteStorage noteStorage) {
         assert storage != null : "Samantha must have a storage handler";
+        assert noteStorage != null : "Samantha must have a note storage handler";
         this.storage = storage;
+        this.noteStorage = noteStorage;
     }
 
     /**
@@ -60,6 +83,16 @@ public class Samantha {
      */
     private void loadTasks() throws TaskFileReadException, CorruptedTaskFileException {
         tasks.addAll(storage.load());
+    }
+
+    /**
+     * Loads the persisted notes into this application's note list.
+     *
+     * @throws NoteFileReadException if the note file cannot be read
+     * @throws CorruptedNoteFileException if a persisted note is malformed
+     */
+    private void loadNotes() throws NoteFileReadException, CorruptedNoteFileException {
+        notes.addAll(noteStorage.load());
     }
 
     /**
@@ -100,14 +133,15 @@ public class Samantha {
     }
 
     /**
-     * Executes a regular command and records it when it changes the task list.
+     * Executes a regular command and records it when it changes application state.
      *
      * @param command command to execute
      * @return command response
      * @throws SamanthaException if command execution fails
      */
     private String executeAndRecord(Command command) throws SamanthaException {
-        String response = command.execute(tasks, storage);
+        CommandContext context = new CommandContext(tasks, notes, storage, noteStorage);
+        String response = command.execute(context);
         if (command.isUndoable()) {
             lastUndoableCommand = command;
         }
@@ -124,7 +158,8 @@ public class Samantha {
         if (lastUndoableCommand == null) {
             return "There is nothing to undo.";
         }
-        String response = lastUndoableCommand.undo(tasks, storage);
+        CommandContext context = new CommandContext(tasks, notes, storage, noteStorage);
+        String response = lastUndoableCommand.undo(context);
         lastUndoableCommand = null;
         return response;
     }
@@ -149,11 +184,32 @@ public class Samantha {
         try {
             loadTasks();
         } catch (CorruptedTaskFileException e) {
-            startupWarning = CORRUPTED_FILE_WARNING;
+            addStartupWarning(CORRUPTED_FILE_WARNING);
         } catch (TaskFileReadException e) {
-            startupWarning = FILE_READ_WARNING;
+            addStartupWarning(FILE_READ_WARNING);
+        }
+
+        try {
+            loadNotes();
+        } catch (CorruptedNoteFileException e) {
+            addStartupWarning(CORRUPTED_NOTE_FILE_WARNING);
+        } catch (NoteFileReadException e) {
+            addStartupWarning(NOTE_FILE_READ_WARNING);
         }
         isInitialized = true;
+    }
+
+    /**
+     * Adds a user-facing warning recorded during startup.
+     *
+     * @param warning warning to display
+     */
+    private void addStartupWarning(String warning) {
+        if (startupWarning.isEmpty()) {
+            startupWarning = warning;
+        } else {
+            startupWarning += System.lineSeparator() + warning;
+        }
     }
 
     /**

@@ -3,8 +3,6 @@ package samantha.command;
 import samantha.exception.InputException;
 import samantha.exception.TaskFileWriteException;
 import samantha.model.Task;
-import samantha.model.TaskList;
-import samantha.storage.Storage;
 
 /**
  * Represents the command that removes a task.
@@ -36,41 +34,38 @@ public class DeleteCommand extends Command {
     /**
      * Removes and saves the selected task.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the removed task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public String execute(TaskList tasks, Storage storage)
+    public String execute(CommandContext context)
             throws InputException, TaskFileWriteException {
-        Task task = getTask(tasks, taskId);
-        deletedTask = tasks.removeTask(taskId);
+        Task task = getTask(context.getTasks(), taskId);
+        deletedTask = context.getTasks().removeTask(taskId);
         deletedTaskIndex = taskId - 1;
-        saveTasks(tasks, storage);
+        saveTasks(context.getTasks(), context.getTaskStorage());
         return "Noted. I've removed this task:\n  "
                 + task + "\n"
-                + String.format("Now you have %d tasks in the list.", tasks.size());
+                + String.format("Now you have %d tasks in the list.", context.getTasks().size());
     }
 
     /**
      * Restores the task deleted by this command.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the undone command
      * @throws InputException if the deleted task has not been recorded
      * @throws TaskFileWriteException if the task list cannot be saved
      */
     @Override
-    public String undo(TaskList tasks, Storage storage)
-            throws InputException, TaskFileWriteException {
+    public String undo(CommandContext context) throws InputException, TaskFileWriteException {
         if (deletedTask == null) {
             throw new InputException("This command cannot be undone.");
         }
-        tasks.addTaskAt(deletedTask, deletedTaskIndex);
-        saveTasks(tasks, storage);
+        context.getTasks().addTaskAt(deletedTask, deletedTaskIndex);
+        saveTasks(context.getTasks(), context.getTaskStorage());
         return "I've undone the last command.";
     }
 }

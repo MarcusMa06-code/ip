@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import samantha.storage.NoteStorage;
 import samantha.storage.Storage;
 
 /**
@@ -40,7 +41,7 @@ class SamanthaTest {
 
     @Test
     void getResponse_undoAfterTodo_removesTaskAndPersistsEmptyList() throws Exception {
-        Samantha samantha = new Samantha(storage());
+        Samantha samantha = new Samantha(storage(), noteStorage());
 
         samantha.getResponse("todo read book");
 
@@ -51,7 +52,7 @@ class SamanthaTest {
 
     @Test
     void getResponse_undoAfterMark_restoresPreviousCompletionState() throws Exception {
-        Samantha samantha = new Samantha(storage());
+        Samantha samantha = new Samantha(storage(), noteStorage());
 
         samantha.getResponse("todo read book");
         samantha.getResponse("mark 1");
@@ -62,7 +63,7 @@ class SamanthaTest {
 
     @Test
     void getResponse_undoAfterDelete_restoresTaskOrder() throws Exception {
-        Samantha samantha = new Samantha(storage());
+        Samantha samantha = new Samantha(storage(), noteStorage());
 
         samantha.getResponse("todo first");
         samantha.getResponse("todo second");
@@ -71,6 +72,32 @@ class SamanthaTest {
         assertEquals("I've undone the last command.", samantha.getResponse("undo"));
         assertEquals("first", storage().load().get(0).getTaskName());
         assertEquals("second", storage().load().get(1).getTaskName());
+    }
+
+    @Test
+    void getResponse_undoAfterNoteEdit_restoresPreviousNoteContent() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("note movie title: Inception");
+        samantha.getResponse("edit-note 1 movie title: Interstellar");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertEquals("movie title: Inception", noteStorage().load().getFirst().getContent());
+    }
+
+    @Test
+    void getResponse_noteCommands_persistAndSearchNotes() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        assertEquals("Got it. I've added this note:\n"
+                + "  movie title: Inception\n"
+                + "Now you have 1 notes in the list.", samantha.getResponse("note movie title: Inception"));
+        assertEquals("Got it. I've updated this note:\n  movie title: Interstellar",
+                samantha.getResponse("edit-note 1 movie title: Interstellar"));
+        assertEquals("Here are the matching tasks in your list:\n\n"
+                + "Here are the matching notes in your list:\n"
+                + "1. movie title: Interstellar", samantha.getResponse("find interstellar"));
+        assertEquals("movie title: Interstellar", noteStorage().load().getFirst().getContent());
     }
 
     @Test
@@ -91,5 +118,9 @@ class SamanthaTest {
 
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("samantha.txt"));
+    }
+
+    private NoteStorage noteStorage() {
+        return new NoteStorage(temporaryDirectory.resolve("notes.txt"));
     }
 }

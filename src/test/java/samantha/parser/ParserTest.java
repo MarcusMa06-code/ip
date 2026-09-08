@@ -16,12 +16,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import samantha.command.AddDeadlineCommand;
 import samantha.command.AddEventCommand;
+import samantha.command.AddNoteCommand;
 import samantha.command.AddTodoCommand;
 import samantha.command.DeleteCommand;
+import samantha.command.DeleteNoteCommand;
+import samantha.command.EditNoteCommand;
 import samantha.command.ExitCommand;
 import samantha.command.FindCommand;
 import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
+import samantha.command.ListNotesCommand;
 import samantha.command.MarkCommand;
 import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
@@ -47,6 +51,10 @@ class ParserTest {
                 Arguments.of("mark 1", MarkCommand.class),
                 Arguments.of("unmark 1", UnmarkCommand.class),
                 Arguments.of("delete 1", DeleteCommand.class),
+                Arguments.of("note remember this", AddNoteCommand.class),
+                Arguments.of("notes", ListNotesCommand.class),
+                Arguments.of("edit-note 1 replacement text", EditNoteCommand.class),
+                Arguments.of("delete-note 1", DeleteNoteCommand.class),
                 Arguments.of("undo", UndoCommand.class));
     }
 
@@ -142,5 +150,17 @@ class ParserTest {
         assertThrows(InputException.class, () -> Parser.parseTaskId(Parser.splitCommand("mark")));
         assertThrows(InputException.class, () -> Parser.parseTaskId(Parser.splitCommand("mark one")));
         assertThrows(InputException.class, () -> Parser.parseTaskId(Parser.splitCommand("mark 1 extra")));
+    }
+
+    @Test
+    void parseNoteId_validId_returnsId() throws InputException {
+        assertEquals(42, Parser.parseNoteId(Parser.splitCommand("delete-note 42")));
+        assertEquals(42, Parser.parseNoteId("edit-note", "42", "replacement"));
+    }
+
+    @Test
+    void parseNoteText_missingText_inputExceptionThrown() {
+        assertThrows(InputException.class, () ->
+                Parser.parseNoteText(Parser.splitCommand("edit-note 1")));
     }
 }
