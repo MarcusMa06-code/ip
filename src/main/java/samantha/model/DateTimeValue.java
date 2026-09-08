@@ -23,9 +23,13 @@ public final class DateTimeValue {
             "^(\\d{1,2})([/-])(\\d{1,2})\\2(\\d{4})(?:\\s+(\\d{4}))?$");
     private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
             DateTimeFormatter.ofPattern("MMM d uuuu", Locale.ENGLISH);
+    private static final DateTimeFormatter DISPLAY_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH);
     private static final DateTimeFormatter STORAGE_DATE_FORMAT =
             DateTimeFormatter.ofPattern("d/M/uuuu", Locale.ENGLISH)
                     .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter STORAGE_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("HHmm", Locale.ENGLISH);
 
     private final LocalDate date;
     private final Optional<LocalTime> time;
@@ -117,7 +121,7 @@ public final class DateTimeValue {
     public String toString() {
         String formattedDate = date.format(DISPLAY_DATE_FORMAT);
         return time.map(value -> formattedDate + ", "
-                + value.format(DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)))
+                + value.format(DISPLAY_TIME_FORMAT))
                 .orElse(formattedDate);
     }
 
@@ -129,7 +133,7 @@ public final class DateTimeValue {
     public String toStorageString() {
         String storedDate = date.format(STORAGE_DATE_FORMAT);
         return time.map(value -> storedDate + " "
-                + value.format(DateTimeFormatter.ofPattern("HHmm")))
+                + value.format(STORAGE_TIME_FORMAT))
                 .orElse(storedDate);
     }
 
