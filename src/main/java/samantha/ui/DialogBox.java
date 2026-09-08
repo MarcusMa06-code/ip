@@ -20,6 +20,9 @@ import javafx.scene.shape.Circle;
  * Represents a conversation bubble with a speaker avatar and text.
  */
 public class DialogBox extends HBox {
+    private static final double AVATAR_RADIUS = 22;
+    private static final double AVATAR_HORIZONTAL_CROP_POSITION = 0.70;
+
     @FXML
     private Label dialog;
     @FXML
@@ -44,7 +47,7 @@ public class DialogBox extends HBox {
         dialog.setText(text);
         displayPicture.setImage(image);
         displayPicture.setViewport(createAvatarViewport(image));
-        displayPicture.setClip(new Circle(22, 22, 22));
+        displayPicture.setClip(new Circle(AVATAR_RADIUS, AVATAR_RADIUS, AVATAR_RADIUS));
         getStyleClass().add("dialog-box");
     }
 
@@ -93,8 +96,7 @@ public class DialogBox extends HBox {
      */
     private static Rectangle2D createAvatarViewport(Image image) {
         double cropSize = Math.min(image.getWidth(), image.getHeight());
-        double horizontalPosition = 0.70;
-        double x = horizontalPosition * (image.getWidth() - cropSize);
+        double x = AVATAR_HORIZONTAL_CROP_POSITION * (image.getWidth() - cropSize);
         double y = (image.getHeight() - cropSize) / 2;
         return new Rectangle2D(x, y, cropSize, cropSize);
     }

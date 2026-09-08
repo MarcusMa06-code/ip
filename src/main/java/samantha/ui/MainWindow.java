@@ -18,6 +18,8 @@ import samantha.Samantha;
  * Controls Samantha's main JavaFX conversation window.
  */
 public class MainWindow extends AnchorPane {
+    private static final double FAREWELL_DELAY_MILLIS = 700;
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -83,7 +85,7 @@ public class MainWindow extends AnchorPane {
      * Leaves the farewell visible before closing the JavaFX window.
      */
     private void closeAfterFarewell() {
-        PauseTransition pause = new PauseTransition(Duration.millis(700));
+        PauseTransition pause = new PauseTransition(Duration.millis(FAREWELL_DELAY_MILLIS));
         pause.setOnFinished(event -> {
             Stage stage = (Stage) userInput.getScene().getWindow();
             stage.close();
