@@ -17,6 +17,7 @@ import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
 import samantha.command.ListNotesCommand;
 import samantha.command.MarkCommand;
+import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
 import samantha.exception.InputException;
 import samantha.model.DateTimeValue;
@@ -41,7 +42,7 @@ public class Parser {
      */
     private enum CommandType {
         BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND,
-        NOTE, NOTES, EDIT_NOTE, DELETE_NOTE
+        UNDO, NOTE, NOTES, EDIT_NOTE, DELETE_NOTE
     }
 
     /**
@@ -72,6 +73,7 @@ public class Parser {
             case UNMARK -> new UnmarkCommand(parseTaskId(parts));
             case DELETE -> new DeleteCommand(parseTaskId(parts));
             case FIND -> new FindCommand(parseFindKeyword(parts));
+            case UNDO -> parseUndo(parts);
             case NOTE -> new AddNoteCommand(parseDescription(parts));
             case NOTES -> new ListNotesCommand();
             case EDIT_NOTE -> new EditNoteCommand(parseNoteId(parts), parseNoteText(parts));
@@ -92,6 +94,20 @@ public class Parser {
         } catch (IllegalArgumentException e) {
             throw new InputException("It seems that you entered a wrong command.");
         }
+    }
+
+    /**
+     * Parses the undo command and rejects unexpected arguments.
+     *
+     * @param parts words from the user command
+     * @return an undo command
+     * @throws InputException if extra arguments were supplied
+     */
+    private static Command parseUndo(String... parts) throws InputException {
+        if (parts.length > COMMAND_WORD_COUNT) {
+            throw new InputException("You entered too many parameters for this operation");
+        }
+        return new UndoCommand();
     }
 
     /**

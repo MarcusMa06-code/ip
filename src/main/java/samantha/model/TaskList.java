@@ -42,6 +42,18 @@ public class TaskList {
     }
 
     /**
+     * Inserts a task at a zero-based position in this task list.
+     *
+     * @param task task to insert
+     * @param index zero-based insertion position
+     */
+    public void addTaskAt(Task task, int index) {
+        assert task != null : "A task list must not contain null tasks";
+        assert index >= 0 && index <= tasks.size() : "Task index must be within insertion range";
+        tasks.add(index, task);
+    }
+
+    /**
      * Returns the task identified by a one-based user-facing ID.
      *
      * @param taskId one-based task ID
@@ -61,6 +73,19 @@ public class TaskList {
      */
     public Task removeTask(int taskId) throws InputException {
         return tasks.remove(getTaskIndex(taskId));
+    }
+
+    /**
+     * Removes a specific task from this task list.
+     *
+     * @param task task to remove
+     * @throws InputException if the task is not in this task list
+     */
+    public void removeTask(Task task) throws InputException {
+        assert task != null : "A task to remove must not be null";
+        if (!tasks.remove(task)) {
+            throw new InputException("You entered a task number that does not exist.");
+        }
     }
 
     /**

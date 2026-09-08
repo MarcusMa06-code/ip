@@ -676,6 +676,8 @@ Here's how to use Samantha:
     Find tasks and notes whose text contains KEYWORD.
   mark N | unmark N | delete N
     Update or remove task number N.
+  undo
+    Undo the most recent task-changing command.
   note TEXT
     Save a note.
   notes
@@ -697,7 +699,50 @@ bye
 Bye. Let's talk next time!
 ```
 
-## Test 14: Manage notes and search them
+## Test 14: Undo the most recent task-changing command
+
+**Aim:** `undo` reverses the most recent task-changing command, persists the
+restored task list, rejects unexpected arguments, and reports clearly when
+there is no command left to undo.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+undo extra
+```
+```expected
+You entered too many parameters for this operation
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+undo
+```
+```expected
+There is nothing to undo.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 15: Manage notes and search them
 
 **Aim:** Notes can be added, listed, edited, deleted, persisted, and found
 through the shared `find` command without sharing task numbering.

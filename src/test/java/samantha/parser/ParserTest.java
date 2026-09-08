@@ -27,6 +27,7 @@ import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
 import samantha.command.ListNotesCommand;
 import samantha.command.MarkCommand;
+import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
 import samantha.exception.InputException;
 
@@ -50,6 +51,7 @@ class ParserTest {
                 Arguments.of("mark 1", MarkCommand.class),
                 Arguments.of("unmark 1", UnmarkCommand.class),
                 Arguments.of("delete 1", DeleteCommand.class),
+                Arguments.of("undo", UndoCommand.class),
                 Arguments.of("note remember this", AddNoteCommand.class),
                 Arguments.of("notes", ListNotesCommand.class),
                 Arguments.of("edit-note 1 replacement text", EditNoteCommand.class),
@@ -59,6 +61,11 @@ class ParserTest {
     @Test
     void parse_unknownCommand_inputExceptionThrown() {
         assertThrows(InputException.class, () -> Parser.parse("archive 1"));
+    }
+
+    @Test
+    void parse_undoWithExtraArgument_inputExceptionThrown() {
+        assertThrows(InputException.class, () -> Parser.parse("undo extra"));
     }
 
     @Test

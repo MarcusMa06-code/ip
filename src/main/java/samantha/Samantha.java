@@ -44,6 +44,7 @@ public class Samantha {
     private boolean isInitialized;
     private boolean isExitRequested;
     private String startupWarning = "";
+    private Command lastUndoableCommand;
 
     /**
      * Creates an empty Samantha instance using the default storage location.
@@ -121,12 +122,44 @@ public class Samantha {
         try {
             Command command = Parser.parse(input);
             assert command != null : "Parsing a valid command must produce a command";
-            String response = command.execute(new CommandContext(tasks, notes, storage, noteStorage));
+            String response = command.isUndo()
+                    ? undoLastCommand()
+                    : executeAndRecord(command);
             isExitRequested = command.isExit();
             return isExitRequested ? GOODBYE : response;
         } catch (SamanthaException e) {
             return e.getMessage();
         }
+    }
+
+    /**
+     * Executes a regular command and records it when it changes the task list.
+     *
+     * @param command command to execute
+     * @return command response
+     * @throws SamanthaException if command execution fails
+     */
+    private String executeAndRecord(Command command) throws SamanthaException {
+        String response = command.execute(new CommandContext(tasks, notes, storage, noteStorage));
+        if (command.isUndoable()) {
+            lastUndoableCommand = command;
+        }
+        return response;
+    }
+
+    /**
+     * Undoes the latest successful undoable command, if one exists.
+     *
+     * @return undo confirmation or a message explaining that there is no history
+     * @throws SamanthaException if undoing the command fails
+     */
+    private String undoLastCommand() throws SamanthaException {
+        if (lastUndoableCommand == null) {
+            return "There is nothing to undo.";
+        }
+        String response = lastUndoableCommand.undo(tasks, storage);
+        lastUndoableCommand = null;
+        return response;
     }
 
     /**

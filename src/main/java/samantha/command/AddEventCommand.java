@@ -27,6 +27,16 @@ public class AddEventCommand extends Command {
     }
 
     /**
+     * Indicates that adding this task can be undone.
+     *
+     * @return {@code true}
+     */
+    @Override
+    public boolean isUndoable() {
+        return true;
+    }
+
+    /**
      * Adds and saves the event task.
      *
      * @param context current application state and persistence handlers
