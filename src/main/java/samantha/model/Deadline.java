@@ -42,7 +42,7 @@ public class Deadline extends Task {
      */
     @Override
     public boolean isOnDate(LocalDate date) {
-        return deadline.getDate().orElseThrow().equals(date);
+        return deadline.getDate().equals(date);
     }
 
     /**

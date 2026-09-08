@@ -71,8 +71,8 @@ public class Event extends Task {
      */
     @Override
     public boolean isOnDate(LocalDate date) {
-        LocalDate fromDate = from.getDate().orElseThrow();
-        LocalDate toDate = to.getDate().orElseThrow();
+        LocalDate fromDate = from.getDate();
+        LocalDate toDate = to.getDate();
         return !date.isBefore(fromDate) && !date.isAfter(toDate);
     }
 

@@ -135,8 +135,8 @@ public final class DateTimeValue {
      *
      * @return the parsed date
      */
-    public Optional<LocalDate> getDate() {
-        return Optional.of(date);
+    public LocalDate getDate() {
+        return date;
     }
 
     /**
