@@ -22,6 +22,22 @@ import samantha.model.Todo;
  */
 public class Storage {
     private static final Path DEFAULT_FILE = Path.of("data", "samantha.txt");
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final String EVENT_TIME_SEPARATOR = "to";
+    private static final int INCOMPLETE_STATUS = 0;
+    private static final int COMPLETE_STATUS = 1;
+    private static final int TASK_TYPE_INDEX = 0;
+    private static final int STATUS_INDEX = 1;
+    private static final int TASK_NAME_INDEX = 2;
+    private static final int FIRST_DETAIL_INDEX = 3;
+    private static final int SECOND_DETAIL_INDEX = 4;
+    private static final int MINIMUM_TASK_FIELDS = 3;
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int COMBINED_EVENT_FIELD_COUNT = 4;
+    private static final int SPLIT_EVENT_FIELD_COUNT = 5;
     private final Path file;
 
     /**
@@ -87,51 +103,127 @@ public class Storage {
      * @throws IllegalArgumentException if the record structure is malformed
      */
     private Task parseTask(String[] parts) throws TaskValidationException, InputException {
-        if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank()) {
+        if (parts.length < MINIMUM_TASK_FIELDS
+                || parts[TASK_TYPE_INDEX].isBlank()
+                || parts[STATUS_INDEX].isBlank()) {
             throw new IllegalArgumentException("Malformed task record");
         }
 
-        int status;
-        try {
-            status = Integer.parseInt(parts[1].trim());
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Malformed task status", e);
-        }
-        if (status != 0 && status != 1) {
-            throw new IllegalArgumentException("Malformed task status");
-        }
-
-        Task task;
-        switch (parts[0].trim()) {
-            case "T" -> {
-                requirePartCount(parts, 3);
-                task = new Todo(requireText(parts[2]));
-            }
-            case "D" -> {
-                requirePartCount(parts, 4);
-                task = new Deadline(requireText(parts[2]), requireText(parts[3]));
-            }
-            case "E" -> {
-                if (parts.length == 4) {
-                    String schedule = requireText(parts[3]);
-                    String[] times = schedule.split("\\s+to\\s+", 2);
-                    if (times.length != 2) {
-                        throw new IllegalArgumentException("Malformed event schedule");
-                    }
-                    task = new Event(requireText(parts[2]), requireText(times[0]), requireText(times[1]));
-                } else if (parts.length == 5) {
-                    task = new Event(requireText(parts[2]), requireText(parts[3]), requireText(parts[4]));
-                } else {
-                    throw new IllegalArgumentException("Wrong number of fields");
-                }
-            }
-            default -> throw new IllegalArgumentException("Unknown task type");
-        }
-
-        if (status == 1) {
+        boolean isDone = parseCompletionStatus(parts[STATUS_INDEX]);
+        Task task = createTask(parts);
+        if (isDone) {
             task.markDone();
         }
         return task;
+    }
+
+    /**
+     * Parses the completion status from a saved task record.
+     *
+     * @param statusText raw completion status
+     * @return {@code true} when the saved task is complete
+     * @throws IllegalArgumentException if the status is not supported
+     */
+    private boolean parseCompletionStatus(String statusText) {
+        int status;
+        try {
+            status = Integer.parseInt(statusText.trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Malformed task status", e);
+        }
+
+        if (status == INCOMPLETE_STATUS) {
+            return false;
+        }
+        if (status == COMPLETE_STATUS) {
+            return true;
+        }
+        throw new IllegalArgumentException("Malformed task status");
+    }
+
+    /**
+     * Creates a task from a validated saved record.
+     *
+     * @param parts pipe-delimited record fields
+     * @return the reconstructed task
+     * @throws TaskValidationException if a task field violates the task model's rules
+     * @throws InputException if a persisted date or time value is invalid
+     * @throws IllegalArgumentException if the task type or record structure is malformed
+     */
+    private Task createTask(String[] parts) throws TaskValidationException, InputException {
+        return switch (parts[TASK_TYPE_INDEX].trim()) {
+            case TODO_TYPE -> parseTodo(parts);
+            case DEADLINE_TYPE -> parseDeadline(parts);
+            case EVENT_TYPE -> parseEvent(parts);
+            default -> throw new IllegalArgumentException("Unknown task type");
+        };
+    }
+
+    /**
+     * Reconstructs a todo task from a saved record.
+     *
+     * @param parts pipe-delimited record fields
+     * @return the reconstructed todo
+     * @throws TaskValidationException if the description is invalid
+     * @throws IllegalArgumentException if the record has the wrong number of fields
+     */
+    private Task parseTodo(String[] parts) throws TaskValidationException {
+        requirePartCount(parts, TODO_FIELD_COUNT);
+        return new Todo(requireText(parts[TASK_NAME_INDEX]));
+    }
+
+    /**
+     * Reconstructs a deadline task from a saved record.
+     *
+     * @param parts pipe-delimited record fields
+     * @return the reconstructed deadline
+     * @throws TaskValidationException if the description is invalid
+     * @throws InputException if the deadline is invalid
+     * @throws IllegalArgumentException if the record has the wrong number of fields
+     */
+    private Task parseDeadline(String[] parts) throws TaskValidationException, InputException {
+        requirePartCount(parts, DEADLINE_FIELD_COUNT);
+        return new Deadline(requireText(parts[TASK_NAME_INDEX]),
+                requireText(parts[FIRST_DETAIL_INDEX]));
+    }
+
+    /**
+     * Reconstructs an event task from either supported saved-record layout.
+     *
+     * @param parts pipe-delimited record fields
+     * @return the reconstructed event
+     * @throws TaskValidationException if the description or schedule is invalid
+     * @throws InputException if an event date or time is invalid
+     * @throws IllegalArgumentException if the record structure is malformed
+     */
+    private Task parseEvent(String[] parts) throws TaskValidationException, InputException {
+        if (parts.length == COMBINED_EVENT_FIELD_COUNT) {
+            return parseCombinedEvent(parts);
+        }
+        if (parts.length == SPLIT_EVENT_FIELD_COUNT) {
+            return new Event(requireText(parts[TASK_NAME_INDEX]),
+                    requireText(parts[FIRST_DETAIL_INDEX]), requireText(parts[SECOND_DETAIL_INDEX]));
+        }
+        throw new IllegalArgumentException("Wrong number of fields");
+    }
+
+    /**
+     * Reconstructs an event from the current combined-schedule record layout.
+     *
+     * @param parts pipe-delimited record fields
+     * @return the reconstructed event
+     * @throws TaskValidationException if the description or schedule is invalid
+     * @throws InputException if an event date or time is invalid
+     * @throws IllegalArgumentException if the schedule is malformed
+     */
+    private Task parseCombinedEvent(String[] parts)
+            throws TaskValidationException, InputException {
+        String schedule = requireText(parts[FIRST_DETAIL_INDEX]);
+        String[] times = schedule.split("\\s+" + EVENT_TIME_SEPARATOR + "\\s+", 2);
+        if (times.length != 2) {
+            throw new IllegalArgumentException("Malformed event schedule");
+        }
+        return new Event(requireText(parts[TASK_NAME_INDEX]), requireText(times[0]), requireText(times[1]));
     }
 
     /**
