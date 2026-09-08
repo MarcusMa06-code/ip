@@ -47,6 +47,7 @@ public class Samantha {
      * @param storage task persistence handler
      */
     Samantha(Storage storage) {
+        assert storage != null : "Samantha must have a storage handler";
         this.storage = storage;
     }
 
@@ -83,8 +84,10 @@ public class Samantha {
      */
     public String getResponse(String input) {
         initialize();
+        assert isInitialized : "Samantha must be initialized before handling commands";
         try {
             Command command = Parser.parse(input);
+            assert command != null : "Parsing a valid command must produce a command";
             String response = command.execute(tasks, storage);
             isExitRequested = command.isExit();
             return isExitRequested ? GOODBYE : response;

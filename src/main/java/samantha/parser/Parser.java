@@ -46,7 +46,9 @@ public class Parser {
      * @throws InputException if the command or its arguments are invalid
      */
     public static Command parse(String fullCommand) throws InputException {
+        assert fullCommand != null : "A complete command must not be null";
         String[] parts = splitCommand(fullCommand);
+        assert parts.length > 0 : "A split command must contain a command word";
         return switch (parseCommandType(parts[0])) {
             case BYE -> new ExitCommand();
             case HELP -> new HelpCommand();
@@ -129,6 +131,7 @@ public class Parser {
         if (segments.length < 2) {
             throw new InputException("You forgot to include /by for this deadline.");
         }
+        assert segments.length == 2 : "A deadline must have exactly two segments";
         return new String[] {segments[0].trim(), segments[1].trim()};
     }
 
@@ -144,6 +147,7 @@ public class Parser {
         if (segments.length < 3) {
             throw new InputException("You forgot to include /from and /to for this event.");
         }
+        assert segments.length == 3 : "An event must have exactly three segments";
         return new String[] {segments[0].trim(), segments[1].trim(), segments[2].trim()};
     }
 

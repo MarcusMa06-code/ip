@@ -2,6 +2,8 @@ package samantha.command;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import samantha.model.Task;
 import samantha.model.TaskList;
@@ -31,15 +33,13 @@ public class FindCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks, Storage storage) {
-        StringBuilder message = new StringBuilder("Here are the matching tasks in your list:\n");
         List<Task> taskSnapshot = tasks.asList();
-        for (int index = 0; index < taskSnapshot.size(); index++) {
-            Task task = taskSnapshot.get(index);
-            if (containsKeyword(task)) {
-                message.append(String.format("%d. %s\n", index + 1, task));
-            }
-        }
-        return message.toString().stripTrailing();
+        String matchingTasks = IntStream.range(0, taskSnapshot.size())
+                .filter(index -> containsKeyword(taskSnapshot.get(index)))
+                .mapToObj(index -> String.format("%d. %s", index + 1, taskSnapshot.get(index)))
+                .collect(Collectors.joining("\n"));
+        String message = "Here are the matching tasks in your list:\n" + matchingTasks;
+        return message.stripTrailing();
     }
 
     /**

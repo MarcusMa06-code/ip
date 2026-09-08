@@ -56,6 +56,7 @@ public class Storage {
      * @param file location of the task data file
      */
     public Storage(Path file) {
+        assert file != null : "Storage must have a data-file path";
         this.file = file;
     }
 
@@ -114,6 +115,7 @@ public class Storage {
         if (isDone) {
             task.markDone();
         }
+        assert task != null : "A valid task record must reconstruct a task";
         return task;
     }
 
@@ -262,18 +264,18 @@ public class Storage {
      * @throws TaskFileWriteException if the file cannot be created or written
      */
     public void save(List<Task> tasks) throws TaskFileWriteException {
+        assert tasks != null : "Tasks to save must not be null";
+        assert tasks.stream().noneMatch(task -> task == null)
+                : "Tasks to save must not contain null tasks";
         try {
             Path parent = file.getParent();
             if (parent != null) {
                 Files.createDirectories(parent);
             }
 
-            try (var writer = Files.newBufferedWriter(file)) {
-                for (Task task : tasks) {
-                    writer.write(task.toFileString());
-                    writer.newLine();
-                }
-            }
+            Files.write(file, tasks.stream()
+                    .map(Task::toFileString)
+                    .toList());
         } catch (IOException e) {
             throw new TaskFileWriteException(e);
         }
