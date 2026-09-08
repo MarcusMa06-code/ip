@@ -5,13 +5,17 @@ import java.util.Arrays;
 
 import samantha.command.AddDeadlineCommand;
 import samantha.command.AddEventCommand;
+import samantha.command.AddNoteCommand;
 import samantha.command.AddTodoCommand;
 import samantha.command.Command;
 import samantha.command.DeleteCommand;
+import samantha.command.DeleteNoteCommand;
+import samantha.command.EditNoteCommand;
 import samantha.command.ExitCommand;
 import samantha.command.FindCommand;
 import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
+import samantha.command.ListNotesCommand;
 import samantha.command.MarkCommand;
 import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
@@ -25,6 +29,7 @@ public class Parser {
     private static final int COMMAND_WORD_COUNT = 1;
     private static final int MAXIMUM_ARGUMENT_PARTS = 2;
     private static final int COMMAND_ARGUMENT_INDEX = 1;
+    private static final int NOTE_TEXT_INDEX = 2;
 
     /**
      * Creates a parser for Samantha commands.
@@ -36,7 +41,8 @@ public class Parser {
      * Represents the commands supported by Samantha.
      */
     private enum CommandType {
-        BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND, UNDO
+        BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND,
+        UNDO, NOTE, NOTES, EDIT_NOTE, DELETE_NOTE
     }
 
     /**
@@ -68,6 +74,10 @@ public class Parser {
             case DELETE -> new DeleteCommand(parseTaskId(parts));
             case FIND -> new FindCommand(parseFindKeyword(parts));
             case UNDO -> parseUndo(parts);
+            case NOTE -> new AddNoteCommand(parseDescription(parts));
+            case NOTES -> new ListNotesCommand();
+            case EDIT_NOTE -> new EditNoteCommand(parseNoteId(parts), parseNoteText(parts));
+            case DELETE_NOTE -> new DeleteNoteCommand(parseNoteId(parts));
         };
     }
 
@@ -80,7 +90,7 @@ public class Parser {
      */
     private static CommandType parseCommandType(String word) throws InputException {
         try {
-            return CommandType.valueOf(word.toUpperCase());
+            return CommandType.valueOf(word.replace('-', '_').toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new InputException("It seems that you entered a wrong command.");
         }
@@ -203,5 +213,41 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new InputException("You need to enter a number for the task id.");
         }
+    }
+
+    /**
+     * Parses the one-based note ID supplied to a note command.
+     *
+     * @param parts words from the user command
+     * @return the parsed note ID
+     * @throws InputException if the command has a missing, extra, or non-numeric ID
+     */
+    public static int parseNoteId(String... parts) throws InputException {
+        if (parts.length > MAXIMUM_ARGUMENT_PARTS
+                && !parts[0].equalsIgnoreCase("edit-note")) {
+            throw new InputException("You entered too many parameters for this operation");
+        }
+        if (parts.length == COMMAND_WORD_COUNT) {
+            throw new InputException("You forgot to mention the id of the note");
+        }
+        try {
+            return Integer.parseInt(parts[COMMAND_ARGUMENT_INDEX]);
+        } catch (NumberFormatException e) {
+            throw new InputException("You need to enter a number for the note id.");
+        }
+    }
+
+    /**
+     * Extracts and validates replacement text following an edit-note command.
+     *
+     * @param parts words from the user command
+     * @return replacement note content
+     * @throws InputException if no replacement text was supplied
+     */
+    public static String parseNoteText(String... parts) throws InputException {
+        if (parts.length <= NOTE_TEXT_INDEX) {
+            throw new InputException("You forgot to mention the new note text.");
+        }
+        return String.join(" ", Arrays.copyOfRange(parts, NOTE_TEXT_INDEX, parts.length));
     }
 }

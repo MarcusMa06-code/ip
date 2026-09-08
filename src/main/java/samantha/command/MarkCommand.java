@@ -35,19 +35,18 @@ public class MarkCommand extends Command {
     /**
      * Marks and saves the selected task.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the marked task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public String execute(TaskList tasks, Storage storage)
+    public String execute(CommandContext context)
             throws InputException, TaskFileWriteException {
-        Task task = getTask(tasks, taskId);
+        Task task = getTask(context.getTasks(), taskId);
         wasDone = task.isDone();
         task.markDone();
-        saveTasks(tasks, storage);
+        saveTasks(context.getTasks(), context.getTaskStorage());
         return "Nice! I've marked this task as done:\n  " + task;
     }
 

@@ -35,19 +35,18 @@ public class UnmarkCommand extends Command {
     /**
      * Marks the selected task as incomplete and saves it.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the unmarked task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public String execute(TaskList tasks, Storage storage)
+    public String execute(CommandContext context)
             throws InputException, TaskFileWriteException {
-        Task task = getTask(tasks, taskId);
+        Task task = getTask(context.getTasks(), taskId);
         wasDone = task.isDone();
         task.markNotDone();
-        saveTasks(tasks, storage);
+        saveTasks(context.getTasks(), context.getTaskStorage());
         return "OK, I've marked this task as not done yet:\n  " + task;
     }
 

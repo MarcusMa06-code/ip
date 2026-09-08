@@ -2,9 +2,7 @@ package samantha.command;
 
 import samantha.exception.TaskFileWriteException;
 import samantha.exception.TaskValidationException;
-import samantha.model.TaskList;
 import samantha.model.Todo;
-import samantha.storage.Storage;
 
 /**
  * Represents the command that adds a todo task.
@@ -34,15 +32,14 @@ public class AddTodoCommand extends Command {
     /**
      * Adds and saves the todo task.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the newly added task
      * @throws TaskValidationException if the description is empty
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public String execute(TaskList tasks, Storage storage)
+    public String execute(CommandContext context)
             throws TaskValidationException, TaskFileWriteException {
-        return addAndSaveTask(new Todo(taskName), tasks, storage);
+        return addAndSaveTask(new Todo(taskName), context.getTasks(), context.getTaskStorage());
     }
 }

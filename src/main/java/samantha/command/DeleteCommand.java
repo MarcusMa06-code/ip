@@ -36,22 +36,21 @@ public class DeleteCommand extends Command {
     /**
      * Removes and saves the selected task.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the removed task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public String execute(TaskList tasks, Storage storage)
+    public String execute(CommandContext context)
             throws InputException, TaskFileWriteException {
-        Task task = getTask(tasks, taskId);
-        deletedTask = tasks.removeTask(taskId);
+        Task task = getTask(context.getTasks(), taskId);
+        deletedTask = context.getTasks().removeTask(taskId);
         deletedTaskIndex = taskId - 1;
-        saveTasks(tasks, storage);
+        saveTasks(context.getTasks(), context.getTaskStorage());
         return "Noted. I've removed this task:\n  "
                 + task + "\n"
-                + String.format("Now you have %d tasks in the list.", tasks.size());
+                + String.format("Now you have %d tasks in the list.", context.getTasks().size());
     }
 
     /**
