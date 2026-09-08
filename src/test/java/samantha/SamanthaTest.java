@@ -39,6 +39,41 @@ class SamanthaTest {
     }
 
     @Test
+    void getResponse_undoAfterTodo_removesTaskAndPersistsEmptyList() throws Exception {
+        Samantha samantha = new Samantha(storage());
+
+        samantha.getResponse("todo read book");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertTrue(storage().load().isEmpty());
+        assertEquals("There is nothing to undo.", samantha.getResponse("undo"));
+    }
+
+    @Test
+    void getResponse_undoAfterMark_restoresPreviousCompletionState() throws Exception {
+        Samantha samantha = new Samantha(storage());
+
+        samantha.getResponse("todo read book");
+        samantha.getResponse("mark 1");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertEquals("T | 0 | read book", storage().load().get(0).toFileString());
+    }
+
+    @Test
+    void getResponse_undoAfterDelete_restoresTaskOrder() throws Exception {
+        Samantha samantha = new Samantha(storage());
+
+        samantha.getResponse("todo first");
+        samantha.getResponse("todo second");
+        samantha.getResponse("delete 1");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertEquals("first", storage().load().get(0).getTaskName());
+        assertEquals("second", storage().load().get(1).getTaskName());
+    }
+
+    @Test
     void getResponse_invalidCommand_returnsErrorWithoutRequestingExit() {
         Samantha samantha = new Samantha(storage());
 

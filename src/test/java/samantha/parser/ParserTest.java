@@ -23,6 +23,7 @@ import samantha.command.FindCommand;
 import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
 import samantha.command.MarkCommand;
+import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
 import samantha.exception.InputException;
 
@@ -45,7 +46,8 @@ class ParserTest {
                 Arguments.of("event meeting /from 2/12/2019 1400 /to 2/12/2019 1600", AddEventCommand.class),
                 Arguments.of("mark 1", MarkCommand.class),
                 Arguments.of("unmark 1", UnmarkCommand.class),
-                Arguments.of("delete 1", DeleteCommand.class));
+                Arguments.of("delete 1", DeleteCommand.class),
+                Arguments.of("undo", UndoCommand.class));
     }
 
     @Test
