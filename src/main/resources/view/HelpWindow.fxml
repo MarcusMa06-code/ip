@@ -40,6 +40,14 @@
                                 styleClass="command-item" text="list" />
                         <Button fx:id="findButton" mnemonicParsing="false" onAction="#selectCommand"
                                 styleClass="command-item" text="find" />
+                        <Button fx:id="noteButton" mnemonicParsing="false" onAction="#selectCommand"
+                                styleClass="command-item" text="note" />
+                        <Button fx:id="notesButton" mnemonicParsing="false" onAction="#selectCommand"
+                                styleClass="command-item" text="notes" />
+                        <Button fx:id="editNoteButton" mnemonicParsing="false" onAction="#selectCommand"
+                                styleClass="command-item" text="edit-note" />
+                        <Button fx:id="deleteNoteButton" mnemonicParsing="false" onAction="#selectCommand"
+                                styleClass="command-item" text="delete-note" />
                         <Button fx:id="markButton" mnemonicParsing="false" onAction="#selectCommand"
                                 styleClass="command-item" text="mark" />
                         <Button fx:id="unmarkButton" mnemonicParsing="false" onAction="#selectCommand"

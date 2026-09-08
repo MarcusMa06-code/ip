@@ -39,6 +39,13 @@ public class HelpWindow {
                     "list [DATE]", "list 12/9/2026", "DATE FORMAT", DATE_FORMAT_MESSAGE),
             new CommandHelp("find", "Find tasks whose descriptions contain a keyword.",
                     "find KEYWORD", "find report"),
+            new CommandHelp("note", "Add a note that you want Samantha to remember.",
+                    "note CONTENT", "note buy milk"),
+            new CommandHelp("notes", "Show all saved notes.", "notes", "notes"),
+            new CommandHelp("edit-note", "Replace a note using its list number.",
+                    "edit-note NOTE_NUMBER CONTENT", "edit-note 1 buy oat milk"),
+            new CommandHelp("delete-note", "Remove a note using its list number.",
+                    "delete-note NOTE_NUMBER", "delete-note 1"),
             new CommandHelp("mark", "Mark a task as done using its list number.",
                     "mark N", "mark 1"),
             new CommandHelp("unmark", "Mark a completed task as not done yet.",
@@ -61,6 +68,14 @@ public class HelpWindow {
     private Button listButton;
     @FXML
     private Button findButton;
+    @FXML
+    private Button noteButton;
+    @FXML
+    private Button notesButton;
+    @FXML
+    private Button editNoteButton;
+    @FXML
+    private Button deleteNoteButton;
     @FXML
     private Button markButton;
     @FXML
@@ -100,7 +115,8 @@ public class HelpWindow {
     public void initialize() {
         commandButtons = List.of(
                 helpButton, todoButton, deadlineButton, eventButton, listButton,
-                findButton, markButton, unmarkButton, deleteButton, byeButton);
+                findButton, noteButton, notesButton, editNoteButton, deleteNoteButton,
+                markButton, unmarkButton, deleteButton, byeButton);
         helpWindow.setFocusTraversable(true);
         helpWindow.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
         showCommand(0);
@@ -157,8 +173,40 @@ public class HelpWindow {
      * @param offset positive for next command and negative for previous command
      */
     private void moveSelection(int offset) {
-        int nextIndex = Math.floorMod(selectedIndex + offset, COMMANDS.size());
+        int nextIndex = getAdjacentCommandIndex(selectedIndex, offset);
         showCommand(nextIndex);
+    }
+
+    /**
+     * Returns the guide index reached by moving from a selected command.
+     *
+     * @param selectedIndex currently selected command index
+     * @param offset positive for next command and negative for previous command
+     * @return the wrapped command index after applying the offset
+     */
+    static int getAdjacentCommandIndex(int selectedIndex, int offset) {
+        return Math.floorMod(selectedIndex + offset, COMMANDS.size());
+    }
+
+    /**
+     * Returns the command words shown in the guide, in navigation order.
+     *
+     * @return immutable command word list
+     */
+    static List<String> getCommandNames() {
+        return COMMANDS.stream().map(command -> command.name).toList();
+    }
+
+    /**
+     * Indicates whether a command requires a date or time format hint.
+     *
+     * @param commandName command word in the guide
+     * @return true if the command has a format hint
+     */
+    static boolean hasFormatNote(String commandName) {
+        return COMMANDS.stream()
+                .filter(command -> command.name.equals(commandName))
+                .anyMatch(command -> command.formatMessage != null);
     }
 
     /**
