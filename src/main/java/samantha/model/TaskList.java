@@ -38,16 +38,6 @@ public class TaskList {
     }
 
     /**
-     * Returns the task at a zero-based position.
-     *
-     * @param index zero-based task position
-     * @return the task at the given position
-     */
-    public Task get(int index) {
-        return tasks.get(index);
-    }
-
-    /**
      * Returns the task identified by a one-based user-facing ID.
      *
      * @param taskId one-based task ID
@@ -55,20 +45,18 @@ public class TaskList {
      * @throws InputException if the ID is outside this list
      */
     public Task getTask(int taskId) throws InputException {
-        if (taskId < 1 || taskId > tasks.size()) {
-            throw new InputException("You entered a task number that does not exist.");
-        }
-        return get(taskId - 1);
+        return tasks.get(getTaskIndex(taskId));
     }
 
     /**
-     * Removes and returns the task at a zero-based position.
+     * Removes and returns the task identified by a one-based user-facing ID.
      *
-     * @param index zero-based task position
+     * @param taskId one-based task ID
      * @return the removed task
+     * @throws InputException if the ID is outside this list
      */
-    public Task remove(int index) {
-        return tasks.remove(index);
+    public Task removeTask(int taskId) throws InputException {
+        return tasks.remove(getTaskIndex(taskId));
     }
 
     /**
@@ -87,5 +75,19 @@ public class TaskList {
      */
     public List<Task> asList() {
         return List.copyOf(tasks);
+    }
+
+    /**
+     * Converts a valid one-based task ID into the list's internal index.
+     *
+     * @param taskId one-based task ID
+     * @return zero-based index for the task ID
+     * @throws InputException if the ID is outside this list
+     */
+    private int getTaskIndex(int taskId) throws InputException {
+        if (taskId < 1 || taskId > tasks.size()) {
+            throw new InputException("You entered a task number that does not exist.");
+        }
+        return taskId - 1;
     }
 }
