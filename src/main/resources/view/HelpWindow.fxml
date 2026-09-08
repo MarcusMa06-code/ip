@@ -93,11 +93,10 @@
                         <Label fx:id="copyStatus" styleClass="copy-status" />
                     </children>
                 </VBox>
-                <VBox spacing="5.0" styleClass="date-note">
+                <VBox fx:id="formatNote" spacing="5.0" styleClass="date-note">
                     <children>
-                        <Label styleClass="detail-label" text="DATE AND TIME FORMAT" />
-                        <Label styleClass="date-note-text" wrapText="true"
-                               text="Dates: d/M/yyyy or d-M-yyyy  ·  Times: HHmm (for example, 1800)" />
+                        <Label fx:id="formatHeading" styleClass="detail-label" />
+                        <Label fx:id="formatText" styleClass="date-note-text" wrapText="true" />
                     </children>
                 </VBox>
             </children>
