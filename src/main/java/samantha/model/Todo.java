@@ -47,6 +47,6 @@ public class Todo extends Task {
      */
     @Override
     public String toFileString() {
-        return String.format("T | %d | %s", isDone() ? 1 : 0, getTaskName());
+        return String.format("T | %d | %s", getCompletionStatusCode(), getTaskName());
     }
 }

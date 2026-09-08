@@ -9,6 +9,8 @@ import samantha.storage.Storage;
  * Common state and behavior shared by all task types.
  */
 public abstract class Task {
+    private static final int INCOMPLETE_STATUS_CODE = 0;
+    private static final int COMPLETE_STATUS_CODE = 1;
     private boolean isDone;
     private final String taskName;
 
@@ -58,6 +60,15 @@ public abstract class Task {
      */
     public boolean isDone() {
         return isDone;
+    }
+
+    /**
+     * Returns the completion status code used in saved task records.
+     *
+     * @return {@code 1} for a complete task or {@code 0} otherwise
+     */
+    protected int getCompletionStatusCode() {
+        return isDone ? COMPLETE_STATUS_CODE : INCOMPLETE_STATUS_CODE;
     }
 
     /**
