@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="helpWindow" prefHeight="560.0" prefWidth="900.0" styleClass="help-window"
+<BorderPane fx:id="helpWindow" prefHeight="520.0" prefWidth="760.0" styleClass="help-window"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="samantha.ui.HelpWindow">
@@ -17,13 +17,13 @@
             <children>
                 <Label styleClass="help-brand" text="Samantha" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Label styleClass="keyboard-hint" text="j / k navigate   ·   c or Enter copy   ·   q close" />
+                <Label styleClass="keyboard-hint" text="j/k navigate · c copy · q close" />
                 <Button mnemonicParsing="false" onAction="#closeWindow" styleClass="close-button" text="Close" />
             </children>
         </HBox>
     </top>
     <left>
-        <VBox prefWidth="230.0" spacing="4.0" styleClass="command-sidebar">
+        <VBox prefWidth="180.0" spacing="4.0" styleClass="command-sidebar">
             <children>
                 <Label styleClass="sidebar-title" text="COMMANDS" />
                 <Label styleClass="sidebar-subtitle" text="Use j / k to move" />
@@ -79,13 +79,17 @@
                 <VBox spacing="6.0" styleClass="detail-section">
                     <children>
                         <Label styleClass="detail-label" text="EXAMPLE" />
-                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="example-row">
+                        <VBox spacing="8.0" styleClass="example-row">
                             <children>
-                                <Label fx:id="commandExample" styleClass="example-value" wrapText="true" HBox.hgrow="ALWAYS" />
-                                <Button fx:id="copyButton" mnemonicParsing="false" onAction="#copyCommand"
-                                        styleClass="copy-button" text="Copy example" />
+                                <Label fx:id="commandExample" styleClass="example-value" wrapText="true" />
+                                <HBox alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Button fx:id="copyButton" mnemonicParsing="false" onAction="#copyCommand"
+                                                styleClass="copy-button" text="Copy example" />
+                                    </children>
+                                </HBox>
                             </children>
-                        </HBox>
+                        </VBox>
                         <Label fx:id="copyStatus" styleClass="copy-status" />
                     </children>
                 </VBox>

@@ -23,6 +23,8 @@ import samantha.Samantha;
  */
 public class MainWindow extends AnchorPane {
     private static final double FAREWELL_DELAY_MILLIS = 700;
+    private static final double HELP_WINDOW_MIN_WIDTH = 680;
+    private static final double HELP_WINDOW_MIN_HEIGHT = 520;
     private static final String HELP_COMMAND = "help";
     private static final String HELP_OPENED_MESSAGE = "I’ve opened a clearer guide for you.";
 
@@ -113,8 +115,8 @@ public class MainWindow extends AnchorPane {
             Parent helpWindow = fxmlLoader.load();
             Stage newHelpStage = new Stage();
             newHelpStage.setTitle("Samantha Help");
-            newHelpStage.setMinWidth(760);
-            newHelpStage.setMinHeight(620);
+            newHelpStage.setMinWidth(HELP_WINDOW_MIN_WIDTH);
+            newHelpStage.setMinHeight(HELP_WINDOW_MIN_HEIGHT);
             newHelpStage.initOwner(userInput.getScene().getWindow());
             newHelpStage.setScene(new Scene(helpWindow));
             newHelpStage.setOnHidden(event -> helpStage = null);

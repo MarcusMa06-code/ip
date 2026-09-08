@@ -7,7 +7,7 @@
     -fx-background-color: #5d1f2b;
     -fx-border-color: #3d101a;
     -fx-border-width: 0 0 2 0;
-    -fx-padding: 12 20 12 22;
+    -fx-padding: 11 16 11 18;
 }
 
 .help-brand {
@@ -18,7 +18,7 @@
 
 .keyboard-hint {
     -fx-font-family: "Menlo", "Monospaced";
-    -fx-font-size: 11px;
+    -fx-font-size: 10px;
     -fx-text-fill: #e8cabc;
 }
 
@@ -40,7 +40,7 @@
     -fx-background-color: #f1dfd2;
     -fx-border-color: transparent #e4c5b5 transparent transparent;
     -fx-border-width: 0 1 0 0;
-    -fx-padding: 20 14 20 14;
+    -fx-padding: 18 12 18 12;
 }
 
 .sidebar-title,
@@ -89,7 +89,7 @@
 }
 
 .command-detail {
-    -fx-padding: 28 34 28 34;
+    -fx-padding: 22 26 22 26;
 }
 
 .command-position {
@@ -131,12 +131,13 @@
 .example-row {
     -fx-background-color: #2f171d;
     -fx-background-radius: 4;
-    -fx-padding: 10 10 10 13;
+    -fx-padding: 10 12 10 12;
 }
 
 .example-value {
     -fx-font-family: "Menlo", "Monospaced";
     -fx-font-size: 13px;
+    -fx-line-spacing: 2px;
     -fx-text-fill: #fff3df;
 }
 
