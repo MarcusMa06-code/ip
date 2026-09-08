@@ -4,7 +4,6 @@ import samantha.exception.InputException;
 import samantha.exception.TaskFileWriteException;
 import samantha.exception.TaskValidationException;
 import samantha.model.Event;
-import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.storage.Storage;
 
@@ -42,9 +41,6 @@ public class AddEventCommand extends Command {
     @Override
     public String execute(TaskList tasks, Storage storage)
             throws TaskValidationException, InputException, TaskFileWriteException {
-        Task task = new Event(taskName, from, to);
-        tasks.add(task);
-        saveTasks(tasks, storage);
-        return getTaskAddedResponse(task, tasks.size());
+        return addAndSaveTask(new Event(taskName, from, to), tasks, storage);
     }
 }

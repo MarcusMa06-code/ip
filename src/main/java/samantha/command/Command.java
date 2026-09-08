@@ -71,6 +71,22 @@ public abstract class Command {
     }
 
     /**
+     * Adds a task, persists the updated list, and returns its confirmation.
+     *
+     * @param task task to add
+     * @param tasks current task list
+     * @param storage task persistence handler
+     * @return confirmation for the added task
+     * @throws TaskFileWriteException if the task list cannot be saved
+     */
+    protected String addAndSaveTask(Task task, TaskList tasks, Storage storage)
+            throws TaskFileWriteException {
+        tasks.add(task);
+        saveTasks(tasks, storage);
+        return getTaskAddedResponse(task, tasks.size());
+    }
+
+    /**
      * Returns the confirmation after a new task is added.
      *
      * @param task newly added task
