@@ -37,6 +37,8 @@ public final class DateTimeValue {
      * @param time parsed time, if supplied
      */
     private DateTimeValue(LocalDate date, Optional<LocalTime> time) {
+        assert date != null : "A date-time value must contain a date";
+        assert time != null : "A date-time value must contain an optional time";
         this.date = date;
         this.time = time;
     }
@@ -92,6 +94,7 @@ public final class DateTimeValue {
         if (value.getTime().isPresent()) {
             throw invalidFormat();
         }
+        assert value.getTime().isEmpty() : "A date-only value must not contain a time";
         return value.date;
     }
 

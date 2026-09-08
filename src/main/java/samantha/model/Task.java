@@ -20,6 +20,8 @@ public abstract class Task {
      * @throws TaskValidationException if the description is blank
      */
     public Task(String name, String taskType) throws TaskValidationException {
+        assert name != null : "A task description must not be null";
+        assert taskType != null : "A task type must not be null";
         if (name.isBlank()) {
             throw new TaskValidationException("The description of a " + taskType
                     + " cannot be empty.");

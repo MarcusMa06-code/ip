@@ -25,6 +25,9 @@ public class TaskList {
      * @param tasks tasks to add
      */
     public void addAll(Collection<Task> tasks) {
+        assert tasks != null : "Tasks to add must not be null";
+        assert tasks.stream().noneMatch(task -> task == null)
+                : "A task list must not contain null tasks";
         this.tasks.addAll(tasks);
     }
 
@@ -34,6 +37,7 @@ public class TaskList {
      * @param task task to add
      */
     public void add(Task task) {
+        assert task != null : "A task list must not contain null tasks";
         tasks.add(task);
     }
 
@@ -58,7 +62,10 @@ public class TaskList {
         if (taskId < 1 || taskId > tasks.size()) {
             throw new InputException("You entered a task number that does not exist.");
         }
-        return get(taskId - 1);
+        int index = taskId - 1;
+        assert index >= 0 && index < tasks.size()
+                : "A valid task ID must map to a valid zero-based index";
+        return get(index);
     }
 
     /**
