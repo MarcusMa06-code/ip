@@ -181,12 +181,9 @@ public class Storage {
                 Files.createDirectories(parent);
             }
 
-            try (var writer = Files.newBufferedWriter(file)) {
-                for (Task task : tasks) {
-                    writer.write(task.toFileString());
-                    writer.newLine();
-                }
-            }
+            Files.write(file, tasks.stream()
+                    .map(Task::toFileString)
+                    .toList());
         } catch (IOException e) {
             throw new TaskFileWriteException(e);
         }

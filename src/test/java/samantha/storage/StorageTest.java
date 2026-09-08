@@ -59,6 +59,15 @@ class StorageTest {
     }
 
     @Test
+    void save_emptyTaskList_createsEmptyFile() throws Exception {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+
+        new Storage(file).save(List.of());
+
+        assertEquals(List.of(), Files.readAllLines(file));
+    }
+
+    @Test
     void load_legacyFiveFieldEvent_returnsEvent() throws Exception {
         Path file = temporaryDirectory.resolve("tasks.txt");
         Files.writeString(file, "E | 1 | meeting | 3/12/2019 1400 | 3/12/2019 1600\n");
