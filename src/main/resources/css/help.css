@@ -1,170 +1,152 @@
 .help-window {
-    -fx-background-color: linear-gradient(to bottom right, #2a0e15, #5a1d29 54%, #321018);
+    -fx-background-color: #fff9f0;
     -fx-font-family: "Georgia";
 }
 
 .help-header {
     -fx-background-color: #5d1f2b;
-    -fx-border-color: #c48883 transparent #3d101a transparent;
+    -fx-border-color: #3d101a;
     -fx-border-width: 0 0 2 0;
-    -fx-padding: 18 28 18 30;
+    -fx-padding: 12 20 12 22;
 }
 
 .help-brand {
-    -fx-font-size: 26px;
+    -fx-font-size: 24px;
     -fx-font-style: italic;
     -fx-text-fill: #fff8ec;
 }
 
-.help-header-title {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #fff8ec;
+.keyboard-hint {
+    -fx-font-family: "Menlo", "Monospaced";
+    -fx-font-size: 11px;
+    -fx-text-fill: #e8cabc;
 }
 
-.help-header-subtitle {
-    -fx-font-size: 12px;
-    -fx-text-fill: #e4c5b5;
-}
-
-.help-close-button {
+.close-button {
     -fx-background-color: transparent;
     -fx-border-color: #d9a7a5;
-    -fx-border-radius: 14;
-    -fx-font-size: 12px;
-    -fx-min-height: 28px;
-    -fx-min-width: 64px;
+    -fx-border-radius: 13;
+    -fx-font-size: 11px;
+    -fx-min-height: 26px;
+    -fx-padding: 3 11 3 11;
     -fx-text-fill: #fff8ec;
 }
 
-.help-close-button:hover {
+.close-button:hover {
     -fx-background-color: #74323d;
 }
 
-.help-scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 0;
+.command-sidebar {
+    -fx-background-color: #f1dfd2;
+    -fx-border-color: transparent #e4c5b5 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 20 14 20 14;
 }
 
-.help-scroll-pane > .viewport {
-    -fx-background-color: #fff9f0;
-}
-
-.help-content {
-    -fx-background-color: #fff9f0;
-    -fx-padding: 34 44 42 44;
-}
-
-.help-intro {
-    -fx-padding: 0 0 4 0;
-}
-
-.help-eyebrow,
-.syntax-label {
+.sidebar-title,
+.detail-eyebrow,
+.detail-label {
+    -fx-font-family: "Menlo", "Monospaced";
     -fx-font-size: 10px;
     -fx-font-weight: bold;
-    -fx-letter-spacing: 1px;
     -fx-text-fill: #a65059;
 }
 
-.help-title {
-    -fx-font-size: 27px;
-    -fx-font-style: italic;
-    -fx-text-fill: #5d1f2b;
+.sidebar-subtitle {
+    -fx-font-size: 11px;
+    -fx-padding: 0 0 10 0;
+    -fx-text-fill: #8b7471;
 }
 
-.help-description {
-    -fx-font-size: 14px;
-    -fx-line-spacing: 2px;
-    -fx-text-fill: #6e5b59;
+.command-list {
+    -fx-padding: 2 0 0 0;
 }
 
-.help-section-title {
-    -fx-border-color: transparent transparent #e8d4c5 transparent;
-    -fx-border-width: 0 0 1 0;
-    -fx-font-size: 17px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 8 0;
-    -fx-text-fill: #5d1f2b;
-}
-
-.command-card {
-    -fx-background-color: #f8ede1;
-    -fx-border-color: #e4c5b5;
-    -fx-border-radius: 4;
-    -fx-border-width: 1;
-    -fx-padding: 15 17 16 17;
-}
-
-.command-card:hover {
-    -fx-background-color: #fbf2e9;
-    -fx-border-color: #c48883;
-}
-
-.command-name {
+.command-item {
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-color: transparent;
+    -fx-background-radius: 3;
     -fx-font-family: "Menlo", "Monospaced";
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #5d1f2b;
-}
-
-.command-tag {
-    -fx-background-color: #ead3c3;
-    -fx-background-radius: 10;
-    -fx-font-size: 9px;
-    -fx-font-weight: bold;
-    -fx-padding: 4 8 3 8;
-    -fx-text-fill: #74323d;
-}
-
-.command-description {
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
+    -fx-max-width: Infinity;
+    -fx-min-height: 31px;
+    -fx-padding: 0 10 0 10;
     -fx-text-fill: #493b3c;
 }
 
-.syntax-label {
-    -fx-padding: 4 0 0 0;
+.command-item:hover {
+    -fx-background-color: #ead3c3;
+}
+
+.command-item-selected {
+    -fx-background-color: #6f2b39;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fff8ec;
+}
+
+.command-item-selected:hover {
+    -fx-background-color: #6f2b39;
+}
+
+.command-detail {
+    -fx-padding: 28 34 28 34;
+}
+
+.command-position {
+    -fx-font-family: "Menlo", "Monospaced";
+    -fx-font-size: 11px;
+    -fx-text-fill: #8b7471;
+}
+
+.detail-title {
+    -fx-font-family: "Menlo", "Monospaced";
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5d1f2b;
+}
+
+.detail-description {
+    -fx-font-size: 16px;
+    -fx-line-spacing: 2px;
+    -fx-text-fill: #493b3c;
+}
+
+.detail-section {
+    -fx-border-color: #ead3c3 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 15 0 0 0;
 }
 
 .syntax-value {
-    -fx-background-color: #fff9f0;
-    -fx-border-color: #ead3c3;
+    -fx-background-color: #f8ede1;
+    -fx-background-radius: 3;
+    -fx-border-color: #e4c5b5;
     -fx-border-radius: 3;
     -fx-font-family: "Menlo", "Monospaced";
     -fx-font-size: 13px;
-    -fx-padding: 8 10 8 10;
+    -fx-padding: 10 12 10 12;
     -fx-text-fill: #30282a;
 }
 
 .example-row {
     -fx-background-color: #2f171d;
-    -fx-background-radius: 3;
-    -fx-padding: 5 6 5 9;
+    -fx-background-radius: 4;
+    -fx-padding: 10 10 10 13;
 }
 
-.example-field {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+.example-value {
     -fx-font-family: "Menlo", "Monospaced";
     -fx-font-size: 13px;
-    -fx-highlight-fill: #74323d;
-    -fx-padding: 5 0 5 0;
     -fx-text-fill: #fff3df;
-}
-
-.example-field .content {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
 }
 
 .copy-button {
     -fx-background-color: #74323d;
-    -fx-background-radius: 12;
-    -fx-font-size: 11px;
-    -fx-min-height: 24px;
-    -fx-min-width: 50px;
-    -fx-padding: 3 9 3 9;
+    -fx-background-radius: 13;
+    -fx-font-family: "Menlo", "Monospaced";
+    -fx-font-size: 10px;
+    -fx-min-height: 26px;
+    -fx-padding: 3 10 3 10;
     -fx-text-fill: #fff8ec;
 }
 
@@ -172,30 +154,21 @@
     -fx-background-color: #a65059;
 }
 
-.help-footer {
+.copy-status {
+    -fx-font-size: 11px;
+    -fx-text-fill: #8b7471;
+}
+
+.date-note {
     -fx-background-color: #f1dfd2;
+    -fx-background-radius: 4;
     -fx-border-color: #e4c5b5;
     -fx-border-radius: 4;
-    -fx-padding: 14 17 14 17;
+    -fx-padding: 12 14 12 14;
 }
 
-.help-footer-title {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #5d1f2b;
-}
-
-.help-footer-text {
-    -fx-font-size: 13px;
+.date-note-text {
+    -fx-font-family: "Menlo", "Monospaced";
+    -fx-font-size: 11px;
     -fx-text-fill: #6e5b59;
-}
-
-.scroll-bar:vertical {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
-}
-
-.scroll-bar:vertical .thumb {
-    -fx-background-color: #c48883;
-    -fx-background-radius: 6;
 }

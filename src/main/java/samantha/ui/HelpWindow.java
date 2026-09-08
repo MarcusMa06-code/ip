@@ -1,38 +1,212 @@
 package samantha.ui;
 
+import java.util.List;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
- * Controls Samantha's standalone command guide.
+ * Controls Samantha's keyboard-first standalone command guide.
  */
 public class HelpWindow {
+    private static final String SELECTED_COMMAND_STYLE = "command-item-selected";
+    private static final String COPY_HINT = "Press c or Enter to copy the example.";
+    private static final List<CommandHelp> COMMANDS = List.of(
+            new CommandHelp("help", "Show this guide.", "help", "help"),
+            new CommandHelp("todo", "Add something you want to remember.",
+                    "todo DESCRIPTION", "todo read chapter 5"),
+            new CommandHelp("deadline", "Add a task due on a date, optionally at a time.",
+                    "deadline DESCRIPTION /by DATE [TIME]",
+                    "deadline submit report /by 12/9/2026 1800"),
+            new CommandHelp("event", "Add an event with a start and end time.",
+                    "event DESCRIPTION /from DATE TIME /to DATE TIME",
+                    "event project meeting /from 12/9/2026 1400 /to 12/9/2026 1600"),
+            new CommandHelp("list", "Show every task, or only tasks on a date.",
+                    "list [DATE]", "list 12/9/2026"),
+            new CommandHelp("find", "Find tasks whose descriptions contain a keyword.",
+                    "find KEYWORD", "find report"),
+            new CommandHelp("mark", "Mark a task as done using its list number.",
+                    "mark N", "mark 1"),
+            new CommandHelp("unmark", "Mark a completed task as not done yet.",
+                    "unmark N", "unmark 1"),
+            new CommandHelp("delete", "Remove a task permanently using its list number.",
+                    "delete N", "delete 1"),
+            new CommandHelp("bye", "Close Samantha when you are done.", "bye", "bye"));
+
+    @FXML
+    private BorderPane helpWindow;
+    @FXML
+    private Button helpButton;
+    @FXML
+    private Button todoButton;
+    @FXML
+    private Button deadlineButton;
+    @FXML
+    private Button eventButton;
+    @FXML
+    private Button listButton;
+    @FXML
+    private Button findButton;
+    @FXML
+    private Button markButton;
+    @FXML
+    private Button unmarkButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private Button byeButton;
+    @FXML
+    private Label commandTitle;
+    @FXML
+    private Label commandDescription;
+    @FXML
+    private Label commandSyntax;
+    @FXML
+    private Label commandExample;
+    @FXML
+    private Label commandPosition;
+    @FXML
+    private Label copyStatus;
+    @FXML
+    private Button copyButton;
+
+    private List<Button> commandButtons;
+    private int selectedIndex;
 
     /**
-     * Copies the command example attached to the clicked button.
-     *
-     * @param event copy-button action event
+     * Configures the command list and global keyboard navigation.
      */
     @FXML
-    private void copyCommand(ActionEvent event) {
-        Button copyButton = (Button) event.getSource();
-        String command = (String) copyButton.getUserData();
-        ClipboardContent content = new ClipboardContent();
-        content.putString(command);
-        Clipboard.getSystemClipboard().setContent(content);
-        copyButton.setText("Copied");
+    public void initialize() {
+        commandButtons = List.of(
+                helpButton, todoButton, deadlineButton, eventButton, listButton,
+                findButton, markButton, unmarkButton, deleteButton, byeButton);
+        helpWindow.setFocusTraversable(true);
+        helpWindow.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+        showCommand(0);
+        Platform.runLater(helpWindow::requestFocus);
     }
 
     /**
-     * Closes the help window.
+     * Selects a command from the mouse-accessible command list.
+     *
+     * @param event command-button action event
      */
     @FXML
-    private void closeWindow(ActionEvent event) {
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+    private void selectCommand(ActionEvent event) {
+        int commandIndex = commandButtons.indexOf(event.getSource());
+        if (commandIndex >= 0) {
+            showCommand(commandIndex);
+        }
+    }
+
+    /**
+     * Copies the currently selected example to the system clipboard.
+     */
+    @FXML
+    private void copyCommand() {
+        CommandHelp command = COMMANDS.get(selectedIndex);
+        ClipboardContent content = new ClipboardContent();
+        content.putString(command.example);
+        Clipboard.getSystemClipboard().setContent(content);
+        copyButton.setText("Copied");
+        copyStatus.setText("Copied “" + command.example + "” to the clipboard.");
+    }
+
+    /**
+     * Closes the help window from its mouse-accessible close button.
+     */
+    @FXML
+    private void closeWindow() {
+        closeWindowFromKeyboard();
+    }
+
+    /**
+     * Handles keyboard-first navigation and actions for the command guide.
+     *
+     * @param event key event raised anywhere in the help window
+     */
+    private void handleKeyPress(KeyEvent event) {
+        switch (event.getCode()) {
+            case J -> moveSelection(1);
+            case K -> moveSelection(-1);
+            case C, ENTER -> copyCommand();
+            case Q, ESCAPE -> closeWindowFromKeyboard();
+            default -> {
+                return;
+            }
+        }
+        event.consume();
+    }
+
+    /**
+     * Moves the selected command by a keyboard navigation offset.
+     *
+     * @param offset positive for next command and negative for previous command
+     */
+    private void moveSelection(int offset) {
+        int nextIndex = Math.floorMod(selectedIndex + offset, COMMANDS.size());
+        showCommand(nextIndex);
+    }
+
+    /**
+     * Renders the selected command in the focused detail panel.
+     *
+     * @param commandIndex index of the command to show
+     */
+    private void showCommand(int commandIndex) {
+        commandButtons.get(selectedIndex).getStyleClass().remove(SELECTED_COMMAND_STYLE);
+        selectedIndex = commandIndex;
+        commandButtons.get(selectedIndex).getStyleClass().add(SELECTED_COMMAND_STYLE);
+
+        CommandHelp command = COMMANDS.get(selectedIndex);
+        commandTitle.setText(command.name);
+        commandDescription.setText(command.description);
+        commandSyntax.setText(command.syntax);
+        commandExample.setText(command.example);
+        commandPosition.setText((selectedIndex + 1) + " / " + COMMANDS.size());
+        copyButton.setText("Copy example");
+        copyStatus.setText(COPY_HINT);
+    }
+
+    /**
+     * Closes the stage containing this command guide.
+     */
+    private void closeWindowFromKeyboard() {
+        Stage stage = (Stage) helpWindow.getScene().getWindow();
         stage.close();
+    }
+
+    /**
+     * Stores the user-facing reference information for one command.
+     */
+    private static class CommandHelp {
+        private final String name;
+        private final String description;
+        private final String syntax;
+        private final String example;
+
+        /**
+         * Creates the help content for one supported command.
+         *
+         * @param name command word
+         * @param description concise explanation of the command
+         * @param syntax command syntax
+         * @param example copyable example command
+         */
+        CommandHelp(String name, String description, String syntax, String example) {
+            this.name = name;
+            this.description = description;
+            this.syntax = syntax;
+            this.example = example;
+        }
     }
 }
