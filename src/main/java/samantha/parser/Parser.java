@@ -21,6 +21,9 @@ import samantha.model.DateTimeValue;
  * Interprets the command word and arguments entered by the user.
  */
 public class Parser {
+    private static final int COMMAND_WORD_COUNT = 1;
+    private static final int MAXIMUM_ARGUMENT_PARTS = 2;
+    private static final int COMMAND_ARGUMENT_INDEX = 1;
 
     /**
      * Creates a parser for Samantha commands.
@@ -156,10 +159,13 @@ public class Parser {
      * @throws InputException if too many arguments were supplied or the date is invalid
      */
     public static LocalDate parseListDate(String... parts) throws InputException {
-        if (parts.length > 2) {
+        if (parts.length > MAXIMUM_ARGUMENT_PARTS) {
             throw new InputException("You entered too many parameters for this operation");
         }
-        return parts.length == 2 ? DateTimeValue.parseDate(parts[1]) : null;
+        if (parts.length == COMMAND_WORD_COUNT) {
+            return null;
+        }
+        return DateTimeValue.parseDate(parts[COMMAND_ARGUMENT_INDEX]);
     }
 
     /**
@@ -170,16 +176,16 @@ public class Parser {
      * @throws InputException if the command has a missing, extra, or non-numeric ID
      */
     public static int parseTaskId(String... parts) throws InputException {
-        if (parts.length > 2) {
+        if (parts.length > MAXIMUM_ARGUMENT_PARTS) {
             throw new InputException("You entered too many parameters for this operation");
-        } else if (parts.length == 2) {
-            try {
-                return Integer.parseInt(parts[1]);
-            } catch (NumberFormatException e) {
-                throw new InputException("You need to enter a number for the task id.");
-            }
-        } else {
+        }
+        if (parts.length == COMMAND_WORD_COUNT) {
             throw new InputException("You forgot to mention the id of the task");
+        }
+        try {
+            return Integer.parseInt(parts[COMMAND_ARGUMENT_INDEX]);
+        } catch (NumberFormatException e) {
+            throw new InputException("You need to enter a number for the task id.");
         }
     }
 }

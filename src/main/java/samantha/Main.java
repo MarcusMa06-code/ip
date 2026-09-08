@@ -12,6 +12,8 @@ import javafx.stage.Stage;
  * Starts the Samantha JavaFX user interface.
  */
 public class Main extends Application {
+    private static final double MIN_WINDOW_WIDTH = 520;
+    private static final double MIN_WINDOW_HEIGHT = 680;
 
     /**
      * Configures and displays Samantha's initial JavaFX stage.
@@ -25,8 +27,8 @@ public class Main extends Application {
         fxmlLoader.<samantha.ui.MainWindow>getController().setSamantha(new Samantha());
 
         Scene scene = new Scene(mainWindow);
-        stage.setMinWidth(520);
-        stage.setMinHeight(680);
+        stage.setMinWidth(MIN_WINDOW_WIDTH);
+        stage.setMinHeight(MIN_WINDOW_HEIGHT);
         stage.setTitle("Samantha");
         stage.setScene(scene);
         stage.show();

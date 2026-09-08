@@ -20,7 +20,7 @@ class DateTimeValueTest {
     void parse_dateWithoutTime_returnsDateAndEmptyTime() throws InputException {
         DateTimeValue value = DateTimeValue.parse(" 2/12/2019 ");
 
-        assertEquals(LocalDate.of(2019, 12, 2), value.getDate().orElseThrow());
+        assertEquals(LocalDate.of(2019, 12, 2), value.getDate());
         assertTrue(value.getTime().isEmpty());
         assertEquals("Dec 2 2019", value.toString());
         assertEquals("2/12/2019", value.toStorageString());
@@ -30,7 +30,7 @@ class DateTimeValueTest {
     void parse_dashSeparatedDateWithTime_returnsFormattedValue() throws InputException {
         DateTimeValue value = DateTimeValue.parse("05-01-2020 1800");
 
-        assertEquals(LocalDate.of(2020, 1, 5), value.getDate().orElseThrow());
+        assertEquals(LocalDate.of(2020, 1, 5), value.getDate());
         assertEquals(LocalTime.of(18, 0), value.getTime().orElseThrow());
         assertEquals("Jan 5 2020, 6:00 PM", value.toString());
         assertEquals("5/1/2020 1800", value.toStorageString());

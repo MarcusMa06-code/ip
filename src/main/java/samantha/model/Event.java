@@ -73,8 +73,8 @@ public class Event extends Task {
      */
     @Override
     public boolean isOnDate(LocalDate date) {
-        LocalDate fromDate = from.getDate().orElseThrow();
-        LocalDate toDate = to.getDate().orElseThrow();
+        LocalDate fromDate = from.getDate();
+        LocalDate toDate = to.getDate();
         return !date.isBefore(fromDate) && !date.isAfter(toDate);
     }
 
@@ -96,6 +96,6 @@ public class Event extends Task {
     @Override
     public String toFileString() {
         String schedule = from.toStorageString() + " to " + to.toStorageString();
-        return String.format("E | %d | %s | %s", isDone() ? 1 : 0, getTaskName(), schedule);
+        return String.format("E | %d | %s | %s", getCompletionStatusCode(), getTaskName(), schedule);
     }
 }

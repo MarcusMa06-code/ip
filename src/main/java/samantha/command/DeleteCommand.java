@@ -33,8 +33,7 @@ public class DeleteCommand extends Command {
     @Override
     public String execute(TaskList tasks, Storage storage)
             throws InputException, TaskFileWriteException {
-        Task task = getTask(tasks, taskId);
-        tasks.remove(taskId - 1);
+        Task task = tasks.removeTask(taskId);
         saveTasks(tasks, storage);
         return "Noted. I've removed this task:\n  "
                 + task + "\n"

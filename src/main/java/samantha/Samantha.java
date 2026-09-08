@@ -22,6 +22,11 @@ public class Samantha {
     private static final String FILE_READ_WARNING =
             "Warning: I couldn't read the saved tasks. Starting with an empty task list.";
     private static final String GOODBYE = "Bye. Let's talk next time!";
+    private static final String CONSOLE_BANNER = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
+            + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
+            + "\\___ \\ / _ \\ | |\\/| | / _ \\ |  \\| | | | |_| | / _ \\  \n"
+            + " ___) / ___ \\| |  | |/ ___ \\| |\\  | | | |  _  |/ ___ \\ \n"
+            + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
 
     private final TaskList tasks = new TaskList();
     private final Storage storage;
@@ -122,28 +127,37 @@ public class Samantha {
      * Runs the application until the user enters the exit command.
      */
     public void run() {
-        String banner = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
-                + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
-                + "\\___ \\ / _ \\ | |\\/| | / _ \\ |  \\| | | | | |_| | / _ \\  \n"
-                + " ___) / ___ \\| |  | |/ ___ \\| |\\  | | | |  _  |/ ___ \\ \n"
-                + "|____/_/   \\_\\_|  |_/_/   \\_\\_| \\_| |_| |_| |_/_/   \\_\\\n";
-
         Ui ui = new Ui();
         initialize();
+        showStartupWarning(ui);
+        ui.showWelcome(CONSOLE_BANNER);
+        runCommandLoop(ui);
+        ui.showGoodbye();
+    }
+
+    /**
+     * Displays the warning recorded while loading persisted tasks, if any.
+     *
+     * @param ui console interaction handler
+     */
+    private void showStartupWarning(Ui ui) {
         if (!startupWarning.isEmpty()) {
             ui.showResponse(startupWarning);
         }
+    }
 
-        ui.showWelcome(banner);
-
+    /**
+     * Processes commands until the user requests application exit.
+     *
+     * @param ui console interaction handler
+     */
+    private void runCommandLoop(Ui ui) {
         while (!isExitRequested) {
             String response = getResponse(ui.readCommand());
             if (!isExitRequested) {
                 ui.showResponse(response);
             }
         }
-
-        ui.showGoodbye();
     }
 
     /**

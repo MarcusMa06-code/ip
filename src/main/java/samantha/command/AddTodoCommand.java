@@ -2,7 +2,6 @@ package samantha.command;
 
 import samantha.exception.TaskFileWriteException;
 import samantha.exception.TaskValidationException;
-import samantha.model.Task;
 import samantha.model.TaskList;
 import samantha.model.Todo;
 import samantha.storage.Storage;
@@ -34,9 +33,6 @@ public class AddTodoCommand extends Command {
     @Override
     public String execute(TaskList tasks, Storage storage)
             throws TaskValidationException, TaskFileWriteException {
-        Task task = new Todo(taskName);
-        tasks.add(task);
-        saveTasks(tasks, storage);
-        return getTaskAddedResponse(task, tasks.size());
+        return addAndSaveTask(new Todo(taskName), tasks, storage);
     }
 }

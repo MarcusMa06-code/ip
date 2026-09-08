@@ -42,7 +42,7 @@ public class Deadline extends Task {
      */
     @Override
     public boolean isOnDate(LocalDate date) {
-        return deadline.getDate().orElseThrow().equals(date);
+        return deadline.getDate().equals(date);
     }
 
     /**
@@ -62,7 +62,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileString() {
-        return String.format("D | %d | %s | %s", isDone() ? 1 : 0, getTaskName(),
+        return String.format("D | %d | %s | %s", getCompletionStatusCode(), getTaskName(),
                 deadline.toStorageString());
     }
 }

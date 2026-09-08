@@ -25,7 +25,7 @@ class TaskListTest {
         assertEquals(3, tasks.size());
         assertEquals(first, tasks.getTask(1));
         assertEquals(third, tasks.getTask(3));
-        assertEquals(second, tasks.remove(1));
+        assertEquals(second, tasks.removeTask(2));
         assertEquals(List.of(first, third), tasks.asList());
     }
 
