@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import samantha.model.Task;
-import samantha.model.TaskList;
-import samantha.storage.Storage;
 
 /**
  * Represents the command that displays tasks, optionally filtered by date.
@@ -27,13 +25,12 @@ public class ListCommand extends Command {
     /**
      * Displays the matching tasks.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler, which is not needed for listing
+     * @param context current application state and persistence handlers
      * @return matching task list
      */
     @Override
-    public String execute(TaskList tasks, Storage storage) {
-        List<Task> taskSnapshot = tasks.asList();
+    public String execute(CommandContext context) {
+        List<Task> taskSnapshot = context.getTasks().asList();
         String matchingTasks = IntStream.range(0, taskSnapshot.size())
                 .filter(index -> date == null || taskSnapshot.get(index).isOnDate(date))
                 .mapToObj(index -> String.format("%d. %s", index + 1, taskSnapshot.get(index)))

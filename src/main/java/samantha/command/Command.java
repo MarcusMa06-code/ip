@@ -1,10 +1,14 @@
 package samantha.command;
 
 import samantha.exception.InputException;
+import samantha.exception.NoteFileWriteException;
 import samantha.exception.TaskFileWriteException;
 import samantha.exception.TaskValidationException;
+import samantha.model.Note;
+import samantha.model.NoteList;
 import samantha.model.Task;
 import samantha.model.TaskList;
+import samantha.storage.NoteStorage;
 import samantha.storage.Storage;
 import samantha.ui.Ui;
 
@@ -22,15 +26,33 @@ public abstract class Command {
     /**
      * Performs this command and returns its user-facing response.
      *
+     * @param context current application state and persistence handlers
+     * @return response for the command
+     * @throws TaskValidationException if task data is invalid
+     * @throws InputException if a task value has invalid input format
+     * @throws TaskFileWriteException if the task list cannot be saved
+     * @throws NoteFileWriteException if the note list cannot be saved
+     */
+    public abstract String execute(CommandContext context)
+            throws TaskValidationException, InputException, TaskFileWriteException,
+            NoteFileWriteException;
+
+    /**
+     * Performs this command using the legacy task-only command interface.
+     *
      * @param tasks current task list
      * @param storage task persistence handler
      * @return response for the command
      * @throws TaskValidationException if task data is invalid
      * @throws InputException if a task value has invalid input format
      * @throws TaskFileWriteException if the task list cannot be saved
+     * @throws NoteFileWriteException if the note list cannot be saved
      */
-    public abstract String execute(TaskList tasks, Storage storage)
-            throws TaskValidationException, InputException, TaskFileWriteException;
+    public String execute(TaskList tasks, Storage storage)
+            throws TaskValidationException, InputException, TaskFileWriteException,
+            NoteFileWriteException {
+        return execute(new CommandContext(tasks, storage));
+    }
 
     /**
      * Performs this command and displays its response through the console UI.
@@ -41,10 +63,31 @@ public abstract class Command {
      * @throws TaskValidationException if task data is invalid
      * @throws InputException if a task value has invalid input format
      * @throws TaskFileWriteException if the task list cannot be saved
+     * @throws NoteFileWriteException if the note list cannot be saved
      */
     public void execute(TaskList tasks, Ui ui, Storage storage)
-            throws TaskValidationException, InputException, TaskFileWriteException {
+            throws TaskValidationException, InputException, TaskFileWriteException,
+            NoteFileWriteException {
         String response = execute(tasks, storage);
+        if (!response.isEmpty()) {
+            ui.showResponse(response);
+        }
+    }
+
+    /**
+     * Performs this command and displays its response through the console UI.
+     *
+     * @param context current application state and persistence handlers
+     * @param ui console interaction handler
+     * @throws TaskValidationException if task data is invalid
+     * @throws InputException if a task value has invalid input format
+     * @throws TaskFileWriteException if the task list cannot be saved
+     * @throws NoteFileWriteException if the note list cannot be saved
+     */
+    public void execute(CommandContext context, Ui ui)
+            throws TaskValidationException, InputException, TaskFileWriteException,
+            NoteFileWriteException {
+        String response = execute(context);
         if (!response.isEmpty()) {
             ui.showResponse(response);
         }
@@ -109,5 +152,46 @@ public abstract class Command {
      */
     protected Task getTask(TaskList tasks, int taskId) throws InputException {
         return tasks.getTask(taskId);
+    }
+
+    /**
+     * Adds a note, persists the updated list, and returns its confirmation.
+     *
+     * @param note note to add
+     * @param notes current note list
+     * @param storage note persistence handler
+     * @return confirmation for the added note
+     * @throws NoteFileWriteException if the note list cannot be saved
+     */
+    protected String addAndSaveNote(Note note, NoteList notes, NoteStorage storage)
+            throws NoteFileWriteException {
+        notes.add(note);
+        saveNotes(notes, storage);
+        return "Got it. I've added this note:\n  "
+                + note + "\n"
+                + String.format("Now you have %d notes in the list.", notes.size());
+    }
+
+    /**
+     * Saves the current note list through the note storage component.
+     *
+     * @param notes note list to save
+     * @param storage note persistence handler
+     * @throws NoteFileWriteException if the note list cannot be saved
+     */
+    protected void saveNotes(NoteList notes, NoteStorage storage) throws NoteFileWriteException {
+        storage.save(notes.asList());
+    }
+
+    /**
+     * Returns the note for a one-based note ID after validating its range.
+     *
+     * @param notes current note list
+     * @param noteId one-based note ID
+     * @return the matching note
+     * @throws InputException if the note ID is outside the note list
+     */
+    protected Note getNote(NoteList notes, int noteId) throws InputException {
+        return notes.getNote(noteId);
     }
 }
