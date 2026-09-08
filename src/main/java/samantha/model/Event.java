@@ -33,6 +33,8 @@ public class Event extends Task {
         }
         this.from = parseEventDateTime(from);
         this.to = parseEventDateTime(to);
+        assert this.from.getTime().isPresent() : "An event start must include a time";
+        assert this.to.getTime().isPresent() : "An event end must include a time";
     }
 
     /**
