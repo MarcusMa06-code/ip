@@ -4,8 +4,6 @@ import samantha.exception.InputException;
 import samantha.exception.TaskFileWriteException;
 import samantha.exception.TaskValidationException;
 import samantha.model.Deadline;
-import samantha.model.TaskList;
-import samantha.storage.Storage;
 
 /**
  * Represents the command that adds a deadline task.
@@ -28,16 +26,16 @@ public class AddDeadlineCommand extends Command {
     /**
      * Adds and saves the deadline task.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
+     * @param context current application state and persistence handlers
      * @return confirmation for the newly added task
      * @throws TaskValidationException if the description is invalid
      * @throws InputException if the deadline value is invalid
      * @throws TaskFileWriteException if saving fails
      */
     @Override
-    public String execute(TaskList tasks, Storage storage)
+    public String execute(CommandContext context)
             throws TaskValidationException, InputException, TaskFileWriteException {
-        return addAndSaveTask(new Deadline(taskName, deadline), tasks, storage);
+        return addAndSaveTask(new Deadline(taskName, deadline), context.getTasks(),
+                context.getTaskStorage());
     }
 }

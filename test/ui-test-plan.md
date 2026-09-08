@@ -178,6 +178,8 @@ find BOOK
 Here are the matching tasks in your list:
 1. [T][ ] read book
 2. [D][ ] return book (by: Jun 6 2019)
+
+Here are the matching notes in your list:
 ```
 
 ```input
@@ -185,6 +187,8 @@ find holiday
 ```
 ```expected
 Here are the matching tasks in your list:
+
+Here are the matching notes in your list:
 ```
 
 ```input
@@ -669,13 +673,95 @@ Here's how to use Samantha:
   list [DATE]
     List every task, or only tasks on DATE.
   find KEYWORD
-    Find tasks whose descriptions contain KEYWORD.
+    Find tasks and notes whose text contains KEYWORD.
   mark N | unmark N | delete N
     Update or remove task number N.
+  note TEXT
+    Save a note.
+  notes
+    List your notes.
+  edit-note N TEXT
+    Edit note number N.
+  delete-note N
+    Remove note number N.
   bye
     Close Samantha.
 
 Use dates as d/M/yyyy or d-M-yyyy. Use times as HHmm.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 14: Manage notes and search them
+
+**Aim:** Notes can be added, listed, edited, deleted, persisted, and found
+through the shared `find` command without sharing task numbering.
+
+```input
+note movie title: Inception
+```
+```expected
+Got it. I've added this note:
+  movie title: Inception
+Now you have 1 notes in the list.
+```
+
+```input
+note My waist size is 32 inches
+```
+```expected
+Got it. I've added this note:
+  My waist size is 32 inches
+Now you have 2 notes in the list.
+```
+
+```input
+notes
+```
+```expected
+Here are your notes:
+1. movie title: Inception
+2. My waist size is 32 inches
+```
+
+```input
+edit-note 1 movie title: Interstellar
+```
+```expected
+Got it. I've updated this note:
+  movie title: Interstellar
+```
+
+```input
+find MOVIE
+```
+```expected
+Here are the matching tasks in your list:
+
+Here are the matching notes in your list:
+1. movie title: Interstellar
+```
+
+```input
+delete-note 2
+```
+```expected
+Noted. I've removed this note:
+  My waist size is 32 inches
+Now you have 1 notes in the list.
+```
+
+```input
+notes
+```
+```expected
+Here are your notes:
+1. movie title: Interstellar
 ```
 
 ```input
