@@ -690,7 +690,8 @@ Bye. Let's talk next time!
 ## Test 14: Undo the most recent task-changing command
 
 **Aim:** `undo` reverses the most recent task-changing command, persists the
-restored task list, and reports clearly when there is no command left to undo.
+restored task list, rejects unexpected arguments, and reports clearly when
+there is no command left to undo.
 
 ```input
 todo read book
@@ -699,6 +700,13 @@ todo read book
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
+```
+
+```input
+undo extra
+```
+```expected
+You entered too many parameters for this operation
 ```
 
 ```input

@@ -67,7 +67,7 @@ public class Parser {
             case UNMARK -> new UnmarkCommand(parseTaskId(parts));
             case DELETE -> new DeleteCommand(parseTaskId(parts));
             case FIND -> new FindCommand(parseFindKeyword(parts));
-            case UNDO -> new UndoCommand();
+            case UNDO -> parseUndo(parts);
         };
     }
 
@@ -84,6 +84,20 @@ public class Parser {
         } catch (IllegalArgumentException e) {
             throw new InputException("It seems that you entered a wrong command.");
         }
+    }
+
+    /**
+     * Parses the undo command and rejects unexpected arguments.
+     *
+     * @param parts words from the user command
+     * @return an undo command
+     * @throws InputException if extra arguments were supplied
+     */
+    private static Command parseUndo(String... parts) throws InputException {
+        if (parts.length > COMMAND_WORD_COUNT) {
+            throw new InputException("You entered too many parameters for this operation");
+        }
+        return new UndoCommand();
     }
 
     /**

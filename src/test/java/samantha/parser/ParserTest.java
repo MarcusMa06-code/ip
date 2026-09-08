@@ -56,6 +56,11 @@ class ParserTest {
     }
 
     @Test
+    void parse_undoWithExtraArgument_inputExceptionThrown() {
+        assertThrows(InputException.class, () -> Parser.parse("undo extra"));
+    }
+
+    @Test
     void splitCommandAndParseDescription_preserveCommandArguments() {
         String[] parts = Parser.splitCommand("todo buy groceries today");
 
