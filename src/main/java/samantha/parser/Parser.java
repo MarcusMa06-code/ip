@@ -13,6 +13,7 @@ import samantha.command.FindCommand;
 import samantha.command.HelpCommand;
 import samantha.command.ListCommand;
 import samantha.command.MarkCommand;
+import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
 import samantha.exception.InputException;
 import samantha.model.DateTimeValue;
@@ -35,7 +36,7 @@ public class Parser {
      * Represents the commands supported by Samantha.
      */
     private enum CommandType {
-        BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND
+        BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND, UNDO
     }
 
     /**
@@ -66,6 +67,7 @@ public class Parser {
             case UNMARK -> new UnmarkCommand(parseTaskId(parts));
             case DELETE -> new DeleteCommand(parseTaskId(parts));
             case FIND -> new FindCommand(parseFindKeyword(parts));
+            case UNDO -> new UndoCommand();
         };
     }
 

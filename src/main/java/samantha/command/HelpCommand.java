@@ -32,6 +32,8 @@ public class HelpCommand extends Command {
                 + "    Find tasks whose descriptions contain KEYWORD.\n"
                 + "  mark N | unmark N | delete N\n"
                 + "    Update or remove task number N.\n"
+                + "  undo\n"
+                + "    Undo the most recent task-changing command.\n"
                 + "  bye\n"
                 + "    Close Samantha.\n"
                 + "\n"
