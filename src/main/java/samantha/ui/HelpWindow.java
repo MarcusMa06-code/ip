@@ -134,14 +134,6 @@ public class HelpWindow {
     }
 
     /**
-     * Closes the help window from its mouse-accessible close button.
-     */
-    @FXML
-    private void closeWindow() {
-        closeWindowFromKeyboard();
-    }
-
-    /**
      * Handles keyboard-first navigation and actions for the command guide.
      *
      * @param event key event raised anywhere in the help window

@@ -22,20 +22,6 @@
     -fx-text-fill: #e8cabc;
 }
 
-.close-button {
-    -fx-background-color: transparent;
-    -fx-border-color: #d9a7a5;
-    -fx-border-radius: 13;
-    -fx-font-size: 11px;
-    -fx-min-height: 26px;
-    -fx-padding: 3 11 3 11;
-    -fx-text-fill: #fff8ec;
-}
-
-.close-button:hover {
-    -fx-background-color: #74323d;
-}
-
 .command-sidebar {
     -fx-background-color: #f1dfd2;
     -fx-border-color: transparent #e4c5b5 transparent transparent;

@@ -18,7 +18,6 @@
                 <Label styleClass="help-brand" text="Samantha" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label styleClass="keyboard-hint" text="j/k navigate · c copy · q close" />
-                <Button mnemonicParsing="false" onAction="#closeWindow" styleClass="close-button" text="Close" />
             </children>
         </HBox>
     </top>
