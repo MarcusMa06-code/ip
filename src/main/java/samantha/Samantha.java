@@ -133,14 +133,15 @@ public class Samantha {
     }
 
     /**
-     * Executes a regular command and records it when it changes the task list.
+     * Executes a regular command and records it when it changes application state.
      *
      * @param command command to execute
      * @return command response
      * @throws SamanthaException if command execution fails
      */
     private String executeAndRecord(Command command) throws SamanthaException {
-        String response = command.execute(new CommandContext(tasks, notes, storage, noteStorage));
+        CommandContext context = new CommandContext(tasks, notes, storage, noteStorage);
+        String response = command.execute(context);
         if (command.isUndoable()) {
             lastUndoableCommand = command;
         }
@@ -157,7 +158,8 @@ public class Samantha {
         if (lastUndoableCommand == null) {
             return "There is nothing to undo.";
         }
-        String response = lastUndoableCommand.undo(tasks, storage);
+        CommandContext context = new CommandContext(tasks, notes, storage, noteStorage);
+        String response = lastUndoableCommand.undo(context);
         lastUndoableCommand = null;
         return response;
     }

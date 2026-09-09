@@ -676,8 +676,6 @@ Here's how to use Samantha:
     Find tasks and notes whose text contains KEYWORD.
   mark N | unmark N | delete N
     Update or remove task number N.
-  undo
-    Undo the most recent task-changing command.
   note TEXT
     Save a note.
   notes
@@ -686,6 +684,8 @@ Here's how to use Samantha:
     Edit note number N.
   delete-note N
     Remove note number N.
+  undo
+    Undo the most recent state-changing command.
   bye
     Close Samantha.
 
@@ -699,50 +699,7 @@ bye
 Bye. Let's talk next time!
 ```
 
-## Test 14: Undo the most recent task-changing command
-
-**Aim:** `undo` reverses the most recent task-changing command, persists the
-restored task list, rejects unexpected arguments, and reports clearly when
-there is no command left to undo.
-
-```input
-todo read book
-```
-```expected
-Got it. I've added this task:
-  [T][ ] read book
-Now you have 1 tasks in the list.
-```
-
-```input
-undo extra
-```
-```expected
-You entered too many parameters for this operation
-```
-
-```input
-undo
-```
-```expected
-I've undone the last command.
-```
-
-```input
-undo
-```
-```expected
-There is nothing to undo.
-```
-
-```input
-bye
-```
-```expected
-Bye. Let's talk next time!
-```
-
-## Test 15: Manage notes and search them
+## Test 14: Manage notes and search them
 
 **Aim:** Notes can be added, listed, edited, deleted, persisted, and found
 through the shared `find` command without sharing task numbering.
@@ -807,6 +764,144 @@ notes
 ```expected
 Here are your notes:
 1. movie title: Interstellar
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 15: Undo the most recent state-changing command
+
+**Aim:** `undo` reverses the most recent state-changing command, persists the
+restored state, rejects unexpected arguments, and reports clearly when there is
+no command left to undo.
+
+```input
+todo read book
+```
+```expected
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+```
+
+```input
+undo extra
+```
+```expected
+You entered too many parameters for this operation
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+undo
+```
+```expected
+There is nothing to undo.
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
+
+## Test 16: Undo note changes
+
+**Aim:** `undo` reverses note additions, edits, and deletions while preserving
+the remaining note order.
+
+```input
+note first
+```
+```expected
+Got it. I've added this note:
+  first
+Now you have 1 notes in the list.
+```
+
+```input
+note second
+```
+```expected
+Got it. I've added this note:
+  second
+Now you have 2 notes in the list.
+```
+
+```input
+edit-note 1 updated
+```
+```expected
+Got it. I've updated this note:
+  updated
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+delete-note 1
+```
+```expected
+Noted. I've removed this note:
+  first
+Now you have 1 notes in the list.
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+notes
+```
+```expected
+Here are your notes:
+1. first
+2. second
+```
+
+```input
+note third
+```
+```expected
+Got it. I've added this note:
+  third
+Now you have 3 notes in the list.
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+notes
+```
+```expected
+Here are your notes:
+1. first
+2. second
 ```
 
 ```input

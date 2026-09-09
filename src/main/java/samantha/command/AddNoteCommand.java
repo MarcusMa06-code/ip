@@ -20,6 +20,16 @@ public class AddNoteCommand extends Command {
     }
 
     /**
+     * Indicates that adding this note can be undone.
+     *
+     * @return {@code true}.
+     */
+    @Override
+    public boolean isUndoable() {
+        return true;
+    }
+
+    /**
      * Adds and saves the note.
      *
      * @param context current application state and persistence handlers

@@ -18,6 +18,8 @@ import samantha.ui.Ui;
 public abstract class Command {
     /** The task added by an add command, when this command is undoable. */
     private Task addedTask;
+    /** The note added by an add command, when this command is undoable. */
+    private Note addedNote;
 
     /**
      * Creates a command.
@@ -107,7 +109,7 @@ public abstract class Command {
     /**
      * Returns whether this command can be undone.
      *
-     * @return {@code true} when this command changes the task list
+     * @return {@code true} when this command changes application state.
      */
     public boolean isUndoable() {
         return false;
@@ -125,20 +127,27 @@ public abstract class Command {
     /**
      * Reverses this command.
      *
-     * @param tasks current task list
-     * @param storage task persistence handler
-     * @return confirmation for the undone command
-     * @throws InputException if the command cannot be undone
-     * @throws TaskFileWriteException if the task list cannot be saved
+     * @param context current application state and persistence handlers.
+     * @return confirmation for the undone command.
+     * @throws InputException if the command cannot be undone.
+     * @throws TaskValidationException if restored note content is invalid.
+     * @throws TaskFileWriteException if the task list cannot be saved.
+     * @throws NoteFileWriteException if the note list cannot be saved.
      */
-    public String undo(TaskList tasks, Storage storage)
-            throws InputException, TaskFileWriteException {
-        if (addedTask == null) {
-            throw new InputException("This command cannot be undone.");
+    public String undo(CommandContext context)
+            throws InputException, TaskValidationException, TaskFileWriteException,
+            NoteFileWriteException {
+        if (addedTask != null) {
+            context.getTasks().removeTask(addedTask);
+            saveTasks(context.getTasks(), context.getTaskStorage());
+            return "I've undone the last command.";
         }
-        tasks.removeTask(addedTask);
-        saveTasks(tasks, storage);
-        return "I've undone the last command.";
+        if (addedNote != null) {
+            context.getNotes().removeNote(addedNote);
+            saveNotes(context.getNotes(), context.getNoteStorage());
+            return "I've undone the last command.";
+        }
+        throw new InputException("This command cannot be undone.");
     }
 
     /**
@@ -207,6 +216,7 @@ public abstract class Command {
             throws NoteFileWriteException {
         notes.add(note);
         saveNotes(notes, storage);
+        addedNote = note;
         return "Got it. I've added this note:\n  "
                 + note + "\n"
                 + String.format("Now you have %d notes in the list.", notes.size());

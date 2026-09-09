@@ -42,7 +42,7 @@ public class Parser {
      */
     private enum CommandType {
         BYE, HELP, LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, FIND,
-        UNDO, NOTE, NOTES, EDIT_NOTE, DELETE_NOTE
+        NOTE, NOTES, EDIT_NOTE, DELETE_NOTE, UNDO
     }
 
     /**
@@ -73,11 +73,11 @@ public class Parser {
             case UNMARK -> new UnmarkCommand(parseTaskId(parts));
             case DELETE -> new DeleteCommand(parseTaskId(parts));
             case FIND -> new FindCommand(parseFindKeyword(parts));
-            case UNDO -> parseUndo(parts);
             case NOTE -> new AddNoteCommand(parseDescription(parts));
             case NOTES -> new ListNotesCommand();
             case EDIT_NOTE -> new EditNoteCommand(parseNoteId(parts), parseNoteText(parts));
             case DELETE_NOTE -> new DeleteNoteCommand(parseNoteId(parts));
+            case UNDO -> parseUndo(parts);
         };
     }
 

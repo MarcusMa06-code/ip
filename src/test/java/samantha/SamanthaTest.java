@@ -41,7 +41,7 @@ class SamanthaTest {
 
     @Test
     void getResponse_undoAfterTodo_removesTaskAndPersistsEmptyList() throws Exception {
-        Samantha samantha = new Samantha(storage());
+        Samantha samantha = new Samantha(storage(), noteStorage());
 
         samantha.getResponse("todo read book");
 
@@ -52,7 +52,7 @@ class SamanthaTest {
 
     @Test
     void getResponse_undoAfterMark_restoresPreviousCompletionState() throws Exception {
-        Samantha samantha = new Samantha(storage());
+        Samantha samantha = new Samantha(storage(), noteStorage());
 
         samantha.getResponse("todo read book");
         samantha.getResponse("mark 1");
@@ -63,7 +63,7 @@ class SamanthaTest {
 
     @Test
     void getResponse_undoAfterDelete_restoresTaskOrder() throws Exception {
-        Samantha samantha = new Samantha(storage());
+        Samantha samantha = new Samantha(storage(), noteStorage());
 
         samantha.getResponse("todo first");
         samantha.getResponse("todo second");
@@ -72,6 +72,40 @@ class SamanthaTest {
         assertEquals("I've undone the last command.", samantha.getResponse("undo"));
         assertEquals("first", storage().load().get(0).getTaskName());
         assertEquals("second", storage().load().get(1).getTaskName());
+    }
+
+    @Test
+    void getResponse_undoAfterNoteEdit_restoresPreviousNoteContent() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("note movie title: Inception");
+        samantha.getResponse("edit-note 1 movie title: Interstellar");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertEquals("movie title: Inception", noteStorage().load().getFirst().getContent());
+    }
+
+    @Test
+    void getResponse_undoAfterNoteAdd_removesNoteAndPersistsEmptyList() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("note remember this");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertTrue(noteStorage().load().isEmpty());
+    }
+
+    @Test
+    void getResponse_undoAfterNoteDelete_restoresNoteOrder() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("note first");
+        samantha.getResponse("note second");
+        samantha.getResponse("delete-note 1");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertEquals("first", noteStorage().load().get(0).getContent());
+        assertEquals("second", noteStorage().load().get(1).getContent());
     }
 
     @Test

@@ -42,6 +42,18 @@ public class NoteList {
     }
 
     /**
+     * Inserts a note at a zero-based position in this note list.
+     *
+     * @param note note to insert.
+     * @param index zero-based insertion position.
+     */
+    public void addNoteAt(Note note, int index) {
+        assert note != null : "A note list must not contain null notes";
+        assert index >= 0 && index <= notes.size() : "Note index must be within insertion range";
+        notes.add(index, note);
+    }
+
+    /**
      * Returns the note identified by a one-based user-facing ID.
      *
      * @param noteId one-based note ID
@@ -61,6 +73,19 @@ public class NoteList {
      */
     public Note removeNote(int noteId) throws InputException {
         return notes.remove(getNoteIndex(noteId));
+    }
+
+    /**
+     * Removes a specific note from this note list.
+     *
+     * @param note note to remove.
+     * @throws InputException if the note is not in this note list.
+     */
+    public void removeNote(Note note) throws InputException {
+        assert note != null : "A note to remove must not be null";
+        if (!notes.remove(note)) {
+            throw new InputException("You entered a note number that does not exist.");
+        }
     }
 
     /**
