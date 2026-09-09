@@ -3,6 +3,8 @@ package samantha.command;
 import samantha.exception.InputException;
 import samantha.exception.TaskFileWriteException;
 import samantha.model.Task;
+import samantha.model.TaskList;
+import samantha.storage.Storage;
 
 /**
  * Represents the command that marks a task as incomplete.
