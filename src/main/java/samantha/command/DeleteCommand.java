@@ -34,7 +34,7 @@ public class DeleteCommand extends Command {
     /**
      * Removes and saves the selected task.
      *
-     * @param context current application state and persistence handlers
+     * @param context current application state and persistence handlers.
      * @return confirmation for the removed task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails

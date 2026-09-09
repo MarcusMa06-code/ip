@@ -22,7 +22,7 @@ public class AddNoteCommand extends Command {
     /**
      * Indicates that adding this note can be undone.
      *
-     * @return {@code true}
+     * @return {@code true}.
      */
     @Override
     public boolean isUndoable() {

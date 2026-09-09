@@ -33,7 +33,7 @@ public class MarkCommand extends Command {
     /**
      * Marks and saves the selected task.
      *
-     * @param context current application state and persistence handlers
+     * @param context current application state and persistence handlers.
      * @return confirmation for the marked task
      * @throws InputException if the task ID does not exist
      * @throws TaskFileWriteException if saving fails

@@ -27,7 +27,7 @@ public class EditNoteCommand extends Command {
     /**
      * Indicates that editing this note can be undone.
      *
-     * @return {@code true}
+     * @return {@code true}.
      */
     @Override
     public boolean isUndoable() {
@@ -37,7 +37,7 @@ public class EditNoteCommand extends Command {
     /**
      * Edits and saves the selected note.
      *
-     * @param context current application state and persistence handlers
+     * @param context current application state and persistence handlers.
      * @return confirmation for the edited note
      * @throws InputException if the note ID does not exist
      * @throws TaskValidationException if the replacement content is invalid
@@ -57,10 +57,10 @@ public class EditNoteCommand extends Command {
      * Restores the note content from before this command.
      *
      * @param context current application state and persistence handlers
-     * @return confirmation for the undone command
-     * @throws InputException if the note no longer exists
-     * @throws TaskValidationException if the saved content is invalid
-     * @throws NoteFileWriteException if the note list cannot be saved
+     * @return confirmation for the undone command.
+     * @throws InputException if the note no longer exists.
+     * @throws TaskValidationException if the saved content is invalid.
+     * @throws NoteFileWriteException if the note list cannot be saved.
      */
     @Override
     public String undo(CommandContext context)

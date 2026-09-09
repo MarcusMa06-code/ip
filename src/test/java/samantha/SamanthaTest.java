@@ -86,6 +86,29 @@ class SamanthaTest {
     }
 
     @Test
+    void getResponse_undoAfterNoteAdd_removesNoteAndPersistsEmptyList() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("note remember this");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertTrue(noteStorage().load().isEmpty());
+    }
+
+    @Test
+    void getResponse_undoAfterNoteDelete_restoresNoteOrder() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("note first");
+        samantha.getResponse("note second");
+        samantha.getResponse("delete-note 1");
+
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertEquals("first", noteStorage().load().get(0).getContent());
+        assertEquals("second", noteStorage().load().get(1).getContent());
+    }
+
+    @Test
     void getResponse_noteCommands_persistAndSearchNotes() throws Exception {
         Samantha samantha = new Samantha(storage(), noteStorage());
 

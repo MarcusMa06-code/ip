@@ -43,7 +43,7 @@ class HelpCommandTest {
                 + "  delete-note N\n"
                 + "    Remove note number N.\n"
                 + "  undo\n"
-                + "    Undo the most recent task-changing command.\n"
+                + "    Undo the most recent state-changing command.\n"
                 + "  bye\n"
                 + "    Close Samantha.\n"
                 + "\n"

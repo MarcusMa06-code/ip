@@ -109,7 +109,7 @@ public abstract class Command {
     /**
      * Returns whether this command can be undone.
      *
-     * @return {@code true} when this command changes application state
+     * @return {@code true} when this command changes application state.
      */
     public boolean isUndoable() {
         return false;
@@ -127,12 +127,12 @@ public abstract class Command {
     /**
      * Reverses this command.
      *
-     * @param context current application state and persistence handlers
-     * @return confirmation for the undone command
-     * @throws InputException if the command cannot be undone
-     * @throws TaskValidationException if restored note content is invalid
-     * @throws TaskFileWriteException if the task list cannot be saved
-     * @throws NoteFileWriteException if the note list cannot be saved
+     * @param context current application state and persistence handlers.
+     * @return confirmation for the undone command.
+     * @throws InputException if the command cannot be undone.
+     * @throws TaskValidationException if restored note content is invalid.
+     * @throws TaskFileWriteException if the task list cannot be saved.
+     * @throws NoteFileWriteException if the note list cannot be saved.
      */
     public String undo(CommandContext context)
             throws InputException, TaskValidationException, TaskFileWriteException,
