@@ -43,6 +43,7 @@ public class Samantha {
     private final NoteStorage noteStorage;
     private boolean isInitialized;
     private boolean isExitRequested;
+    private boolean isLastResponseError;
     private String startupWarning = "";
     private Command lastUndoableCommand;
 
@@ -119,6 +120,7 @@ public class Samantha {
     public String getResponse(String input) {
         initialize();
         assert isInitialized : "Samantha must be initialized before handling commands";
+        isLastResponseError = false;
         try {
             Command command = Parser.parse(input);
             assert command != null : "Parsing a valid command must produce a command";
@@ -128,6 +130,7 @@ public class Samantha {
             isExitRequested = command.isExit();
             return isExitRequested ? GOODBYE : response;
         } catch (SamanthaException e) {
+            isLastResponseError = true;
             return e.getMessage();
         }
     }
@@ -171,6 +174,15 @@ public class Samantha {
      */
     public boolean isExitRequested() {
         return isExitRequested;
+    }
+
+    /**
+     * Returns whether the most recently handled command produced an error reply.
+     *
+     * @return {@code true} when {@link #getResponse(String)} returned an exception message
+     */
+    public boolean isLastResponseError() {
+        return isLastResponseError;
     }
 
     /**

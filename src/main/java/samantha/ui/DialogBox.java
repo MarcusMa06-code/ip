@@ -79,6 +79,19 @@ public class DialogBox extends HBox {
     }
 
     /**
+     * Creates a Samantha error reply aligned to the left.
+     *
+     * @param text error message
+     * @param image Samantha avatar
+     * @return left-aligned error dialog
+     */
+    public static DialogBox getSamanthaErrorDialog(String text, Image image) {
+        DialogBox dialogBox = getSamanthaDialog(text, image);
+        dialogBox.getStyleClass().add("error-dialog");
+        return dialogBox;
+    }
+
+    /**
      * Reverses the avatar and text order for Samantha's left-aligned reply.
      */
     private void flip() {
