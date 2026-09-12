@@ -43,7 +43,6 @@ public class MainWindow extends AnchorPane {
     private final Image samanthaImage = loadImage("/images/SamanthaAvatar.png");
     private Samantha samantha;
     private Stage helpStage;
-    private OnboardingOverlay onboardingOverlay;
     private boolean hasShownInitialResponses;
 
     /**
@@ -69,8 +68,6 @@ public class MainWindow extends AnchorPane {
                 isGreeting = false;
             }
             hasShownInitialResponses = true;
-            showOnboarding();
-            return;
         }
         userInput.requestFocus();
     }
@@ -176,28 +173,6 @@ public class MainWindow extends AnchorPane {
             return DialogBox.getSamanthaErrorDialog(response, samanthaImage);
         }
         return DialogBox.getSamanthaDialog(response, samanthaImage);
-    }
-
-    /**
-     * Covers the window with the opening sequence until it finishes or is skipped.
-     */
-    private void showOnboarding() {
-        onboardingOverlay = new OnboardingOverlay(this::finishOnboarding);
-        AnchorPane.setTopAnchor(onboardingOverlay, 0.0);
-        AnchorPane.setRightAnchor(onboardingOverlay, 0.0);
-        AnchorPane.setBottomAnchor(onboardingOverlay, 0.0);
-        AnchorPane.setLeftAnchor(onboardingOverlay, 0.0);
-        getChildren().add(onboardingOverlay);
-        onboardingOverlay.play();
-    }
-
-    /**
-     * Removes the opening overlay and returns keyboard focus to the composer.
-     */
-    private void finishOnboarding() {
-        getChildren().remove(onboardingOverlay);
-        onboardingOverlay = null;
-        userInput.requestFocus();
     }
 
     /**
