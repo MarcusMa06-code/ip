@@ -10,6 +10,7 @@ import samantha.exception.CorruptedTaskFileException;
 import samantha.exception.NoteFileReadException;
 import samantha.exception.SamanthaException;
 import samantha.exception.TaskFileReadException;
+import samantha.exception.UnknownCommandException;
 import samantha.model.NoteList;
 import samantha.model.TaskList;
 import samantha.parser.Parser;
@@ -31,6 +32,7 @@ public class Samantha {
     private static final String NOTE_FILE_READ_WARNING =
             "Warning: I couldn't read the saved notes. Starting with an empty note list.";
     private static final String GOODBYE = "Bye. Let's talk next time!";
+    private static final int UNKNOWN_COMMANDS_BEFORE_HELP = 3;
     private static final String CONSOLE_BANNER = " ____    _    __  __    _    _   _ _____ _   _    _    \n"
             + "/ ___|  / \\  |  \\/  |  / \\  | \\ | |_   _| | | |  / \\   \n"
             + "\\___ \\ / _ \\ | |\\/| | / _ \\ |  \\| | | | |_| | / _ \\  \n"
@@ -44,6 +46,9 @@ public class Samantha {
     private boolean isInitialized;
     private boolean isExitRequested;
     private boolean isLastResponseError;
+    private boolean isLastResponseUnknownCommand;
+    private boolean shouldOpenHelpGuide;
+    private int unknownCommandCount;
     private String startupWarning = "";
     private Command lastUndoableCommand;
 
@@ -121,6 +126,8 @@ public class Samantha {
         initialize();
         assert isInitialized : "Samantha must be initialized before handling commands";
         isLastResponseError = false;
+        isLastResponseUnknownCommand = false;
+        shouldOpenHelpGuide = false;
         try {
             Command command = Parser.parse(input);
             assert command != null : "Parsing a valid command must produce a command";
@@ -128,9 +135,20 @@ public class Samantha {
                     ? undoLastCommand()
                     : executeAndRecord(command);
             isExitRequested = command.isExit();
+            unknownCommandCount = 0;
             return isExitRequested ? GOODBYE : response;
+        } catch (UnknownCommandException e) {
+            isLastResponseError = true;
+            isLastResponseUnknownCommand = true;
+            unknownCommandCount++;
+            shouldOpenHelpGuide = unknownCommandCount >= UNKNOWN_COMMANDS_BEFORE_HELP;
+            if (shouldOpenHelpGuide) {
+                unknownCommandCount = 0;
+            }
+            return e.getMessage();
         } catch (SamanthaException e) {
             isLastResponseError = true;
+            unknownCommandCount = 0;
             return e.getMessage();
         }
     }
@@ -183,6 +201,32 @@ public class Samantha {
      */
     public boolean isLastResponseError() {
         return isLastResponseError;
+    }
+
+    /**
+     * Returns whether the most recently handled command was an unrecognized command word.
+     *
+     * @return {@code true} after an unknown command
+     */
+    public boolean isLastResponseUnknownCommand() {
+        return isLastResponseUnknownCommand;
+    }
+
+    /**
+     * Returns whether the GUI should open the command guide after repeated unknown commands.
+     *
+     * @return {@code true} after three consecutive unrecognized commands
+     */
+    public boolean shouldOpenHelpGuide() {
+        return shouldOpenHelpGuide;
+    }
+
+    /**
+     * Clears the consecutive unknown-command count and any pending help-window request.
+     */
+    public void resetUnknownCommandStreak() {
+        unknownCommandCount = 0;
+        shouldOpenHelpGuide = false;
     }
 
     /**

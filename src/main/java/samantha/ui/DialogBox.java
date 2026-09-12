@@ -9,12 +9,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * Represents a conversation bubble with a speaker avatar and text.
@@ -22,6 +26,11 @@ import javafx.scene.shape.Circle;
 public class DialogBox extends HBox {
     private static final double AVATAR_RADIUS = 22;
     private static final double AVATAR_HORIZONTAL_CROP_POSITION = 0.70;
+    private static final double ERROR_LABEL_MAX_WIDTH = 320;
+    private static final double ERROR_LABEL_HORIZONTAL_PADDING = 13;
+    private static final double ERROR_TEXT_MAX_WIDTH =
+            ERROR_LABEL_MAX_WIDTH - (ERROR_LABEL_HORIZONTAL_PADDING * 2);
+    private static final String HELP_LINK_WORD = "help";
 
     @FXML
     private Label dialog;
@@ -86,9 +95,65 @@ public class DialogBox extends HBox {
      * @return left-aligned error dialog
      */
     public static DialogBox getSamanthaErrorDialog(String text, Image image) {
+        return getSamanthaErrorDialog(text, image, null);
+    }
+
+    /**
+     * Creates a Samantha error reply, optionally making {@code help} clickable.
+     *
+     * @param text error message
+     * @param image Samantha avatar
+     * @param onHelpClicked action to run when the user clicks {@code help}, or {@code null}
+     * @return left-aligned error dialog
+     */
+    public static DialogBox getSamanthaErrorDialog(String text, Image image, Runnable onHelpClicked) {
         DialogBox dialogBox = getSamanthaDialog(text, image);
         dialogBox.getStyleClass().add("error-dialog");
+        if (onHelpClicked != null) {
+            dialogBox.makeHelpClickable(text, onHelpClicked);
+        }
         return dialogBox;
+    }
+
+    /**
+     * Turns the word {@code help} in an unknown-command message into an inline link.
+     *
+     * @param text full error message
+     * @param onHelpClicked action to run when the link is clicked
+     */
+    private void makeHelpClickable(String text, Runnable onHelpClicked) {
+        int helpIndex = text.indexOf(HELP_LINK_WORD);
+        if (helpIndex < 0) {
+            return;
+        }
+
+        Text before = createErrorText(text.substring(0, helpIndex));
+        Text helpLink = createErrorText(HELP_LINK_WORD);
+        helpLink.getStyleClass().add("help-link");
+        helpLink.setUnderline(true);
+        helpLink.setCursor(Cursor.HAND);
+        helpLink.setOnMouseClicked(event -> onHelpClicked.run());
+        helpLink.setOnMouseEntered(event -> helpLink.getStyleClass().add("help-link-hover"));
+        helpLink.setOnMouseExited(event -> helpLink.getStyleClass().remove("help-link-hover"));
+        Text after = createErrorText(text.substring(helpIndex + HELP_LINK_WORD.length()));
+
+        TextFlow flow = new TextFlow(before, helpLink, after);
+        flow.setMaxWidth(ERROR_TEXT_MAX_WIDTH);
+        dialog.setText("");
+        dialog.setGraphic(flow);
+        dialog.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+    }
+
+    /**
+     * Creates a text node that inherits the error-bubble type style.
+     *
+     * @param content visible text
+     * @return styled text node
+     */
+    private static Text createErrorText(String content) {
+        Text text = new Text(content);
+        text.getStyleClass().add("error-text");
+        return text;
     }
 
     /**

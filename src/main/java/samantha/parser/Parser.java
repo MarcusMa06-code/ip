@@ -20,6 +20,7 @@ import samantha.command.MarkCommand;
 import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
 import samantha.exception.InputException;
+import samantha.exception.UnknownCommandException;
 import samantha.model.DateTimeValue;
 
 /**
@@ -92,7 +93,7 @@ public class Parser {
         try {
             return CommandType.valueOf(word.replace('-', '_').toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new InputException("I don't recognize that. Type help if you want the guide.");
+            throw new UnknownCommandException();
         }
     }
 

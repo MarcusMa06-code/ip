@@ -102,6 +102,10 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
         userInput.requestFocus();
 
+        if (samantha.shouldOpenHelpGuide()) {
+            openHelpWindow();
+        }
+
         if (samantha.isExitRequested()) {
             closeAfterFarewell();
         }
@@ -119,6 +123,9 @@ public class MainWindow extends AnchorPane {
      * Opens the readable command guide in a separate, reusable window.
      */
     private void openHelpWindow() {
+        if (samantha != null) {
+            samantha.resetUnknownCommandStreak();
+        }
         if (helpStage != null && helpStage.isShowing()) {
             helpStage.toFront();
             helpStage.requestFocus();
@@ -162,6 +169,9 @@ public class MainWindow extends AnchorPane {
      * @return Samantha dialog box
      */
     private DialogBox createSamanthaReply(String response, boolean isError) {
+        if (isError && samantha.isLastResponseUnknownCommand()) {
+            return DialogBox.getSamanthaErrorDialog(response, samanthaImage, this::openHelpWindow);
+        }
         if (isError) {
             return DialogBox.getSamanthaErrorDialog(response, samanthaImage);
         }

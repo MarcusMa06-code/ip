@@ -194,6 +194,52 @@ class SamanthaTest {
 
         samantha.getResponse("todo read book");
         assertFalse(samantha.isLastResponseError());
+        assertFalse(samantha.isLastResponseUnknownCommand());
+    }
+
+    @Test
+    void getResponse_threeUnknownCommands_opensHelpGuideThenResets() {
+        Samantha samantha = new Samantha(storage());
+
+        samantha.getResponse("blah");
+        assertTrue(samantha.isLastResponseUnknownCommand());
+        assertFalse(samantha.shouldOpenHelpGuide());
+
+        samantha.getResponse("nope");
+        assertFalse(samantha.shouldOpenHelpGuide());
+
+        samantha.getResponse("unknown");
+        assertTrue(samantha.shouldOpenHelpGuide());
+
+        samantha.getResponse("still-wrong");
+        assertTrue(samantha.isLastResponseUnknownCommand());
+        assertFalse(samantha.shouldOpenHelpGuide());
+    }
+
+    @Test
+    void getResponse_unknownThenValidCommand_resetsUnknownCommandStreak() {
+        Samantha samantha = new Samantha(storage());
+
+        samantha.getResponse("blah");
+        samantha.getResponse("todo read book");
+        samantha.getResponse("nope");
+        samantha.getResponse("still-wrong");
+
+        assertTrue(samantha.isLastResponseUnknownCommand());
+        assertFalse(samantha.shouldOpenHelpGuide());
+    }
+
+    @Test
+    void resetUnknownCommandStreak_afterTwoUnknowns_doesNotOpenHelpOnNextUnknown() {
+        Samantha samantha = new Samantha(storage());
+
+        samantha.getResponse("blah");
+        samantha.getResponse("nope");
+        samantha.resetUnknownCommandStreak();
+        samantha.getResponse("still-wrong");
+
+        assertTrue(samantha.isLastResponseUnknownCommand());
+        assertFalse(samantha.shouldOpenHelpGuide());
     }
 
     @Test
