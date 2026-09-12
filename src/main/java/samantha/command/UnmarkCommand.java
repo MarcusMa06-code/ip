@@ -45,7 +45,7 @@ public class UnmarkCommand extends Command {
         wasDone = task.isDone();
         task.markNotDone();
         saveTasks(context.getTasks(), context.getTaskStorage());
-        return "OK, I've marked this task as not done yet:\n  " + task;
+        return "I've put that back on the list:\n  " + task;
     }
 
     /**

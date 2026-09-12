@@ -186,7 +186,7 @@ public abstract class Command {
      * @return confirmation for the added task
      */
     protected String getTaskAddedResponse(Task task, int taskCount) {
-        return "Got it. I've added this task: \n  "
+        return "I'll remember that:\n  "
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", taskCount);
     }
@@ -217,7 +217,7 @@ public abstract class Command {
         notes.add(note);
         saveNotes(notes, storage);
         addedNote = note;
-        return "Got it. I've added this note:\n  "
+        return "I'll keep this note:\n  "
                 + note + "\n"
                 + String.format("Now you have %d notes in the list.", notes.size());
     }

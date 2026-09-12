@@ -50,7 +50,7 @@ public class EditNoteCommand extends Command {
         previousContent = note.getContent();
         note.edit(content);
         saveNotes(context.getNotes(), context.getNoteStorage());
-        return "Got it. I've updated this note:\n  " + note;
+        return "I've updated this note:\n  " + note;
     }
 
     /**

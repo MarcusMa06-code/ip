@@ -31,7 +31,7 @@ class AddTodoCommandTest {
         assertEquals(1, tasks.size());
         assertInstanceOf(Todo.class, tasks.getTask(1));
         assertEquals("T | 0 | read book", storage.load().getFirst().toFileString());
-        assertTrue(output.contains("I've added this task"));
+        assertTrue(output.contains("I'll remember that"));
     }
 
     @Test

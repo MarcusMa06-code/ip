@@ -55,7 +55,7 @@ deadlines and events occurring on that date while excluding unrelated tasks.
 todo buy groceries
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] buy groceries
 Now you have 1 tasks in the list.
 ```
@@ -64,7 +64,7 @@ Now you have 1 tasks in the list.
 deadline return book /by 2/12/2019
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] return book (by: Dec 2 2019)
 Now you have 2 tasks in the list.
 ```
@@ -73,7 +73,7 @@ Now you have 2 tasks in the list.
 event project meeting /from 2-12-2019 1400 /to 2-12-2019 1600
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
 Now you have 3 tasks in the list.
 ```
@@ -118,7 +118,7 @@ under `list`.
 todo borrow book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] borrow book
 Now you have 1 tasks in the list.
 ```
@@ -148,7 +148,7 @@ and reports no task lines when there are no matches.
 todo read book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ```
@@ -157,7 +157,7 @@ Now you have 1 tasks in the list.
 deadline return book /by 6-6-2019
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ```
@@ -166,7 +166,7 @@ Now you have 2 tasks in the list.
 todo join club
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] join club
 Now you have 3 tasks in the list.
 ```
@@ -215,7 +215,7 @@ Malformed numeric dates are rejected without adding a task.
 deadline return book /by 2/12/2019 1800
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] return book (by: Dec 2 2019, 6:00 PM)
 Now you have 1 tasks in the list.
 ```
@@ -224,7 +224,7 @@ Now you have 1 tasks in the list.
 deadline submit report /by 5-01-2020
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] submit report (by: Jan 5 2020)
 Now you have 2 tasks in the list.
 ```
@@ -276,7 +276,7 @@ and `list`, and the task count accumulates across different task types.
 deadline return book /by 2/12/2019
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] return book (by: Dec 2 2019)
 Now you have 1 tasks in the list.
 ```
@@ -285,7 +285,7 @@ Now you have 1 tasks in the list.
 event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
 Now you have 2 tasks in the list.
 ```
@@ -319,7 +319,7 @@ is why `list` is checked in full after each flip.
 todo read book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ```
@@ -328,7 +328,7 @@ Now you have 1 tasks in the list.
 todo return book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] return book
 Now you have 2 tasks in the list.
 ```
@@ -337,7 +337,7 @@ Now you have 2 tasks in the list.
 todo join club
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] join club
 Now you have 3 tasks in the list.
 ```
@@ -346,7 +346,7 @@ Now you have 3 tasks in the list.
 mark 2
 ```
 ```expected
-Nice! I've marked this task as done:
+That's done:
   [T][X] return book
 ```
 
@@ -364,7 +364,7 @@ Here are the tasks in your list:
 unmark 2
 ```
 ```expected
-OK, I've marked this task as not done yet:
+I've put that back on the list:
   [T][ ] return book
 ```
 
@@ -403,7 +403,7 @@ The description of a todo cannot be empty.
 blah
 ```
 ```expected
-It seems that you entered a wrong command.
+I don't recognize that. Type help if you want the guide.
 ```
 
 ```input
@@ -467,7 +467,7 @@ An event can only have one /from and one /to.
 deadline return book /by 2/12/2019
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] return book (by: Dec 2 2019)
 Now you have 1 tasks in the list.
 ```
@@ -497,7 +497,7 @@ crashing, and a valid `mark` afterward still flips the right task.
 todo read book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ```
@@ -527,7 +527,7 @@ You entered a task number that does not exist.
 mark  1
 ```
 ```expected
-Nice! I've marked this task as done:
+That's done:
   [T][X] read book
 ```
 
@@ -550,7 +550,7 @@ indexed wrongly would pass every check except that last one.
 todo read book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ```
@@ -559,7 +559,7 @@ Now you have 1 tasks in the list.
 deadline return book /by 6-6-2019
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ```
@@ -568,7 +568,7 @@ Now you have 2 tasks in the list.
 event project meeting /from 8-6-2019 1400 /to 8-6-2019 1600
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [E][ ] project meeting (from: Jun 8 2019, 2:00 PM to: Jun 8 2019, 4:00 PM)
 Now you have 3 tasks in the list.
 ```
@@ -577,7 +577,7 @@ Now you have 3 tasks in the list.
 delete 2
 ```
 ```expected
-Noted. I've removed this task:
+I've taken that off the list:
   [D][ ] return book (by: Jun 6 2019)
 Now you have 2 tasks in the list.
 ```
@@ -595,7 +595,7 @@ Here are the tasks in your list:
 mark 2
 ```
 ```expected
-Nice! I've marked this task as done:
+That's done:
   [E][X] project meeting (from: Jun 8 2019, 2:00 PM to: Jun 8 2019, 4:00 PM)
 ```
 
@@ -618,7 +618,7 @@ removed anything.
 todo read book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ```
@@ -722,7 +722,7 @@ through the shared `find` command without sharing task numbering.
 note movie title: Inception
 ```
 ```expected
-Got it. I've added this note:
+I'll keep this note:
   movie title: Inception
 Now you have 1 notes in the list.
 ```
@@ -731,7 +731,7 @@ Now you have 1 notes in the list.
 note My waist size is 32 inches
 ```
 ```expected
-Got it. I've added this note:
+I'll keep this note:
   My waist size is 32 inches
 Now you have 2 notes in the list.
 ```
@@ -749,7 +749,7 @@ Here are your notes:
 edit-note 1 movie title: Interstellar
 ```
 ```expected
-Got it. I've updated this note:
+I've updated this note:
   movie title: Interstellar
 ```
 
@@ -767,7 +767,7 @@ Here are the matching notes in your list:
 delete-note 2
 ```
 ```expected
-Noted. I've removed this note:
+I've taken that off the list:
   My waist size is 32 inches
 Now you have 1 notes in the list.
 ```
@@ -797,7 +797,7 @@ no command left to undo.
 todo read book
 ```
 ```expected
-Got it. I've added this task:
+I'll remember that:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ```
@@ -839,7 +839,7 @@ the remaining note order.
 note first
 ```
 ```expected
-Got it. I've added this note:
+I'll keep this note:
   first
 Now you have 1 notes in the list.
 ```
@@ -848,7 +848,7 @@ Now you have 1 notes in the list.
 note second
 ```
 ```expected
-Got it. I've added this note:
+I'll keep this note:
   second
 Now you have 2 notes in the list.
 ```
@@ -857,7 +857,7 @@ Now you have 2 notes in the list.
 edit-note 1 updated
 ```
 ```expected
-Got it. I've updated this note:
+I've updated this note:
   updated
 ```
 
@@ -872,7 +872,7 @@ I've undone the last command.
 delete-note 1
 ```
 ```expected
-Noted. I've removed this note:
+I've taken that off the list:
   first
 Now you have 1 notes in the list.
 ```
@@ -897,7 +897,7 @@ Here are your notes:
 note third
 ```
 ```expected
-Got it. I've added this note:
+I'll keep this note:
   third
 Now you have 3 notes in the list.
 ```

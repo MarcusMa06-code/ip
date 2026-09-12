@@ -45,7 +45,7 @@ public class MarkCommand extends Command {
         wasDone = task.isDone();
         task.markDone();
         saveTasks(context.getTasks(), context.getTaskStorage());
-        return "Nice! I've marked this task as done:\n  " + task;
+        return "That's done:\n  " + task;
     }
 
     /**

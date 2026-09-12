@@ -46,7 +46,7 @@ public class DeleteCommand extends Command {
         deletedTask = context.getTasks().removeTask(taskId);
         deletedTaskIndex = taskId - 1;
         saveTasks(context.getTasks(), context.getTaskStorage());
-        return "Noted. I've removed this task:\n  "
+        return "I've taken that off the list:\n  "
                 + task + "\n"
                 + String.format("Now you have %d tasks in the list.", context.getTasks().size());
     }

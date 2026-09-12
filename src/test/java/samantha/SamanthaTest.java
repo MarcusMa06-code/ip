@@ -24,7 +24,7 @@ class SamanthaTest {
     void getInitialResponses_missingTaskFile_returnsGreeting() {
         Samantha samantha = new Samantha(storage());
 
-        assertEquals(List.of("Hello. I’m here. What would you like to do today?"),
+        assertEquals(List.of("Hello. I'm here. What would you like to do today?"),
                 samantha.getInitialResponses());
     }
 
@@ -34,7 +34,7 @@ class SamanthaTest {
 
         String response = samantha.getResponse("todo read book");
 
-        assertEquals("Got it. I've added this task: \n  [T][ ] read book\n"
+        assertEquals("I'll remember that:\n  [T][ ] read book\n"
                 + "Now you have 1 tasks in the list.", response);
         assertEquals("T | 0 | read book", storage().load().get(0).toFileString());
     }
@@ -112,10 +112,10 @@ class SamanthaTest {
     void getResponse_noteCommands_persistAndSearchNotes() throws Exception {
         Samantha samantha = new Samantha(storage(), noteStorage());
 
-        assertEquals("Got it. I've added this note:\n"
+        assertEquals("I'll keep this note:\n"
                 + "  movie title: Inception\n"
                 + "Now you have 1 notes in the list.", samantha.getResponse("note movie title: Inception"));
-        assertEquals("Got it. I've updated this note:\n  movie title: Interstellar",
+        assertEquals("I've updated this note:\n  movie title: Interstellar",
                 samantha.getResponse("edit-note 1 movie title: Interstellar"));
         assertEquals("Here are the matching tasks in your list:\n\n"
                 + "Here are the matching notes in your list:\n"
@@ -127,7 +127,8 @@ class SamanthaTest {
     void getResponse_invalidCommand_returnsErrorWithoutRequestingExit() {
         Samantha samantha = new Samantha(storage());
 
-        assertEquals("It seems that you entered a wrong command.", samantha.getResponse("unknown"));
+        assertEquals("I don't recognize that. Type help if you want the guide.",
+                samantha.getResponse("unknown"));
         assertFalse(samantha.isExitRequested());
     }
 
