@@ -54,6 +54,8 @@
                                 styleClass="command-item" text="unmark" />
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#selectCommand"
                                 styleClass="command-item" text="delete" />
+                        <Button fx:id="undoButton" mnemonicParsing="false" onAction="#selectCommand"
+                                styleClass="command-item" text="undo" />
                         <Button fx:id="byeButton" mnemonicParsing="false" onAction="#selectCommand"
                                 styleClass="command-item" text="bye" />
                     </children>

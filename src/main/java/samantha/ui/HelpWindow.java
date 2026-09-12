@@ -37,7 +37,7 @@ public class HelpWindow {
                     "DATE AND TIME FORMAT", DATE_TIME_FORMAT_MESSAGE),
             new CommandHelp("list", "Show every task, or only tasks on a date.",
                     "list [DATE]", "list 12/9/2026", "DATE FORMAT", DATE_FORMAT_MESSAGE),
-            new CommandHelp("find", "Find tasks whose descriptions contain a keyword.",
+            new CommandHelp("find", "Find tasks and notes whose text contains a keyword.",
                     "find KEYWORD", "find report"),
             new CommandHelp("note", "Add a note that you want Samantha to remember.",
                     "note CONTENT", "note buy milk"),
@@ -52,6 +52,8 @@ public class HelpWindow {
                     "unmark N", "unmark 1"),
             new CommandHelp("delete", "Remove a task permanently using its list number.",
                     "delete N", "delete 1"),
+            new CommandHelp("undo", "Undo the most recent change to a task or note.",
+                    "undo", "undo"),
             new CommandHelp("bye", "Close Samantha when you are done.", "bye", "bye"));
 
     @FXML
@@ -82,6 +84,8 @@ public class HelpWindow {
     private Button unmarkButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button undoButton;
     @FXML
     private Button byeButton;
     @FXML
@@ -116,7 +120,7 @@ public class HelpWindow {
         commandButtons = List.of(
                 helpButton, todoButton, deadlineButton, eventButton, listButton,
                 findButton, noteButton, notesButton, editNoteButton, deleteNoteButton,
-                markButton, unmarkButton, deleteButton, byeButton);
+                markButton, unmarkButton, deleteButton, undoButton, byeButton);
         helpWindow.setFocusTraversable(true);
         helpWindow.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
         showCommand(0);

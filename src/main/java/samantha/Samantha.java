@@ -21,7 +21,7 @@ import samantha.ui.Ui;
  * Coordinates Samantha's command loop and its task, storage, and UI components.
  */
 public class Samantha {
-    private static final String GUI_GREETING = "Hello. I’m here. What would you like to do today?";
+    private static final String GREETING = "Hello. I'm here. What would you like to do today?";
     private static final String CORRUPTED_FILE_WARNING =
             "Warning: The saved task file is corrupted. Starting with an empty task list.";
     private static final String FILE_READ_WARNING =
@@ -103,7 +103,7 @@ public class Samantha {
     public List<String> getInitialResponses() {
         initialize();
         List<String> messages = new ArrayList<>();
-        messages.add(GUI_GREETING);
+        messages.add(GREETING);
         if (!startupWarning.isEmpty()) {
             messages.add(startupWarning);
         }
@@ -219,7 +219,7 @@ public class Samantha {
         Ui ui = new Ui();
         initialize();
         showStartupWarning(ui);
-        ui.showWelcome(CONSOLE_BANNER);
+        ui.showWelcome(CONSOLE_BANNER, GREETING);
         runCommandLoop(ui);
         ui.showGoodbye();
     }

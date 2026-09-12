@@ -13,15 +13,15 @@ class HelpWindowTest {
     void getCommandNames_allSupportedCommandsAppearInNavigationOrder() {
         assertEquals(List.of(
                 "help", "todo", "deadline", "event", "list", "find", "note", "notes",
-                "edit-note", "delete-note", "mark", "unmark", "delete", "bye"),
+                "edit-note", "delete-note", "mark", "unmark", "delete", "undo", "bye"),
                 HelpWindow.getCommandNames());
     }
 
     @Test
     void getAdjacentCommandIndex_movesAndWrapsAroundGuide() {
         assertEquals(1, HelpWindow.getAdjacentCommandIndex(0, 1));
-        assertEquals(13, HelpWindow.getAdjacentCommandIndex(0, -1));
-        assertEquals(0, HelpWindow.getAdjacentCommandIndex(13, 1));
+        assertEquals(14, HelpWindow.getAdjacentCommandIndex(0, -1));
+        assertEquals(0, HelpWindow.getAdjacentCommandIndex(14, 1));
     }
 
     @Test

@@ -28,11 +28,10 @@ public class Ui {
      * Displays the given welcome banner and Samantha's greeting.
      *
      * @param banner the banner to display before the greeting
+     * @param greeting Samantha's opening line
      */
-    public void showWelcome(String banner) {
-        showResponse(banner
-                + "Hello! I'm Samantha.\n"
-                + "What can I do for you?");
+    public void showWelcome(String banner, String greeting) {
+        showResponse(banner + greeting);
     }
 
     /**

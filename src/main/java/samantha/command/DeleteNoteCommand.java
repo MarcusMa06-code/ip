@@ -45,7 +45,7 @@ public class DeleteNoteCommand extends Command {
         deletedNote = context.getNotes().removeNote(noteId);
         deletedNoteIndex = noteId - 1;
         saveNotes(context.getNotes(), context.getNoteStorage());
-        return "Noted. I've removed this note:\n  " + note + "\n"
+        return "I've taken that off the list:\n  " + note + "\n"
                 + String.format("Now you have %d notes in the list.", context.getNotes().size());
     }
 

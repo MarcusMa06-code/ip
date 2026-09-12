@@ -25,16 +25,16 @@ class NoteCommandTest {
         NoteList notes = new NoteList();
         CommandContext context = context(notes);
 
-        assertEquals("Got it. I've added this note:\n"
+        assertEquals("I'll keep this note:\n"
                 + "  waist size: 32 inches\n"
                 + "Now you have 1 notes in the list.",
                 new AddNoteCommand("waist size: 32 inches").execute(context));
         assertEquals("Here are your notes:\n1. waist size: 32 inches",
                 new ListNotesCommand().execute(context));
 
-        assertEquals("Got it. I've updated this note:\n  waist size: 31 inches",
+        assertEquals("I've updated this note:\n  waist size: 31 inches",
                 new EditNoteCommand(1, "waist size: 31 inches").execute(context));
-        assertEquals("Noted. I've removed this note:\n"
+        assertEquals("I've taken that off the list:\n"
                 + "  waist size: 31 inches\n"
                 + "Now you have 0 notes in the list.",
                 new DeleteNoteCommand(1).execute(context));

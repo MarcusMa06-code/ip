@@ -92,7 +92,7 @@ public class Parser {
         try {
             return CommandType.valueOf(word.replace('-', '_').toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new InputException("It seems that you entered a wrong command.");
+            throw new InputException("I don't recognize that. Type help if you want the guide.");
         }
     }
 
