@@ -30,6 +30,7 @@ import samantha.command.MarkCommand;
 import samantha.command.UndoCommand;
 import samantha.command.UnmarkCommand;
 import samantha.exception.InputException;
+import samantha.exception.UnknownCommandException;
 
 class ParserTest {
     @ParameterizedTest
@@ -59,8 +60,8 @@ class ParserTest {
     }
 
     @Test
-    void parse_unknownCommand_inputExceptionThrown() {
-        assertThrows(InputException.class, () -> Parser.parse("archive 1"));
+    void parse_unknownCommand_unknownCommandExceptionThrown() {
+        assertThrows(UnknownCommandException.class, () -> Parser.parse("archive 1"));
     }
 
     @Test
