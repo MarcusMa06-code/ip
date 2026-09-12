@@ -120,6 +120,18 @@ class ParserTest {
     }
 
     @Test
+    void parseEventDetails_repeatedMarker_inputExceptionThrown() {
+        assertThrows(InputException.class, () ->
+                Parser.parseEventDetails(Parser.splitCommand(
+                        "event meeting /from 2/12/2019 1400 /to 2/12/2019 1600 /from 2/12/2019 1500")));
+    }
+
+    @Test
+    void parseTaskId_extraSpacesAroundId_returnsId() throws InputException {
+        assertEquals(1, Parser.parseTaskId(Parser.splitCommand("mark  1")));
+    }
+
+    @Test
     void parseListDate_noArgument_returnsNull() throws InputException {
         assertNull(Parser.parseListDate(Parser.splitCommand("list")));
     }

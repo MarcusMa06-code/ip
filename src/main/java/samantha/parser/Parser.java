@@ -111,13 +111,13 @@ public class Parser {
     }
 
     /**
-     * Splits a raw user command into words.
+     * Splits a raw user command into words, ignoring extra surrounding whitespace.
      *
      * @param input raw command entered by the user
      * @return the command words
      */
     public static String[] splitCommand(String input) {
-        return input.split(" ");
+        return input.trim().split("\\s+");
     }
 
     /**
@@ -166,12 +166,16 @@ public class Parser {
      *
      * @param parts words from an event command
      * @return a three-element array containing the description, start time, and end time
-     * @throws InputException if the command does not contain both {@code /from} and {@code /to}
+     * @throws InputException if the command does not contain exactly one {@code /from}
+     *         and one {@code /to}
      */
     public static String[] parseEventDetails(String... parts) throws InputException {
         String[] segments = parseDescription(parts).split("/from|/to");
         if (segments.length < 3) {
             throw new InputException("You forgot to include /from and /to for this event.");
+        }
+        if (segments.length > 3) {
+            throw new InputException("An event can only have one /from and one /to.");
         }
         assert segments.length == 3 : "An event must have exactly three segments";
         return new String[] {segments[0].trim(), segments[1].trim(), segments[2].trim()};

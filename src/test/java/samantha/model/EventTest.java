@@ -28,6 +28,14 @@ class EventTest {
     }
 
     @Test
+    void constructor_endNotAfterStart_taskValidationExceptionThrown() {
+        assertThrows(TaskValidationException.class, () ->
+                new Event("meeting", "2/12/2019 1600", "2/12/2019 1400"));
+        assertThrows(TaskValidationException.class, () ->
+                new Event("meeting", "2/12/2019 1400", "2/12/2019 1400"));
+    }
+
+    @Test
     void event_dateWithinInclusiveRange_reportsDetailsAndSerializesStatus()
             throws TaskValidationException, InputException {
         Event event = new Event("conference", "2/12/2019 1400", "4/12/2019 1600");
