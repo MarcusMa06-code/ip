@@ -127,6 +127,13 @@ class ParserTest {
     }
 
     @Test
+    void parseEventDetails_emptyDescription_returnsBlankDescriptionSegment() throws InputException {
+        assertArrayEquals(new String[] {"", "2/12/2019 1400", "2/12/2019 1600"},
+                Parser.parseEventDetails(Parser.splitCommand(
+                        "event /from 2/12/2019 1400 /to 2/12/2019 1600")));
+    }
+
+    @Test
     void parseTaskId_extraSpacesAroundId_returnsId() throws InputException {
         assertEquals(1, Parser.parseTaskId(Parser.splitCommand("mark  1")));
     }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -26,6 +27,65 @@ class SamanthaTest {
 
         assertEquals(List.of("Hello. I'm here. What would you like to do today?"),
                 samantha.getInitialResponses());
+    }
+
+    @Test
+    void getInitialResponses_corruptedTaskFile_includesWarningAndContinues() throws Exception {
+        Files.writeString(temporaryDirectory.resolve("samantha.txt"), "not a valid task record\n");
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        assertEquals(List.of(
+                "Hello. I'm here. What would you like to do today?",
+                "Warning: The saved task file is corrupted. Starting with an empty task list."),
+                samantha.getInitialResponses());
+        assertEquals("I'll remember that:\n  [T][ ] recover\nNow you have 1 tasks in the list.",
+                samantha.getResponse("todo recover"));
+    }
+
+    @Test
+    void getInitialResponses_unreadableTaskFile_includesWarning() throws Exception {
+        Path unreadable = temporaryDirectory.resolve("tasks-dir");
+        Files.createDirectory(unreadable);
+        Samantha samantha = new Samantha(new Storage(unreadable), noteStorage());
+
+        assertEquals(List.of(
+                "Hello. I'm here. What would you like to do today?",
+                "Warning: I couldn't read the saved tasks. Starting with an empty task list."),
+                samantha.getInitialResponses());
+    }
+
+    @Test
+    void getInitialResponses_corruptedNoteFile_includesWarning() throws Exception {
+        Files.writeString(temporaryDirectory.resolve("notes.txt"), "   \n");
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        assertEquals(List.of(
+                "Hello. I'm here. What would you like to do today?",
+                "Warning: The saved note file is corrupted. Starting with an empty note list."),
+                samantha.getInitialResponses());
+    }
+
+    @Test
+    void getResponse_undoAfterDeadlineAndEvent_restoresEmptyTaskFile() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        samantha.getResponse("deadline return book /by 2/12/2019");
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertTrue(storage().load().isEmpty());
+
+        samantha.getResponse("event meeting /from 2/12/2019 1400 /to 2/12/2019 1600");
+        assertEquals("I've undone the last command.", samantha.getResponse("undo"));
+        assertTrue(storage().load().isEmpty());
+    }
+
+    @Test
+    void getResponse_emptyEventDescription_returnsErrorWithoutSaving() throws Exception {
+        Samantha samantha = new Samantha(storage(), noteStorage());
+
+        assertEquals("The description of a event cannot be empty.",
+                samantha.getResponse("event /from 2/12/2019 1400 /to 2/12/2019 1600"));
+        assertTrue(samantha.isLastResponseError());
+        assertTrue(storage().load().isEmpty());
     }
 
     @Test

@@ -924,3 +924,62 @@ bye
 ```expected
 Bye. Let's talk next time!
 ```
+
+## Test 17: Reject an empty event description and undo timed tasks
+
+**Aim:** An event missing its description is rejected without adding a task,
+and undoing a deadline or event restores an empty task list so those
+additions are reversible like todos.
+
+```input
+event /from 2/12/2019 1400 /to 2/12/2019 1600
+```
+```expected
+The description of a event cannot be empty.
+```
+
+```input
+deadline return book /by 2/12/2019
+```
+```expected
+I'll remember that:
+  [D][ ] return book (by: Dec 2 2019)
+Now you have 1 tasks in the list.
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+event meeting /from 2/12/2019 1400 /to 2/12/2019 1600
+```
+```expected
+I'll remember that:
+  [E][ ] meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+Now you have 1 tasks in the list.
+```
+
+```input
+undo
+```
+```expected
+I've undone the last command.
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```
