@@ -422,11 +422,11 @@ Bye. Let's talk next time!
 
 ## Test 6: Reject malformed deadlines and events, then confirm a valid one still works
 
-**Aim:** A deadline missing `/by`, a deadline with an empty description, and
-an event missing `/to` are all rejected with a specific error message
+**Aim:** A deadline missing `/by`, a deadline with an empty description,
+an event missing `/to`, an event whose end is not after its start, and an
+event with a repeated `/from` are all rejected with a specific error message
 and don't add anything to the list -- and, importantly, none of them corrupt
-internal state: a valid `deadline` right after still gets added as task #1,
-not #4.
+internal state: a valid `deadline` right after still gets added as task #1.
 
 ```input
 deadline return book
@@ -447,6 +447,20 @@ event meeting /from 2/12/2019 1400
 ```
 ```expected
 You forgot to include /from and /to for this event.
+```
+
+```input
+event meeting /from 2/12/2019 1600 /to 2/12/2019 1400
+```
+```expected
+The event must end after it starts.
+```
+
+```input
+event meeting /from 2/12/2019 1400 /to 2/12/2019 1600 /from 2/12/2019 1500
+```
+```expected
+An event can only have one /from and one /to.
 ```
 
 ```input
@@ -510,7 +524,7 @@ You entered a task number that does not exist.
 ```
 
 ```input
-mark 1
+mark  1
 ```
 ```expected
 Nice! I've marked this task as done:

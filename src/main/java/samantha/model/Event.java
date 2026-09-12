@@ -1,6 +1,7 @@
 package samantha.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import samantha.exception.InputException;
 import samantha.exception.TaskValidationException;
@@ -19,7 +20,8 @@ public class Event extends Task {
      * @param name event description
      * @param from raw value after {@code /from}
      * @param to raw value after {@code /to}
-     * @throws TaskValidationException if the description or schedule lacks a required value
+     * @throws TaskValidationException if the description or schedule lacks a required value,
+     *         or if the end is not after the start
      * @throws InputException if a date or time value is invalid
      */
     public Event(String name, String from, String to)
@@ -35,6 +37,9 @@ public class Event extends Task {
         this.to = parseEventDateTime(to);
         assert this.from.getTime().isPresent() : "An event start must include a time";
         assert this.to.getTime().isPresent() : "An event end must include a time";
+        if (!isEndAfterStart()) {
+            throw new TaskValidationException("The event must end after it starts.");
+        }
     }
 
     /**
@@ -53,6 +58,17 @@ public class Event extends Task {
                     "An event date and time must include a time in HHmm format.");
         }
         return dateTime;
+    }
+
+    /**
+     * Returns whether this event's end date-time is strictly after its start.
+     *
+     * @return {@code true} when the schedule has a positive duration
+     */
+    private boolean isEndAfterStart() {
+        LocalDateTime start = LocalDateTime.of(from.getDate(), from.getTime().orElseThrow());
+        LocalDateTime end = LocalDateTime.of(to.getDate(), to.getTime().orElseThrow());
+        return end.isAfter(start);
     }
 
     /**
