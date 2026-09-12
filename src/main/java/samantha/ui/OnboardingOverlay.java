@@ -7,7 +7,9 @@ import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -29,6 +31,7 @@ public class OnboardingOverlay extends StackPane {
 
     private final Runnable onFinished;
     private SequentialTransition intro;
+    private Scene boundScene;
     private boolean isFinishing;
     private boolean isSkipping;
 
@@ -52,7 +55,34 @@ public class OnboardingOverlay extends StackPane {
      */
     public void play() {
         intro.playFromStart();
-        requestFocus();
+        attachSceneSkipHandler();
+        Platform.runLater(this::requestFocus);
+    }
+
+    /**
+     * Listens for skip keys on the scene so they work even if the overlay
+     * has not yet received focus.
+     */
+    private void attachSceneSkipHandler() {
+        if (getScene() != null) {
+            bindScene(getScene());
+            return;
+        }
+        sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                bindScene(newScene);
+            }
+        });
+    }
+
+    /**
+     * Registers skip keys on the live scene.
+     *
+     * @param scene scene that currently contains this overlay
+     */
+    private void bindScene(Scene scene) {
+        boundScene = scene;
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleSkipKey);
     }
 
     /**
@@ -164,6 +194,10 @@ public class OnboardingOverlay extends StackPane {
         }
         isFinishing = true;
         setMouseTransparent(true);
+        if (boundScene != null) {
+            boundScene.removeEventFilter(KeyEvent.KEY_PRESSED, this::handleSkipKey);
+            boundScene = null;
+        }
         onFinished.run();
     }
 }

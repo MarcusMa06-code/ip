@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import samantha.ui.MainWindow;
 
 /**
  * Starts the Samantha JavaFX user interface.
@@ -24,7 +25,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
         AnchorPane mainWindow = fxmlLoader.load();
-        fxmlLoader.<samantha.ui.MainWindow>getController().setSamantha(new Samantha());
+        MainWindow controller = fxmlLoader.getController();
 
         Scene scene = new Scene(mainWindow);
         stage.setMinWidth(MIN_WINDOW_WIDTH);
@@ -32,5 +33,6 @@ public class Main extends Application {
         stage.setTitle("Samantha");
         stage.setScene(scene);
         stage.show();
+        controller.setSamantha(new Samantha());
     }
 }
