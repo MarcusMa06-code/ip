@@ -129,7 +129,11 @@ class SamanthaTest {
 
         assertEquals("I don't recognize that. Type help if you want the guide.",
                 samantha.getResponse("unknown"));
+        assertTrue(samantha.isLastResponseError());
         assertFalse(samantha.isExitRequested());
+
+        samantha.getResponse("todo read book");
+        assertFalse(samantha.isLastResponseError());
     }
 
     @Test

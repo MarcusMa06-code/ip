@@ -26,7 +26,7 @@ public class MainWindow extends AnchorPane {
     private static final double HELP_WINDOW_MIN_WIDTH = 680;
     private static final double HELP_WINDOW_MIN_HEIGHT = 520;
     private static final String HELP_COMMAND = "help";
-    private static final String HELP_OPENED_MESSAGE = "I’ve opened a clearer guide for you.";
+    private static final String HELP_OPENED_MESSAGE = "I've opened a clearer guide for you.";
 
     @FXML
     private ScrollPane scrollPane;
@@ -36,11 +36,14 @@ public class MainWindow extends AnchorPane {
     private TextField userInput;
     @FXML
     private Button sendButton;
+    @FXML
+    private Button helpButton;
 
     private final Image userImage = loadImage("/images/Theodore.png");
     private final Image samanthaImage = loadImage("/images/SamanthaAvatar.png");
     private Samantha samantha;
     private Stage helpStage;
+    private OnboardingOverlay onboardingOverlay;
     private boolean hasShownInitialResponses;
 
     /**
@@ -60,10 +63,14 @@ public class MainWindow extends AnchorPane {
         this.samantha = samantha;
         if (!hasShownInitialResponses) {
             List<String> initialResponses = samantha.getInitialResponses();
+            boolean isGreeting = true;
             for (String response : initialResponses) {
-                dialogContainer.getChildren().add(DialogBox.getSamanthaDialog(response, samanthaImage));
+                dialogContainer.getChildren().add(createSamanthaReply(response, !isGreeting));
+                isGreeting = false;
             }
             hasShownInitialResponses = true;
+            showOnboarding();
+            return;
         }
         userInput.requestFocus();
     }
@@ -91,13 +98,21 @@ public class MainWindow extends AnchorPane {
         String response = samantha.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getSamanthaDialog(response, samanthaImage));
+                createSamanthaReply(response, samantha.isLastResponseError()));
         userInput.clear();
         userInput.requestFocus();
 
         if (samantha.isExitRequested()) {
             closeAfterFarewell();
         }
+    }
+
+    /**
+     * Opens the command guide from the title-row help control.
+     */
+    @FXML
+    private void openHelpFromButton() {
+        openHelpWindow();
     }
 
     /**
@@ -137,6 +152,42 @@ public class MainWindow extends AnchorPane {
             stage.close();
         });
         pause.play();
+    }
+
+    /**
+     * Creates Samantha's reply using an error style when the command failed.
+     *
+     * @param response reply text
+     * @param isError whether the reply should be highlighted as an error
+     * @return Samantha dialog box
+     */
+    private DialogBox createSamanthaReply(String response, boolean isError) {
+        if (isError) {
+            return DialogBox.getSamanthaErrorDialog(response, samanthaImage);
+        }
+        return DialogBox.getSamanthaDialog(response, samanthaImage);
+    }
+
+    /**
+     * Covers the window with the opening sequence until it finishes or is skipped.
+     */
+    private void showOnboarding() {
+        onboardingOverlay = new OnboardingOverlay(this::finishOnboarding);
+        AnchorPane.setTopAnchor(onboardingOverlay, 0.0);
+        AnchorPane.setRightAnchor(onboardingOverlay, 0.0);
+        AnchorPane.setBottomAnchor(onboardingOverlay, 0.0);
+        AnchorPane.setLeftAnchor(onboardingOverlay, 0.0);
+        getChildren().add(onboardingOverlay);
+        onboardingOverlay.play();
+    }
+
+    /**
+     * Removes the opening overlay and returns keyboard focus to the composer.
+     */
+    private void finishOnboarding() {
+        getChildren().remove(onboardingOverlay);
+        onboardingOverlay = null;
+        userInput.requestFocus();
     }
 
     /**
