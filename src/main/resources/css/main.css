@@ -128,23 +128,3 @@
 .help-affordance:pressed {
     -fx-background-color: rgba(93, 31, 43, 0.16);
 }
-
-.onboarding-overlay {
-    -fx-background-color: linear-gradient(to bottom, rgba(24, 6, 11, 0.97), rgba(90, 29, 41, 0.95));
-}
-
-.onboarding-name {
-    -fx-font-family: "Georgia";
-    -fx-font-size: 42px;
-    -fx-font-style: italic;
-    -fx-font-weight: bold;
-    -fx-text-fill: #fff4e8;
-}
-
-.onboarding-line {
-    -fx-background-color: #e8c4b0;
-    -fx-max-height: 1px;
-    -fx-min-height: 1px;
-    -fx-pref-height: 1px;
-    -fx-pref-width: 72px;
-}
