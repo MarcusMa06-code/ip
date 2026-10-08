@@ -983,3 +983,44 @@ bye
 ```expected
 Bye. Let's talk next time!
 ```
+
+## Test 18: Reject the save-file separator in task descriptions
+
+**Aim:** A `|` in a task description would be split into extra fields when
+the save file is next loaded, making the whole file look corrupted. Each task
+type must reject it up front, and the list must be unchanged afterwards.
+
+```input
+todo a | b
+```
+```expected
+The description of a todo cannot contain |.
+```
+
+```input
+deadline report|draft /by 12/9/2026 1800
+```
+```expected
+The description of a deadline cannot contain |.
+```
+
+```input
+event sync | review /from 12/9/2026 1400 /to 12/9/2026 1600
+```
+```expected
+The description of a event cannot contain |.
+```
+
+```input
+list
+```
+```expected
+Here are the tasks in your list:
+```
+
+```input
+bye
+```
+```expected
+Bye. Let's talk next time!
+```

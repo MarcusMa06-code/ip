@@ -26,6 +26,7 @@ In the window, **?** also opens the guide. Select a command there and press `c` 
 > * Items in square brackets are optional. For example, `list [DATE]` can be `list` or `list 12/9/2026`.
 > * Dates use `d/M/yyyy` or `d-M-yyyy`, for example `12/9/2026` or `12-9-2026`.
 > * Times use `HHmm` in 24-hour form, for example `1800` for 6:00 PM.
+> * Task descriptions cannot contain `|`, because Samantha uses it to separate fields in her save file.
 > * Task and note numbers are the numbers shown by `list` or `notes`. They start at `1`.
 
 ### Viewing help: `help`
