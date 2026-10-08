@@ -7,14 +7,16 @@ Samantha is a personal assistant for tasks and notes. Type a command in the wind
 ## Quick start
 
 1. Ensure that Java `25` is installed.
-2. Open Samantha's window (from IntelliJ, or by running `./gradlew run` in the project folder).
-3. Type a command in the box at the bottom and press **Enter**. Try:
+2. Download the latest `samantha.jar` from the [Releases page](https://github.com/MarcusMa06-code/ip/releases).
+3. Put the file in an empty folder. Samantha saves your data in a `data` folder next to it.
+4. Open a terminal in that folder and run `java -jar samantha.jar`. Samantha's window opens.
+5. Type a command in the box at the bottom and press **Enter**. Try:
 
     * `todo read chapter 5` — adds a task
     * `list` — shows every task
     * `help` — opens the command guide in the window (or prints it in the terminal)
 
-4. Refer to [Features](#features) for every command.
+6. Refer to [Features](#features) for every command.
 
 In the window, **?** also opens the guide. Select a command there and press `c` to copy an example.
 
@@ -213,7 +215,7 @@ If a saved file is missing, Samantha starts with an empty list. If a file is cor
 ## FAQ
 
 **Q:** How do I use Samantha on another computer?
-**A:** Copy the `data` folder (with `samantha.txt` and `notes.txt`) into the project folder on the other computer.
+**A:** Copy the `data` folder (with `samantha.txt` and `notes.txt`) into the folder that holds `samantha.jar` on the other computer.
 
 ## Command summary
 
