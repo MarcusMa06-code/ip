@@ -11,6 +11,11 @@ import samantha.storage.Storage;
 public abstract class Task {
     private static final int INCOMPLETE_STATUS_CODE = 0;
     private static final int COMPLETE_STATUS_CODE = 1;
+    /**
+     * Field separator used in saved task records. A description containing it
+     * would be split into extra fields on the next load, so it is rejected.
+     */
+    private static final String FILE_FIELD_SEPARATOR = "|";
     private boolean isDone;
     private final String taskName;
 
@@ -19,7 +24,7 @@ public abstract class Task {
      *
      * @param name task description
      * @param taskType user-facing task type name
-     * @throws TaskValidationException if the description is blank
+     * @throws TaskValidationException if the description is blank or contains {@code |}
      */
     public Task(String name, String taskType) throws TaskValidationException {
         assert name != null : "A task description must not be null";
@@ -27,6 +32,10 @@ public abstract class Task {
         if (name.isBlank()) {
             throw new TaskValidationException("The description of a " + taskType
                     + " cannot be empty.");
+        }
+        if (name.contains(FILE_FIELD_SEPARATOR)) {
+            throw new TaskValidationException("The description of a " + taskType
+                    + " cannot contain " + FILE_FIELD_SEPARATOR + ".");
         }
         this.taskName = name;
         this.isDone = false;

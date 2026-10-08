@@ -18,6 +18,13 @@ class TodoTest {
     }
 
     @Test
+    void constructor_descriptionWithSeparator_taskValidationExceptionThrown() {
+        TaskValidationException exception = assertThrows(TaskValidationException.class, () ->
+                new Todo("a | b"));
+        assertEquals("The description of a todo cannot contain |.", exception.getMessage());
+    }
+
+    @Test
     void todo_newAndMarked_statusAndRepresentationsUpdated() throws TaskValidationException {
         Todo todo = new Todo("read book");
 
